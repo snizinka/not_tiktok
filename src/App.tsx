@@ -11,6 +11,7 @@ import useUserActions from './hooks/useUserActions';
 import { userData } from './store/action-creator/user';
 import SignUp from './components/SignUp';
 import { Chat } from './components/Chat';
+import { Request } from './components/Request';
 
 function App() {
   const { error, loading, user } = useTypedSelector(state => state.user)
@@ -52,6 +53,7 @@ function App() {
           <Route path='/signup' element={<SignUp></SignUp>}></Route>
           <Route path='/signin' element={<ProtectedSign></ProtectedSign>}></Route>
           <Route path='/chat' element={<Chat></Chat>}></Route>
+          <Route path='/request' element={<Request></Request>}></Route>
           <Route path='*' element={<PostList></PostList>}></Route>
         </Routes>
       </Router>
