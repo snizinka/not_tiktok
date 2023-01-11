@@ -13,7 +13,7 @@ export const Request = (props: any) => {
                             <div className='topic-list'>
                                 <div className="topic-item">
                                     <button className='remove-item'>x</button>
-                                    <a href='#'>Science</a>
+                                    <a href='#1'>Science</a>
                                 </div>
                             </div>
                         </div>
