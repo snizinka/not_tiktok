@@ -5,6 +5,14 @@ import Header from './Header'
 export const Request = (props: any) => {
     const [stage, setStage] = useState(0);
 
+    const [topic, setTopic] = useState("");
+    const [task, setTask] = useState("");
+    const [budget, setBudget] = useState('10');
+    const [deadline, setDeadline] = useState(Date.now);
+    const [detailsFile, setDetailsFile] = useState('');
+    const [userToAccomplish, setUserToAccomplish] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
+
     return (
         <RequestDiv>
             <Header></Header>
@@ -15,7 +23,7 @@ export const Request = (props: any) => {
                         <div className='request-container'>
                             <div className="form-component">
                                 <p>Topic</p>
-                                <input type="text" />
+                                <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} />
                                 <button>Add</button>
                                 <div className='topic-box'>
                                     <div className='topic-list'>
@@ -29,22 +37,22 @@ export const Request = (props: any) => {
 
                             <div className='form-component'>
                                 <p>Task</p>
-                                <input type="text" />
+                                <input type="text" value={task} onChange={(e) => setTask(e.target.value)} />
                             </div>
 
                             <div className="form-component">
                                 <p>Budget</p>
-                                <input type="text" />
+                                <input type="text" value={budget} onChange={(e) => setBudget(e.target.value)} />
                             </div>
 
                             <div className="form-component">
                                 <p>Deadline</p>
-                                <input type="date" />
+                                {/* <input type="date" value={deadline} onChange={(e) => setDeadline('01/11/2022')} /> */}
                             </div>
 
                             <div className="form-component">
                                 <p>More details (Word file)</p>
-                                <input type="file" />
+                                <input type="file" value={detailsFile} onChange={(e) => setDetailsFile(e.target.value)}  />
                             </div>
 
                             <div className="continue">
@@ -61,14 +69,13 @@ export const Request = (props: any) => {
                         <div className='request-container'>
                             <div className="form-component">
                                 <p>User to accomplish</p>
-                                <input type="text" className='search-user' />
-                                <button>Add</button>
+                                <input type="text" className='search-user' value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                             </div>
 
                             <div className="user-list">
                                 <div className="user-offered">
-                                    <p>Some user to accomplish</p>
-                                    <a href="#2">Visit profile</a>
+                                    <a href="#2">Some user to accomplish</a>
+                                    <button>Select</button>
                                 </div>
                             </div>
 
@@ -82,6 +89,25 @@ export const Request = (props: any) => {
                                         setStage(stage + 100)
                                     }
                                 }}>➜</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className="second-stage">
+                        <div className='request-container'>
+                        <p>Topic</p>
+                        <p>Task</p>
+                        <p>Budget</p>
+                        <p>Deadline</p>
+                        <p>User to accomplish</p>
+
+                            <div className="confirm">
+                                <button onClick={() => {
+                                    if (true) {
+                                        setStage(stage + 100)
+                                    }
+                                }}>Confirm</button>
                             </div>
                         </div>
                     </div>
@@ -196,5 +222,46 @@ const RequestDiv = styled.div`
     width: 40px;
     border-radius: 30%;
     cursor: pointer;
+}
+
+.confirm button {
+    height: 40px;
+    width: 80px;
+    border-radius: 10%;
+    cursor: pointer;
+    font-family: 'Signika Negative',sans-serif;
+}
+
+.user-list {
+    width: 350px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+}
+
+.user-offered {
+    width: 310px;
+    border: solid black 2px;
+    border-radius: 7px;
+    padding: 4px;
+
+    a {
+        font-family: 'Signika Negative',sans-serif;
+        display: inline-block;
+        width: calc(310px - 60px);
+        color: #5a5a5a;
+    }
+
+    button {
+        width: 60px;
+        height: 25px;
+        cursor: pointer;
+        background: white;
+        border: none;
+        border-radius: 4px;
+        font-family: 'Signika Negative',sans-serif;
+    }
 }
 `
