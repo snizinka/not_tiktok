@@ -78,6 +78,22 @@ app.post('/messages', async function (req, res) {
     res.send({ result: data })
 })
 
+app.post('/userstoaccomplish', async function (req, res) {
+    let data = await dbOperation.usersToAccomplish(req.body.categories).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/request', async function (req, res) {
+    let data = await dbOperation.createRequest(req.body.request).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
 app.post('/quit', function (req, res) {
     res.send({ result: 'Eat' })
 })

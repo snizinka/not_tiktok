@@ -137,20 +137,25 @@ export const Chat = () => {
 
                                             <div className="message-action">
                                                 <div className="message-action-container">
-                                                    <button onClick={() => {
-                                                        socket.emit('remove_message', { chat: contact, messageId: message.messageId })
-                                                    }}>Remove</button>
-
-                                                    <button onClick={() => {
-                                                        if (chatMode.mode !== 'Editing') {
-                                                            setMessage(message.message)
-                                                            setChatMode({ mode: 'Editing', messageId: message.messageId })
-                                                        } else {
-                                                            setMessage('')
-                                                            setChatMode({ mode: 'Typing', messageId: message.messageId })
-                                                        }
-
-                                                    }}>Edit</button>
+                                                    {
+                                                        message.userId === user[0].userId ? <button onClick={() => {
+                                                            socket.emit('remove_message', { chat: contact, messageId: message.messageId })
+                                                        }}>Remove</button> : ''
+                                                    }
+                                                   
+                                                    {
+                                                        message.userId === user[0].userId ? <button onClick={() => {
+                                                            if (chatMode.mode !== 'Editing') {
+                                                                setMessage(message.message)
+                                                                setChatMode({ mode: 'Editing', messageId: message.messageId })
+                                                            } else {
+                                                                setMessage('')
+                                                                setChatMode({ mode: 'Typing', messageId: message.messageId })
+                                                            }
+    
+                                                        }}>Edit</button> : ''
+                                                    }
+                                                   
                                                     <button
                                                         onClick={() => {
                                                             if (chatMode.mode !== 'Reply') {

@@ -246,4 +246,63 @@ const changeLikeState = async (likeId, postId, userId) => {
     }
 }
 
-module.exports = { getPosts, signUser, changeLikeState, getProfile };
+const usersToAccomplish = async (categories) => {
+    try {
+        let data = [];
+
+        if(categories.userToFind !== '') {
+            let temp = (await query(`SELECT u.username, u.userId, u.userLink FROM nottiktok.users as u
+            WHERE u.username LIKE '%${categories.userToFind}%'`));
+            data.push(temp);
+        } else {
+            for(let i = 0; i < categories.categories.length; i++) {
+            
+                let temp = (await query(`SELECT u.username, u.userId, u.userLink, ctgr.categoryName FROM nottiktok.users as u
+                LEFT JOIN nottiktok.post as pst ON pst.userId = u.userId
+                LEFT JOIN nottiktok.category_link as cl ON cl.postId = pst.postId
+                LEFT JOIN nottiktok.category as ctgr ON ctgr.categoryId = cl.categoryId
+                WHERE ctgr.categoryName = '${categories.categories[i]}'`));
+                data.push(temp);
+            }
+        }
+
+        return { data }
+    } catch(err) {
+        console.log(err)
+    }
+}
+
+const createRequest = async (request) => {
+    try {
+        console.log(request)
+        let resultMain = await query(`INSERT INTO nottiktok.requests (task, budget, deadline, moredetails, userId, requestDate) VALUES("${request.task}", ${request.budget}, "${request.deadline}", "${request.detailsFile}", ${request.user}, "2023.03.12")`);
+        console.log(resultMain)
+        for(let i = 0; i < request.userToAccomplish.length; i++) {
+            let resultSub = await query(`INSERT INTO nottiktok.userstoaccomplish (requestId, userId, isPrimary) VALUES(${resultMain.insertId}, ${request.userToAccomplish[i].userId}, 1)`);
+        }
+        for(let i = 0; i < request.topic.length; i++) {
+            let findTopic = JSON.parse(JSON.stringify(await query(`SELECT * FROM nottiktok.category WHERE categoryName = "${request.topic[i]}"`)));
+            if(findTopic.length !== 0) {
+                let requestcategory = await query(`INSERT INTO nottiktok.requestcategory (requestId, categoryId) VALUES(${resultMain.insertId}, ${findTopic[0].categoryId})`);
+            } else {
+                let topic = await query(`INSERT INTO nottiktok.category (categoryName) VALUES("${request.topic[i]}")`);
+                let requestcategory = await query(`INSERT INTO nottiktok.requestcategory (requestId, categoryId) VALUES(${resultMain.insertId}, ${topic.insertId})`);
+            }
+        }
+        
+        return {data: {
+            status: true
+        }};
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+module.exports = {
+    getPosts,
+    signUser,
+    changeLikeState,
+    getProfile,
+    createRequest,
+    usersToAccomplish
+};
