@@ -16,6 +16,7 @@ const Profile = (props: any) => {
 
     useEffect(() => {
         fetchProfile(Number(params.id))
+        console.log(posts)
     }, [])
 
     function switchTab() {
@@ -30,7 +31,7 @@ const Profile = (props: any) => {
         <div>
             <Header></Header>
             {
-                posts.following !== undefined ?
+                typeof posts === 'object' && posts !== null && posts.userProfile ?
                     <div className={profile.profile_wrapper}>
                         <div className={profile.profile}>
                             <div className={profile.top_left}>
@@ -41,11 +42,11 @@ const Profile = (props: any) => {
                                 <div className={profile.middle}>
                                     <div className={profile.couple}>
                                         <button>Posts: {posts.posts.length}</button>
-                                        <button>Followers: {posts.followers.followers}</button>
+                                        <button>Followers: {posts.userProfile.followers}</button>
                                     </div>
                                     <div className={profile.couple}>
                                         <button>Rating: 200</button>
-                                        <button>Following: {posts.following.following}</button>
+                                        <button>Following: {posts.userProfile.following}</button>
                                     </div>
                                 </div>
 
@@ -84,12 +85,7 @@ const Profile = (props: any) => {
                                     </div>
                                 </div>
                                 <div className={profile.posts_container}>
-                                    {
-                                        posts.y.map((yy: any) => {
-                                            return <div className={profile.post_item}><img src={require(`../post_content/pictures/${yy.pics.at(0)[0].photoLink}`)} alt="" /></div>
-                                        })
-
-                                    }
+                                 
                                 </div>
                             </div>
                         </div>

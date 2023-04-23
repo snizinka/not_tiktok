@@ -25,6 +25,10 @@ export enum PostActionTypes {
     HANDLE_LIKES_SUCCESS = 'HANDLE_LIKES_SUCCESS',
     HANDLE_LIKES_ERROR = 'HANDLE_LIKES_ERROR',
 
+    HANDLE_FOLLOW = 'HANDLE_FOLLOW',
+    HANDLE_FOLLOW_SUCCESS = 'HANDLE_FOLLOW_SUCCESS',
+    HANDLE_FOLLOW_ERROR = 'HANDLE_FOLLOW_ERROR',
+
     FETCH_PROFILE = 'FETCH_PROFILE',
     FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS',
     FETCH_PROFILE_ERROR = 'FETCH_PROFILE_ERROR'  
@@ -66,8 +70,7 @@ interface RemovePostsErrorAction {
 
 
 interface HandleLikesAction {
-    type: PostActionTypes.HANDLE_LIKES,
-    payload: number
+    type: PostActionTypes.HANDLE_LIKES
 }
 
 interface HandleLikesSuccessAction {
@@ -80,6 +83,20 @@ interface HandleLikesErrorAction {
     payload: string
 }
 
+
+interface HandleFollowAction {
+    type: PostActionTypes.HANDLE_FOLLOW
+}
+
+interface HandleFollowSuccessAction {
+    type: PostActionTypes.HANDLE_FOLLOW_SUCCESS,
+    payload: any
+}
+
+interface HandleFollowErrorAction {
+    type: PostActionTypes.HANDLE_FOLLOW_ERROR,
+    payload: string
+}
 
 
 interface FetchProfileAction {
@@ -100,3 +117,4 @@ export type PostAction = FetchPostsAction | FetchPostsSuccessAction | FetchPosts
                         | RemovePostsAction | RemovePostsSuccessAction | RemovePostsErrorAction
                         | HandleLikesAction | HandleLikesSuccessAction | HandleLikesErrorAction
                         |FetchProfileAction | FetchProfileSuccessAction | FetchProfileErrorAction
+                        |HandleFollowAction | HandleFollowSuccessAction | HandleFollowErrorAction

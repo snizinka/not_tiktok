@@ -23,7 +23,7 @@ export const fetchChatUsers = (userId: number) => {
     }
 }
 
-export const fetchChatMessages = (contactId: number) => {
+export const fetchChatMessages = (contact: number) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.FETCH_MESSAGES })
@@ -34,7 +34,7 @@ export const fetchChatMessages = (contactId: number) => {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    contactId: contactId
+                    contact: contact
                 })
             }).then(res => res.json());
 

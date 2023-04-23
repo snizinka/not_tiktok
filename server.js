@@ -3,7 +3,6 @@ const dbOperation = require('./dbFiles/dbOperation');
 const dbChat = require('./dbFiles/dbChat');
 const cors = require('cors');
 const http = require('http')
-const User = require('./dbFiles/models/User');
 const { Server } = require('socket.io')
 
 const API_PORT = process.env.PORT || 5000;
@@ -23,7 +22,7 @@ app.post('/profile', async function (req, res) {
 })
 
 app.post('/api', async function (req, res) {
-    let data = await dbOperation.getPosts(req.body.parameter, req.body.id).then(res => {
+    let data = await dbOperation.getPosts(req.body.parameter, req.body.id, req.body.userId).then(res => {
         return res
     })
     res.send({ result: data })
@@ -55,7 +54,15 @@ app.post('/signin', async function (req, res) {
 })
 
 app.post('/likehandle', async function (req, res) {
-    let data = await dbOperation.changeLikeState(req.body.likeId, req.body.postId, req.body.userId).then(res => {
+    let data = await dbOperation.changeLikeState(req.body.postId, req.body.userId).then(res => {
+        return res
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/followhandle', async function (req, res) {
+    let data = await dbOperation.changeFollowState(req.body.authorId, req.body.userId).then(res => {
         return res
     })
 
@@ -71,9 +78,18 @@ app.post('/chatusers', async function (req, res) {
 })
 
 app.post('/messages', async function (req, res) {
-    let data = await dbChat.getMessagesFromChat(req.body.contactId).then(res => {
-        return res
-    })
+    const contact = req.body.contact
+    let data = []
+
+    if (contact.type === 'Private') {
+        data = await dbChat.getMessagesFromPrivateChat(contact.id).then(res => {
+            return res
+        })
+    } else {
+        data = await dbChat.getMessagesFromGroupChat(contact.id).then(res => {
+            return res
+        })
+    }
 
     res.send({ result: data })
 })
@@ -120,32 +136,34 @@ io.on('connection', (socket) => {
     })
 
     socket.on('send_message', async (data) => {
-        let insert = await dbChat.addMessagesToChat(data).then(res => { return res })
-        let updateState = {
-            contactId: data.chat,
-            deliveryTime: data.time,
-            message: data.message,
-            messageId: insert.data.insertId,
-            userId: data.author,
-            userImage: data.details.userImage,
-            username: data.details.username,
-            reply: [{
-                message_repliesId: insert.data.message_repliesId,
-                newmessageId: insert.data.newmessageId,
-                replyId: insert.data.replyId
-            }]
+        let insert = {}
+
+        if (data.chatType === 'Private') {
+            insert = await dbChat.addMessagesToChat(data).then(res => { return res })
+        } else {
+            insert = await dbChat.insertMessagesToGroupChat(data).then(res => { return res })
         }
-        socket.to(data.chat).emit('receive_message', updateState)
+        
+        socket.to(insert.data.contactId).emit('receive_message', insert.data)
     })
 
     socket.on('remove_message', async (data) => {
-        let removed = await dbChat.removeMessagesFromChat(data.messageId)
-        socket.to(data.chat).emit('message_removed', data.messageId);
+        if (data.chat.type === 'Private') {
+            await dbChat.removeMessagesFromChat(data.messageId)
+        } else {
+            await dbChat.removeMessagesFromGroupChat(data.messageId)
+        }
+        socket.to(data.chat.id).emit('message_removed', data.messageId);
     })
 
     socket.on('edit_message', async (data) => {
-        let edited = await dbChat.editMessagesFromChat(data)
-        socket.to(data.chat).emit('message_edited', data)
+        if (data.chat.type === 'Private') {
+            await dbChat.editMessagesFromChat(data)
+        } else {
+            await dbChat.editGroupMessagesFromChat(data)
+        }
+
+        socket.to(data.chat.id).emit('message_edited', data)
     })
 
     socket.on('disconnect', () => {

@@ -45,6 +45,7 @@
 }
 
 .follow {
+    cursor: pointer;
     font-family: 'Signika Negative', sans-serif;
     font-size: 15px;
     font-weight: 700;
@@ -195,6 +196,7 @@
     object-fit: cover;
     margin-left: 2.5%;
     margin-top: 2.5%;
+    cursor: pointer;
 }
 
 .middle_wrapper {
@@ -208,6 +210,7 @@
     width: 100%;
     height: 100%;
     display: flex;
+    transition: .3s ease-in-out;
 }
 
 .slider_img {
@@ -230,12 +233,12 @@
 }
 
 .left_swtch button, .right_switch button {
-    height: 60px;
+    height: 30px;
     width: 60px;
-    border-radius: 100%;
+    border-radius: 10%;
     cursor: pointer;
     background: #BDBDBD;
-    border: solid #BB8C7A 2px;
+    border: solid transparent 2px;
     color: #FFFFFF;
     font-family: 'Signika Negative', sans-serif;
 }
@@ -328,4 +331,51 @@
     font-family: 'Signika Negative', sans-serif;
     font-size: 15px;
     cursor: pointer;
+}
+
+.searchCard {
+    height: 400px;
+    width: 250px;
+}
+
+.searchImageField {
+    min-height: 300px;
+}
+
+.searchImage {
+    border-radius: 10px;
+    height: 300px;
+    width: fit-content;
+}
+
+.userField {
+    gap: 8px;
+    display: flex;
+    padding: 4px 0;
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 16px;
+    line-height: 40px;
+}
+
+.userImage {
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.searchContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    height: 100%;
+    padding: 0 100px;
+}
+
+.searchTitle {
+    text-align: center;
+    font-weight: 700;
+    font-size: 19px;
+    font-family: 'Signika Negative', sans-serif;
+    margin-bottom: 40px;
 }

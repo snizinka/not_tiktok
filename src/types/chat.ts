@@ -1,7 +1,7 @@
 export interface ChatState {
     user: any;
     chat: any;
-    chats: any[];
+    chats: any[] | any;
     messages: any[];
     loading: boolean;
     error: null | string;

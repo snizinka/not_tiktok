@@ -1,68 +1,95 @@
-const config = require('./dbConfig');
-const util = require('util');
-const Category = require('./models/Category');
-const User = require('./models/User');
-const Video = require('./models/Video');
-const Picture = require('./models/Picture');
-const Text = require('./models/Text');
-const Post = require('./models/Post');
-const Comment = require('./models/Comment');
-
-const query = util.promisify(config.query).bind(config)
-
+const GetContactByUserId = require('./models/Contact/GetContactByUserId');
+const GetMessagesByContactId = require('./models/Chat/Message/GetMessage/GetMessagesByContactId');
+const GetGroupMessageReply = require('./models/Chat/Message/GetMessage/GetGroupMessageReply');
+const GetMessageReply = require('./models/Chat/Message/GetMessage/GetMessageReply');
+const AddMessageToPrivateChat = require('./models/Chat/Message/AddMessage/AddMessageToPrivateChat');
+const AddMessageToGroupChat = require('./models/Chat/Message/AddMessage/AddMessageToGroupChat');
+const GetMessageById = require('./models/Chat/Message/GetMessage/GetMessageById');
+const ReplyToPrivateMessage = require('./models/Chat/Message/ReplyToMessage/ReplyToPrivateMessage');
+const ReplyToGroupMessage = require('./models/Chat/Message/ReplyToMessage/ReplyToGroupMessage');
+const DeletePrivateMessage = require('./models/Chat/Message/DeleteMessage/DeletePrivateMessage');
+const DeleteGroupMessage = require('./models/Chat/Message/DeleteMessage/DeleteGroupMessage');
+const EditPrivateMessage = require('./models/Chat/Message/EditMessage/EditPrivateMessage');
+const EditGroupMessage = require('./models/Chat/Message/EditMessage/EditGroupMessage');
+const GetGroupContactsByUserId = require('./models/Contact/GetGroupContactsByUserId');
+const GetGroupMessagesById = require('./models/Chat/Message/GetMessage/GetGroupMessagesById');
+const GetGroupMessageById = require('./models/Chat/Message/GetMessage/GetGroupMessageById');
 
 const getChatUsers = async (userId) => {
-    let user = await query(`Select c.contactId, c.fuserId, c.suserId, c.contactDate, 
-    u.userId as firstId, u.username as firstName, u.userLink, u.mailAddress, u.phoneNumber, u.userImage as firstImage, 
-    other.userId as secondId, other.username as secondName, other.userLink, other.mailAddress, other.phoneNumber, other.userImage as secondImage
-    from nottiktok.contacts as c
-    left join nottiktok.users as u on u.userId = ${userId}
-    left join nottiktok.users as other on other.userId = c.fuserId OR other.userId = c.suserId
-    where (c.fuserId = u.userId AND  c.suserId = other.userId) OR (c.suserId = u.userId AND  c.fuserId = other.userId)`)
+    let contacts = await GetContactByUserId.getContact(userId)
+    let groupContacts = await GetGroupContactsByUserId.getContact(userId)
+    let unitedContacts = [contacts, groupContacts]
 
-    return { data: user }
+    return { data: unitedContacts }
 }
 
-const getMessagesFromChat = async (contactId) => {
-    let messages = await query("SELECT msgs.`chat-messagesId` as messageId, msgs.contactId, msgs.message, msgs.deliveryTime, " +
-    "usr.userId, usr.username, usr.userImage FROM nottiktok.`chat-messages` as msgs " +
-    "LEFT join nottiktok.contacts as cntct ON cntct.contactId = " + contactId +
-    " LEFT JOIN nottiktok.users as usr on usr.userId = msgs.authorId " +
-    "WHERE msgs.contactId = " + contactId);
+const getMessagesFromPrivateChat = async (contactId) => {
+    let messages = await GetMessagesByContactId.getMessages(contactId)
+    for(let i = 0; i < messages.length; i++) {
+        messages[i] = await GetMessageReply.getMessageReplies(messages[i])
+    }
+
+    return { data: messages }
+}
+
+const getMessagesFromGroupChat = async (chatId) => {
+    let messages = await GetGroupMessagesById.getMessages(chatId)
 
     for(let i = 0; i < messages.length; i++) {
-        let data = await query(`SELECT * FROM nottiktok.message_replies WHERE newmessageId = ${messages[i].messageId}`);
-        messages[i].reply = data
-        console.log(messages[i])
+        messages[i] = await GetGroupMessageReply.getMessageReplies(messages[i])
     }
 
     return { data: messages }
 }
 
 const addMessagesToChat = async (message) => {
-    console.log(message.chatMode.mode)
-    let added = await query("INSERT INTO nottiktok.`chat-messages` (authorId, contactId, message) VALUES("+message.author + ", "+ message.chat +",'"+ message.message +"')");
-    if(message.chatMode.mode === 'Reply') {
-        let reply = await query(`INSERT INTO nottiktok.message_replies (newmessageId, replyId) VALUES(${added.insertId}, ${message.chatMode.messageId})`)
-        added.message_repliesId = reply.insertId
-        added.newmessageId = added.insertId
-        added.replyId = message.chatMode.messageId
+    let added = await AddMessageToPrivateChat.addMessage(message)
+    let createdMessage = await GetMessageById.getMessages(added.insertId)
+    
+    if (message.chatMode.mode === 'Reply') {
+        await ReplyToPrivateMessage.replyToMessage({message: createdMessage, chatMode: message.chatMode})
     }
 
-    return { data: added }
+    createdMessage = await GetMessageReply.getMessageReplies(createdMessage)
+
+    return { data: createdMessage }
+}
+
+const insertMessagesToGroupChat = async (message) => {
+    let added = await AddMessageToGroupChat.addMessage(message)
+    let createdMessage = await GetGroupMessageById.getMessages(added.insertId)
+    
+    if (message.chatMode.mode === 'Reply') {
+        await ReplyToGroupMessage.replyToMessage({message: createdMessage, chatMode: message.chatMode})
+    }
+
+    createdMessage = await GetGroupMessageReply.getMessageReplies(createdMessage)
+
+    return { data: createdMessage }
 }
 
 const removeMessagesFromChat = async (messageId) => {
-    let removed = await query("DELETE FROM nottiktok.`chat-messages` WHERE `chat-messagesId` = " + messageId);
+    let removed = await DeletePrivateMessage.deleteMessage(messageId)
+
+    return { data: removed }
+}
+
+const removeMessagesFromGroupChat = async (messageId) => {
+    let removed = await DeleteGroupMessage.deleteMessage(messageId)
 
     return { data: removed }
 }
 
 const editMessagesFromChat = async (message) => {
-    console.log(message)
-    let edited = await query("UPDATE nottiktok.`chat-messages` SET message = '" + message.newmessage + "' WHERE `chat-messagesId` = " + message.messageId);
+    let edited = await EditPrivateMessage.editMessage(message)
 
     return { data: edited }
 }
 
-module.exports = { getChatUsers, getMessagesFromChat, addMessagesToChat, removeMessagesFromChat, editMessagesFromChat };
+const editGroupMessagesFromChat = async (message) => {
+    let edited = await EditGroupMessage.editMessage(message)
+
+    return { data: edited }
+}
+
+module.exports = { getChatUsers, getMessagesFromPrivateChat: getMessagesFromPrivateChat, getMessagesFromGroupChat, addMessagesToChat, insertMessagesToGroupChat, removeMessagesFromChat, removeMessagesFromGroupChat, editMessagesFromChat, editGroupMessagesFromChat };

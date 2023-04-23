@@ -1,5 +1,5 @@
 .header {
-    padding: 30px 0 30px;
+    padding: 25px 0 25px;
     background: #9A86A4;
     display: flex;
     justify-content: center;
@@ -31,7 +31,7 @@
 .search_input {
     padding: 0 2.5vw 0 2.5vw;
     width: 20vw;
-    height: 50px;
+    height: 40px;
     border-radius: 4px;
     border: none;
     background: #B1BCE6;
@@ -40,7 +40,7 @@
 
 .search_button {
     width: 7vw;
-    height: 50px;
+    height: 40px;
     border-radius: 4px;
     border: none;
     background: #FFF9D7;
@@ -55,13 +55,13 @@
     height: 50px;
     position: relative;
     cursor: pointer;
+    border-radius: 100%; 
+    background: #B1BCE6;
 }
 
 .nav_element p {
     height: 50px;
     width: 50px;
-    border-radius: 100%;
-    background: #B1BCE6;
 }
 
 .nav {
@@ -76,6 +76,7 @@
 .submenu {
     width: 150px;
     position: absolute;
+    top: 50px;
     left: -50px;
     padding: 10px;
     background: #D9D9D9;
