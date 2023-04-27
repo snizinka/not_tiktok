@@ -22,10 +22,12 @@ class GetGroupContacts extends Contact {
         for (let i = 0; i < user.length; i++) {
             let userOne = new User(user[i].userId)
             await userOne.fetchUserData()
-            users.push({ chatUser: userOne })
+            users.push(userOne)
         }
 
-        return { users, chat: chat }
+        chat.users = users
+
+        return { chat: chat }
     }
 }
 

@@ -4,11 +4,11 @@ const util = require('util');
 const User = require("../../../User/User");
 const query = util.promisify(config.query).bind(config)
 
-class GetGroupMessagesById extends Message {
-    static async getMessages(chatId) {
-        let messages = await query("SELECT msgs.messageId, msgs.chatId as contactId, msgs.message, msgs.deliveryTime, msgs.authorId, msgs.forwarded_from, msgs.forward_chat " +
-        "FROM nottiktok.groupmessages as msgs " +
-        "WHERE msgs.chatId = " + chatId)
+class GetLastPrivateMessagesByContactId extends Message {
+    static async getMessages(contactId) {
+        let messages = await query("SELECT msgs.`chat-messagesId` as messageId, msgs.contactId, msgs.message, msgs.deliveryTime, msgs.authorId, msgs.forwarded_from, msgs.forward_chat " +
+            "FROM nottiktok.`chat-messages` as msgs " +
+            "WHERE msgs.contactId = " + contactId + " order by msgs.`chat-messagesId` desc limit 10")
 
         let messageList = []
 
@@ -22,4 +22,4 @@ class GetGroupMessagesById extends Message {
     }
 }
 
-module.exports = GetGroupMessagesById
+module.exports = GetLastPrivateMessagesByContactId

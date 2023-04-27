@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react"
+import useChatActions from "../../hooks/useChatActions";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 const ChatContact = (props: any) => {
+    const { user } = useTypedSelector(state => state.user)
     const [owner, setOwner] = useState<any>()
     const [receiver, setReceiver] = useState<any>()
+    const { leaveChat } = useChatActions()
 
     useEffect(() => {
         setOwner(props.chat.owner)
         setReceiver(props.chat.receiver)
     }, [props])
 
+    function leavesChat() {
+        const data = {
+            contactId: props?.chat?.contactId,
+            chatType: 'Private'
+        }
+        leaveChat(data)
+    }
+
     function onContactSelect() {
-        props.onChangeSelectedChat(owner.userId)
+        props.onChangeSelectedChat(null)
         props.onChangeContact({id: props.chat.contactId, type: 'Private'})
     }
 
@@ -21,6 +33,7 @@ const ChatContact = (props: any) => {
                 <p className="chat-username">{receiver?.username}</p>
                 <p className="chat-text">Chat text</p>
             </div>
+            <button onClick={leavesChat}>Remove</button>
         </div>
     )
 };

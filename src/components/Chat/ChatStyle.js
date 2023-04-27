@@ -151,4 +151,18 @@ export const ChatStyle = styled.div`
     .replyingMessageContent {
         display: flex;
     }
+
+    .chat_list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .chat-contact-img {
+        height: 50px;
+        width: 50px;
+        border-radius: 100%;
+        object-fit: cover;
+        padding-right: 5px;
+    }
 `

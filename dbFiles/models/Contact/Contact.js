@@ -7,6 +7,8 @@ class Contact {
     }
 
     static async getContact(parameter) {}
+
+    static async removeContact(parameter) {}
 }
 
 module.exports = Contact

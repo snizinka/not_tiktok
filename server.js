@@ -110,6 +110,55 @@ app.post('/request', async function (req, res) {
     res.send({ result: data })
 })
 
+app.post('/createchat', async function (req, res) {
+    let data = await dbChat.addGroup(req.body.chat).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/availableforchat', async function (req, res) {
+    let data = await dbChat.getUsersAvailableForChat(req.body.chat).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/adduserstochat', async function (req, res) {
+    let data = await dbChat.addUsersToChat(req.body.chat).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/removeuserfromchat', async function (req, res) {
+    let data = await dbChat.removeFromGroup(req.body.chat).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/leavechat', async function (req, res) {
+    let chat = req.body.chat;
+    let data = []
+
+    if (chat.chatType === 'Group') {
+        data = await dbChat.leaveChat(chat).then(res => {
+            return res;
+        })
+    } else {
+        data = await dbChat.leavePrivateChat(chat).then(res => {
+            return res;
+        })
+    }
+
+    res.send({ result: data })
+})
+
 app.post('/quit', function (req, res) {
     res.send({ result: 'Eat' })
 })
@@ -133,6 +182,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     socket.on('join_chat', (data) => {
         socket.join(data)
+        //socket.to(data).emit('joined_chat', data)
     })
 
     socket.on('send_message', async (data) => {
@@ -143,7 +193,9 @@ io.on('connection', (socket) => {
         } else {
             insert = await dbChat.insertMessagesToGroupChat(data).then(res => { return res })
         }
-        
+
+        console.log(insert.data.contactId)
+
         socket.to(insert.data.contactId).emit('receive_message', insert.data)
     })
 
@@ -167,6 +219,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
+        socket.disconnect(true)
         console.log('Disconnected')
     })
 })

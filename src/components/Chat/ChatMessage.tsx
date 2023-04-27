@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import io from 'socket.io-client'
 import ChatMessageReply from "./ChatMessageReply";
+import ChatMessageForwarded from "./ChatMessageForwarded";
 
 const ChatMessage = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
@@ -20,10 +21,10 @@ const ChatMessage = (props: any) => {
             {props.message.user.userId === user[0].userId ? <button onClick={() => {
                 if (props.chatMode.mode !== 'Editing') {
                     props.changeMessage(props.message.message);
-                    props.changeChatMode({ mode: 'Editing', messageId: props.message.messageId });
+                    props.changeChatMode({ mode: 'Editing', messageId: props.message.messageId, from: props.contact.type });
                 } else {
                     props.changeMessage('');
-                    props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId });
+                    props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId, from: props.contact.type });
                 }
 
             }}>Edit</button> : ''}
@@ -31,13 +32,21 @@ const ChatMessage = (props: any) => {
             <button
                 onClick={() => {
                     if (props.chatMode.mode !== 'Reply') {
-                        props.changeChatMode({ mode: 'Reply', message: props.message });
+                        props.changeChatMode({ mode: 'Reply', message: props.message, from: props.contact.type });
                     } else {
                         props.changeMessage('');
-                        props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId });
+                        props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId, from: props.contact.type });
                     }
                 }}>Reply</button>
-            <button>Forward</button>
+            <button
+                onClick={() => {
+                    if (props.chatMode.mode !== 'Forward') {
+                        props.changeChatMode({ mode: 'Forward', message: props.message.messageId, from: props.contact.type });
+                    } else {
+                        props.changeMessage('');
+                        props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId, from: props.contact.type });
+                    }
+                }}>Forward</button>
         </div>
     }
 
@@ -50,6 +59,7 @@ const ChatMessage = (props: any) => {
                     <p className="message-content">{props.message?.message}</p>
 
                     {props.message?.reply ? <ChatMessageReply reply={props.message.reply} /> : ''}
+                    {props.message?.forwarded ? <ChatMessageForwarded forwarded={props.message.forwarded} /> : ''}
                 </div>
             </div>
         </div>

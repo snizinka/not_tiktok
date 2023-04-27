@@ -10,12 +10,12 @@ const ChatContactFactory = (props: any) => {
     useEffect(() => {
         setContentType(props.chatType)
         setContentData(props.contacts)
-    }, [])
+    }, [props])
 
     switch (contentType) {
         case 'Private':
             contacts?.users?.map((cont: any) => {
-                content.push(<ChatContact key={`chatContact-${cont.contactId}`} chat={cont}
+                content.push(<ChatContact key={`chat-Contact-${cont.contactId}`} chat={cont}
                     onChangeSelectedChat={props.changeSelectedChat}
                     onChangeContact={props.changeContact}
                 />)
@@ -35,15 +35,15 @@ const ChatContactFactory = (props: any) => {
     }
 
     return (
-        <div>
+        <>
             {
                 content?.map((cont: any, index: number) => {
-                    return <div key={`postPicture-${index}`}>
+                    return <>
                         {cont}
-                    </div>
+                    </>
                 })
             }
-        </div>
+        </>
     )
 };
 

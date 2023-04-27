@@ -9,39 +9,44 @@ import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { ChatStyle } from "./ChatStyle";
 import ChatContactFactory from "./ChatContactFactory/ChatContactFactory";
-
+import ChatGroupAdd from "./ChatGroupAdd";
+import ChatAddUser from "./ChatAddUser";
+import ChatUsers from "./ChatUsers";
 
 export const Chat = () => {
     const socket = io("http://localhost:5000")
 
-    const { chats, messages } = useTypedSelector(state => state.chat)
+    const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
     const { user } = useTypedSelector(state => state.user)
     const { fetchChatUsers,
         fetchChatMessages,
         addChatMessage,
         removeChatMessage,
-        editChatMessage
+        editChatMessage,
+        sortContacts
     } = useChatActions()
-    const [selectedChat, setSelectedChat] = useState(null)
-    const [contact, setContact]: any = useState({id: undefined, type: 'Private'})
+    const [selectedChat, setSelectedChat] = useState(false)
+    const [selectedGroup, setSelectedGroup] = useState<any>(null)
+    const [contact, setContact]: any = useState({ id: undefined, type: 'Private' })
+    const [addNewChat, setAddNewChat] = useState(false)
     const [message, setMessage] = useState("")
-    const [chatMode, setChatMode] = useState({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } } })
+    const [contactToSearch, setContactToSearch] = useState("")
+    const [chatMode, setChatMode] = useState({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } }, from: '' })
 
     useEffect(() => {
         fetchChatUsers(user[0].userId)
+
+        return () => {
+            socket.off('disconnect')
+        }
     }, [])
 
     useEffect(() => {
         console.log(chats)
+
     }, [chats])
 
     useEffect(() => {
-        socket.on('receive_message', (data) => {
-            if (data.user.userId !== user[0].userId) {
-            }
-            addChatMessage(data)
-        })
-
         socket.on('message_removed', (data) => {
             removeChatMessage(data)
         })
@@ -52,13 +57,36 @@ export const Chat = () => {
     }, [socket])
 
     useEffect(() => {
-        socket.emit('join_chat', contact.id)
-    }, [selectedChat])
+        socket.on('receive_message', (data) => {
+            if (data.user.userId !== user[0].userId) {
+            }
+            addChatMessage(data)
+        })
+    }, [socket, message])
 
     useEffect(() => {
-        if (contact.id !== undefined)
+        console.log(contact)
+        if (contact.id !== undefined) {
+            socket.off('disconnect')
+            socket.emit('join_chat', contact.id)
             fetchChatMessages(contact)
+        }
     }, [contact])
+
+    useEffect(() => {
+        sortContacts(contactToSearch)
+    }, [contactToSearch])
+
+    useEffect(() => {
+        console.log(selectedGroup)
+        chats?.map((cht: any) => {
+            if (cht?.chatType === 'Group') {
+                cht?.chat.map((group: any) => {
+                    console.log(group)
+                })
+            }
+        })
+    }, [selectedGroup])
 
 
     async function sendMessage(messageToSend: any, chatMode: any) {
@@ -71,7 +99,7 @@ export const Chat = () => {
             chatMode: chatMode,
             chatType: contact.type
         }
-        await socket.emit('send_message', message)
+        socket.emit('send_message', message)
     }
 
     function operateMessage() {
@@ -88,15 +116,19 @@ export const Chat = () => {
             sendMessage(message, chatMode)
             clearChatMode()
             setMessage('')
+        } else if (chatMode.mode === 'Forward') {
+            sendMessage(message, chatMode)
+            clearChatMode()
+            setMessage('')
         }
     }
 
     function clearChatMode() {
-        setChatMode({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } } })
+        setChatMode({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } }, from: '' })
     }
 
-    function changeSelectedChat(chatId: any) {
-        setSelectedChat(chatId)
+    function changeSelectedChat(chat: any) {
+        setSelectedGroup(chat)
     }
 
     function changeContact(contactId: any) {
@@ -121,39 +153,60 @@ export const Chat = () => {
             <div className="chat-container">
                 <div className="left-pannel">
                     <div className="chat-list">
-                        {
-                            chats?.map((user: any) => {
-                                return <ChatContactFactory
-                                    contacts={user}
-                                    chatType={user.chatType}
-                                    changeSelectedChat={changeSelectedChat}
-                                    changeContact={changeContact}
-                                />
-                            })
-                        }
+                        <div className="search_contact">
+                            <input type="text" value={contactToSearch} onInput={(e: any) => setContactToSearch(e.target.value)} />
+                        </div>
+                        <div className="new_chat">
+                            <button onClick={() => setAddNewChat(!addNewChat)}>Create a new chat</button>
+                        </div>
+                        <div className="chat_list">
+                            {
+                                chats?.map((user: any, id: number) => {
+                                    return <ChatContactFactory
+                                        key={`chat-factory-${id}`}
+                                        contacts={user}
+                                        chatType={user?.chatType}
+                                        changeSelectedChat={changeSelectedChat}
+                                        changeContact={changeContact}
+                                    />
+                                })
+                            }
+                        </div>
 
                     </div>
                 </div>
 
                 <div className="chat-box">
-                    <div className="chat-info"></div>
+                    <div className="chat-info">
+                        {
+                            contact.type === 'Group' ? <button onClick={() => setSelectedChat(!selectedChat)}>Add users</button> : ''
+                        }
+                    </div>
 
                     {
                         contact.id === undefined ? <div className="chat-field"><p>Chose a chat ...</p></div> :
                             <ScrollToBottom className="chat-field">
                                 {
-                                    messages.map((message: any[] | never[] | any | never) => {
-                                        return <div key={`message-container-${message?.messageId}`} className="message-container" style={{ justifyContent: message?.user?.userId === user[0].userId ? 'flex-end' : 'flex-start' }}>
-                                            <ChatMessage
-                                                message={message}
-                                                contact={contact}
-                                                chatMode={chatMode}
-                                                changeMessage={changeMessage}
-                                                changeChatMode={changeChatMode}
-                                            />
-                                        </div>
-                                    })
+                                    loadingMessages ? <div>
+                                        <p>Loading</p>
+                                    </div> :
+                                        messages.map((message: any[] | never[] | any | never) => {
+                                            return <div key={`message-container-${message?.messageId}`} className="message-container" style={{ justifyContent: message?.user?.userId === user[0].userId ? 'flex-end' : 'flex-start' }}>
+                                                <ChatMessage
+                                                    message={message}
+                                                    contact={contact}
+                                                    chatMode={chatMode}
+                                                    changeMessage={changeMessage}
+                                                    changeChatMode={changeChatMode}
+                                                />
+                                            </div>
+                                        })
                                 }
+                                <div>
+                                    {selectedGroup ? <ChatUsers chats={chats.filter((cht: any) => cht.chatType === 'Group')
+                                        .flatMap((cht: any) => cht.chat)
+                                        .filter((group: any) => group.chatId === selectedGroup.chatId)[0]} /> : ''}
+                                </div>
                             </ScrollToBottom>
                     }
 
@@ -175,6 +228,12 @@ export const Chat = () => {
                             changeMessageState={changeMessageState}
                         />
                     </div>
+                    {
+                        addNewChat ? <ChatGroupAdd /> : ''
+                    }
+                    {
+                        selectedChat ? <ChatAddUser key={`chat-add-user-${contact.id}`} userId={user[0].userId} chatId={contact.id} /> : ''
+                    }
                 </div>
             </div>
         </ChatDiv>

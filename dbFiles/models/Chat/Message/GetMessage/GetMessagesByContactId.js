@@ -6,7 +6,7 @@ const query = util.promisify(config.query).bind(config)
 
 class GetMessagesByContactId extends Message {
     static async getMessages(contactId) {
-        let messages = await query("SELECT msgs.`chat-messagesId` as messageId, msgs.contactId, msgs.message, msgs.deliveryTime, msgs.authorId " +
+        let messages = await query("SELECT msgs.`chat-messagesId` as messageId, msgs.contactId, msgs.message, msgs.deliveryTime, msgs.authorId, msgs.forwarded_from, msgs.forward_chat " +
             "FROM nottiktok.`chat-messages` as msgs " +
             "WHERE msgs.contactId = " + contactId)
 
@@ -15,7 +15,7 @@ class GetMessagesByContactId extends Message {
         for (let i = 0; i < messages.length; i++) {
             let messageAuthor = new User(messages[i].authorId)
             await messageAuthor.fetchUserData()
-            messageList.push(new Message(messages[i].messageId, messages[i].contactId, messages[i].message, messages[i].deliveryTime, messageAuthor))
+            messageList.push(new Message(messages[i].messageId, messages[i].contactId, messages[i].message, messages[i].deliveryTime, messageAuthor, [], messages[i].forwarded_from, messages[i].forward_chat))
         }
 
         return messageList
