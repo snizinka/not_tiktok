@@ -47,45 +47,49 @@ export const fetchChatMessages = (contact: number) => {
 
 export const addChatMessage = (message: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        dispatch({ type: ChatActionTypes.ADD_MESSAGE, payload:message })
+        dispatch({ type: ChatActionTypes.ADD_MESSAGE, payload: message })
     }
 }
 
 export const removeChatMessage = (messageId: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        dispatch({ type: ChatActionTypes.REMOVE_MESSAGE, payload:messageId })
+        dispatch({ type: ChatActionTypes.REMOVE_MESSAGE, payload: messageId })
     }
 }
 
 export const editChatMessage = (message: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        dispatch({ type: ChatActionTypes.EDIT_MESSAGE, payload:message })
+        dispatch({ type: ChatActionTypes.EDIT_MESSAGE, payload: message })
     }
 }
 
 export const sortContacts = (contactName: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        dispatch({ type: ChatActionTypes.SORT_CONTACTS, payload:contactName })
+        dispatch({ type: ChatActionTypes.SORT_CONTACTS, payload: contactName })
     }
 }
 
 export const createChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        dispatch({ type: ChatActionTypes.CREATE_CHAT })
+        try {
+            dispatch({ type: ChatActionTypes.CREATE_CHAT })
+            const data = await fetch('http://localhost:5000/createchat', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat: chat
+                })
+            }).then(res => res.json())
 
-        const data = await fetch('http://localhost:5000/createchat', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                chat: chat
-            })
-        }).then(res => res.json())
-
-        console.log(data.result.data)
-        dispatch({ type: ChatActionTypes.CREATE_CHAT_SUCCESS, payload: data.result.data })
+            console.log(data.result.data)
+            dispatch({ type: ChatActionTypes.CREATE_CHAT_SUCCESS, payload: data.result.data })
+        } catch (e: any) {
+            console.log(e)
+            dispatch({ type: ChatActionTypes.CREATE_CHAT_ERROR, payload: e })
+        }
     }
 }
 

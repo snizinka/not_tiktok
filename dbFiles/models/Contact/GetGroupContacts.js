@@ -6,7 +6,7 @@ const query = util.promisify(config.query).bind(config)
 
 class GetGroupContacts extends Contact {
     static async getContact(chatId) {
-        let chat = await query(`Select c.chatName, c.chatId  
+        let chat = await query(`Select c.chatName, c.chatId, c.chat_link, c.chat_image  
         from nottiktok.chat as c
         where chatId = ${chatId}`)
         chat = chat[0]

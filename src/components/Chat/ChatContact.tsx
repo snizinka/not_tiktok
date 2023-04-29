@@ -23,17 +23,23 @@ const ChatContact = (props: any) => {
 
     function onContactSelect() {
         props.onChangeSelectedChat(null)
-        props.onChangeContact({id: props.chat.contactId, type: 'Private'})
+        props.onChangeContact({ id: props.chat.contactId, type: 'Private', name: receiver?.username })
     }
 
     return (
         <div key={`chat-${props.chat.contactId}`} className="chat" onClick={onContactSelect}>
-            {owner ? <img className="chat-img" src={require(`../../post_content/pictures/${receiver?.userImage}`)} alt="" /> : ''}
+            {receiver?.userImage ?
+                <img
+                    className="chat-img"
+                    loading="lazy"
+                    src={require(`../../post_content/pictures/${receiver?.userImage}`)}
+                    alt=""
+                /> : ''}
             <div className="chat-textside">
                 <p className="chat-username">{receiver?.username}</p>
-                <p className="chat-text">Chat text</p>
+                <p className="chat-text">Last message</p>
             </div>
-            <button onClick={leavesChat}>Remove</button>
+            <button className='leave-chat' onClick={leavesChat}>x</button>
         </div>
     )
 };

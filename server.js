@@ -3,11 +3,33 @@ const dbOperation = require('./dbFiles/dbOperation');
 const dbChat = require('./dbFiles/dbChat');
 const cors = require('cors');
 const http = require('http')
-const { Server } = require('socket.io')
+const multer = require('multer')
+const { Server } = require('socket.io');
 
 const API_PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app)
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'src/post_content/pictures')
+    },
+    filename: function (req, file, cb) {
+        const searchString = '.';
+        const postContentIndex = file.originalname.indexOf(searchString);
+        let postfix = ''
+        if (postContentIndex !== -1) {
+            postfix = file.originalname.substring(postContentIndex + searchString.length);
+        }
+
+        console.log(file)
+
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix + `.${postfix}`)
+    }
+})
+const upload = multer({ storage: storage })
+
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -157,6 +179,16 @@ app.post('/leavechat', async function (req, res) {
     }
 
     res.send({ result: data })
+})
+
+app.post('/uploadfile', upload.single('file'), async function (req, res) {
+    const searchString = 'pictures\\';
+    const postContentIndex = req.file.path.indexOf(searchString);
+    let trimmedString = ''
+    if (postContentIndex !== -1) {
+        trimmedString = req.file.path.substring(postContentIndex + searchString.length);
+    }
+    res.send({ result: trimmedString })
 })
 
 app.post('/quit', function (req, res) {

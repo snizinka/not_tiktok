@@ -4,14 +4,7 @@ import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 const GroupChatContact = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
-    const [owner, setOwner] = useState<any>()
-    const [receiver, setReceiver] = useState<any>()
     const { leaveChat } = useChatActions()
-
-    useEffect(() => {
-        setOwner(props.chat?.chatUser)
-        setReceiver(props.chat?.chatId)
-    }, [props])
 
     function leavesChat() {
         const data = {
@@ -24,17 +17,17 @@ const GroupChatContact = (props: any) => {
 
     function onContactSelect() {
         props.onChangeSelectedChat(props.chat)
-        props.onChangeContact({id: props.chat?.chatId, type: 'Group'})
+        props.onChangeContact({id: props.chat?.chatId, type: 'Group', name: props?.chat?.chatName })
     }
 
     return (
         <div key={`chat-${props.chat?.chatId}`} className="chat" onClick={onContactSelect}>
-            {props.chat?.chatImage ? <img className="chat-img" src={require(`../../post_content/pictures/${props.chat?.chatImage}`)} alt="" /> : ''}
+            {props.chat?.chat_image ? <img className="chat-img" loading="lazy" src={require(`../../post_content/pictures/${props.chat?.chat_image}`)} alt="" /> : ''}
             <div className="chat-textside">
                 <p className="chat-username">{props.chat?.chatName}</p>
-                <p className="chat-text">Chat text</p>
+                <p className="chat-text">Last message</p>
             </div>
-            <button onClick={leavesChat}>Leave</button>
+            <button className='leave-chat' onClick={leavesChat}>x</button>
         </div>
     )
 };

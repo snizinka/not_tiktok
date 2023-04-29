@@ -35,15 +35,15 @@ const ChatContactFactory = (props: any) => {
     }
 
     return (
-        <>
+        <React.Fragment key={`chatContactFactory`}>
             {
                 content?.map((cont: any, index: number) => {
-                    return <>
+                    return <React.Fragment key={`chatContactFactory${index}`}>
                         {cont}
-                    </>
+                    </React.Fragment>
                 })
             }
-        </>
+        </React.Fragment>
     )
 };
 

@@ -5,7 +5,7 @@ const query = util.promisify(config.query).bind(config)
 
 class CreateGroupChat extends Chat {
     static async createChat(group) {
-        let addedGroup = await query("INSERT INTO nottiktok.chat (chatName, chatType) VALUES('" + group.chatName + "', '" + group.chatType + "')");
+        let addedGroup = await query("INSERT INTO nottiktok.chat (chatName, chatType, chat_link, chat_image) VALUES('" + group.chatName + "', '" + group.chatType + "', '"+ group.chatLink +"', '"+ group.chatImage +"')");
         return addedGroup
     }
 }

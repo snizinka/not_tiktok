@@ -27,8 +27,9 @@ export const Chat = () => {
     } = useChatActions()
     const [selectedChat, setSelectedChat] = useState(false)
     const [selectedGroup, setSelectedGroup] = useState<any>(null)
-    const [contact, setContact]: any = useState({ id: undefined, type: 'Private' })
+    const [contact, setContact]: any = useState({ id: undefined, type: 'Private', name: '' })
     const [addNewChat, setAddNewChat] = useState(false)
+    const [showChatUsers, setShowChatUsers] = useState(false)
     const [message, setMessage] = useState("")
     const [contactToSearch, setContactToSearch] = useState("")
     const [chatMode, setChatMode] = useState({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } }, from: '' })
@@ -76,17 +77,6 @@ export const Chat = () => {
     useEffect(() => {
         sortContacts(contactToSearch)
     }, [contactToSearch])
-
-    useEffect(() => {
-        console.log(selectedGroup)
-        chats?.map((cht: any) => {
-            if (cht?.chatType === 'Group') {
-                cht?.chat.map((group: any) => {
-                    console.log(group)
-                })
-            }
-        })
-    }, [selectedGroup])
 
 
     async function sendMessage(messageToSend: any, chatMode: any) {
@@ -147,23 +137,33 @@ export const Chat = () => {
         setMessage(message)
     }
 
+    function changeShowChatUsers() {
+        setShowChatUsers(!showChatUsers)
+    }
+
     return (
         <ChatDiv>
             <Header></Header>
             <div className="chat-container">
                 <div className="left-pannel">
                     <div className="chat-list">
-                        <div className="search_contact">
-                            <input type="text" value={contactToSearch} onInput={(e: any) => setContactToSearch(e.target.value)} />
-                        </div>
                         <div className="new_chat">
-                            <button onClick={() => setAddNewChat(!addNewChat)}>Create a new chat</button>
+                            <button className="create_chat_trigger" onClick={() => setAddNewChat(!addNewChat)}>Create a new chat</button>
+                        </div>
+                        <div className="search_contact">
+                            <input
+                                className="search_fro_chat"
+                                type="text"
+                                value={contactToSearch}
+                                onInput={(e: any) => setContactToSearch(e.target.value)}
+                                placeholder='Search'
+                            />
                         </div>
                         <div className="chat_list">
                             {
                                 chats?.map((user: any, id: number) => {
                                     return <ChatContactFactory
-                                        key={`chat-factory-${id}`}
+                                        key={`chatfactory${id}`}
                                         contacts={user}
                                         chatType={user?.chatType}
                                         changeSelectedChat={changeSelectedChat}
@@ -172,7 +172,6 @@ export const Chat = () => {
                                 })
                             }
                         </div>
-
                     </div>
                 </div>
 
@@ -181,6 +180,10 @@ export const Chat = () => {
                         {
                             contact.type === 'Group' ? <button onClick={() => setSelectedChat(!selectedChat)}>Add users</button> : ''
                         }
+                        <p>
+                            {contact.name}
+                        </p>
+                        {contact.type === 'Group' ? <button onClick={changeShowChatUsers}>Chat users</button> : ''}
                     </div>
 
                     {
@@ -203,7 +206,7 @@ export const Chat = () => {
                                         })
                                 }
                                 <div>
-                                    {selectedGroup ? <ChatUsers chats={chats.filter((cht: any) => cht.chatType === 'Group')
+                                    {selectedGroup && showChatUsers ? <ChatUsers chats={chats.filter((cht: any) => cht.chatType === 'Group')
                                         .flatMap((cht: any) => cht.chat)
                                         .filter((group: any) => group.chatId === selectedGroup.chatId)[0]} /> : ''}
                                 </div>

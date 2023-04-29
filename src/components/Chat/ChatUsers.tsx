@@ -21,20 +21,28 @@ const ChatUsers = (props: any) => {
     }
 
     return (
-        <div key={`chatusers-${props?.chats?.chatId}`}>
-            {
-                chatUsers?.map((chatUsers: any) => {
-                    return <div>
-                        {chatUsers?.userImage ? <img
-                            className="chat-contact-img"
-                            src={require(`../../post_content/pictures/${chatUsers?.userImage}`)}
-                            alt=""
-                        /> : ''}
-                        <a href={`http://localhost:3000/profile/${chatUsers.userId}`}>{chatUsers.username}</a>
-                        { user[0].userId !== chatUsers?.userId ? <button onClick={() => removeFromChat(chatUsers.userId)}>Delete</button> : '' }
-                    </div>
-                })
-            }
+        <div className="chat_users_wrapper">
+            <div key={`chatusers-${props?.chats?.chatId}`} className='chat_users_container'>
+                {
+                    chatUsers?.map((chatUsers: any, index: any) => {
+                        return <div key={`chatUser${index}`} className='chat_user'>
+                            {chatUsers?.userImage ? <img
+                                className="chat-contact-img"
+                                src={require(`../../post_content/pictures/${chatUsers?.userImage}`)}
+                                alt=""
+                            /> : ''}
+                            <a
+                                href={`http://localhost:3000/profile/${chatUsers.userId}`}
+                                className='chat_user_link'>{chatUsers.username}
+                            </a>
+                            {user[0].userId !== chatUsers?.userId ? <button
+                                className="chat_user_button"
+                                onClick={() => removeFromChat(chatUsers.userId)}
+                            >Delete</button> : ''}
+                        </div>
+                    })
+                }
+            </div>
         </div>
     )
 };
