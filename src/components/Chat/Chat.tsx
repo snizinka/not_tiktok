@@ -10,8 +10,8 @@ import ChatInput from "./ChatInput";
 import { ChatStyle } from "./ChatStyle";
 import ChatContactFactory from "./ChatContactFactory/ChatContactFactory";
 import ChatGroupAdd from "./ChatGroupAdd";
-import ChatAddUser from "./ChatAddUser";
 import ChatUsers from "./ChatUsers";
+import { unescape } from "querystring";
 
 export const Chat = () => {
     const socket = io("http://localhost:5000")
@@ -36,9 +36,8 @@ export const Chat = () => {
 
     useEffect(() => {
         fetchChatUsers(user[0].userId)
-
         return () => {
-            socket.off('disconnect')
+            socket.disconnect();
         }
     }, [])
 
@@ -122,6 +121,9 @@ export const Chat = () => {
     }
 
     function changeContact(contactId: any) {
+        if (contact.id !== undefined) {
+            socket.emit('leave', contact.id)
+        }
         setContact(contactId)
     }
 
@@ -139,6 +141,14 @@ export const Chat = () => {
 
     function changeShowChatUsers() {
         setShowChatUsers(!showChatUsers)
+    }
+
+    function changesetSelectedChat() {
+        setSelectedChat(!selectedChat)
+    }
+
+    function changeAddNewChat() {
+        setAddNewChat(!addNewChat)
     }
 
     return (
@@ -177,13 +187,8 @@ export const Chat = () => {
 
                 <div className="chat-box">
                     <div className="chat-info">
-                        {
-                            contact.type === 'Group' ? <button onClick={() => setSelectedChat(!selectedChat)}>Add users</button> : ''
-                        }
-                        <p>
-                            {contact.name}
-                        </p>
-                        {contact.type === 'Group' ? <button onClick={changeShowChatUsers}>Chat users</button> : ''}
+                        {contact.type !== 'Group' ? contact.name : ''}
+                        {contact.type === 'Group' ? <button className="chat-info-btn" onClick={changeShowChatUsers}>{contact.name}</button> : ''}
                     </div>
 
                     {
@@ -206,25 +211,22 @@ export const Chat = () => {
                                         })
                                 }
                                 <div>
-                                    {selectedGroup && showChatUsers ? <ChatUsers chats={chats.filter((cht: any) => cht.chatType === 'Group')
-                                        .flatMap((cht: any) => cht.chat)
-                                        .filter((group: any) => group.chatId === selectedGroup.chatId)[0]} /> : ''}
+                                    {selectedGroup && showChatUsers ? <ChatUsers
+                                        changeShowChatUsers={changeShowChatUsers}
+                                        contact={contact}
+                                        selectedChat={selectedChat}
+                                        changesetSelectedChat={changesetSelectedChat}
+                                        chats={chats.filter((cht: any) => cht.chatType === 'Group')
+                                            .flatMap((cht: any) => cht.chat)
+                                            .filter((group: any) => group.chatId === selectedGroup.chatId)[0]} /> : ''}
                                 </div>
                             </ScrollToBottom>
                     }
 
                     <div className="inputRow">
-                        <div>
-                            {chatMode.mode === 'Reply' ?
-                                <div className="replyingMessage">
-                                    <div className="replyingMessageContent">
-                                        <p>{chatMode?.message?.user?.username}: {' '}</p>
-                                        <p>{chatMode?.message?.message}</p>
-                                    </div>
-                                    <button onClick={clearChatMode}>x</button>
-                                </div> : ''}
-                        </div>
                         <ChatInput
+                            clearChatMode={clearChatMode}
+                            chatMode={chatMode}
                             operateMessage={operateMessage}
                             message={message}
                             contact={contact.id}
@@ -232,10 +234,9 @@ export const Chat = () => {
                         />
                     </div>
                     {
-                        addNewChat ? <ChatGroupAdd /> : ''
-                    }
-                    {
-                        selectedChat ? <ChatAddUser key={`chat-add-user-${contact.id}`} userId={user[0].userId} chatId={contact.id} /> : ''
+                        addNewChat ? <ChatGroupAdd
+                            changeAddNewChat={changeAddNewChat}
+                        /> : ''
                     }
                 </div>
             </div>

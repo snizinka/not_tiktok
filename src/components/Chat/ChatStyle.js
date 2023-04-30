@@ -53,7 +53,9 @@ export const ChatStyle = styled.div`
     }
 
     .message {
-        display: inline-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .chat-img {
@@ -97,7 +99,6 @@ export const ChatStyle = styled.div`
     }
 
     .input-message {
-        width: 40%;
         height: auto;
         border: none;
         outline: none;
@@ -111,6 +112,7 @@ export const ChatStyle = styled.div`
         width: 100%;
         display: flex;
         justify-content: center;
+        flex-direction: column;
     }
 
     .send-message {
@@ -130,6 +132,11 @@ export const ChatStyle = styled.div`
         height: 60px;
         background: #b1bce6;
         border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 16px;
     }
 
     .reply-container {
@@ -142,6 +149,8 @@ export const ChatStyle = styled.div`
 
     .inputRow {
         text-align: center;
+        width: 50%;
+        margin: auto;
     }
 
     .replyingMessage {
@@ -343,7 +352,136 @@ export const ChatStyle = styled.div`
         -webkit-box-align: center;
         -ms-flex-align: center;
         align-items: center;
+    }
+
+    .chat_users_container_list {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        gap: 10px;
+        width: -webkit-max-content;
+        width: -moz-max-content;
+        width: -webkit-max-content;
+        width: -moz-max-content;
+        width: max-content;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
         height: 230px;
         overflow: auto;
+    }
+
+    .messageHandler {
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 4px 6px;
+        margin-top: auto;
+        margin-bottom: 10px;
+        background: #D9D9D9;
+        border: none;
+    }
+
+    .remove {
+        background: #F32828;
+    }
+
+    .replyHandler {
+        background: transparent;
+        border: none;
+        margin-right: 4px;
+        cursor: pointer;
+    }
+
+    .replyAsset {
+        height: 25px;
+    }
+
+    .chat-all {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .chat-reply-container {
+        height: 26px;
+    }
+
+    .reply-username {
+        font-family: 'Signika Negative',sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        margin-right: 4px;
+    }
+
+    .reply-message {
+        font-family: 'Signika Negative',sans-serif;
+        margin-right: 4px;
+    }
+
+    .reply-cancel {
+        background: #F32828;
+        height: 20px;
+        width: 20px;
+        border-radius: 100%;
+        border: none;
+        cursor: pointer;
+    }
+
+    .chat-info-btn {
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 3px 8px;
+        background: #D9D9D9;
+        border: none;
+        transition: .3s ease;
+    }
+
+    .add_users_container {
+        width: max-content;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 60px;
+        overflow: auto;
+    }
+
+    .accent-btn {
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 4px 8px;
+        background: #FFF9D7;
+        border: none;
+        transition: .3s ease;
+    }
+
+    .chat_users {
+        max-width: 200px;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
     }
 `

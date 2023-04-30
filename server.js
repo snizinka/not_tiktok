@@ -214,7 +214,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     socket.on('join_chat', (data) => {
         socket.join(data)
-        //socket.to(data).emit('joined_chat', data)
+        console.log(socket.rooms)
     })
 
     socket.on('send_message', async (data) => {
@@ -228,7 +228,7 @@ io.on('connection', (socket) => {
 
         console.log(insert.data.contactId)
 
-        socket.to(insert.data.contactId).emit('receive_message', insert.data)
+        socket.broadcast.to(insert.data.contactId).emit('receive_message', insert.data)
     })
 
     socket.on('remove_message', async (data) => {
@@ -250,8 +250,13 @@ io.on('connection', (socket) => {
         socket.to(data.chat.id).emit('message_edited', data)
     })
 
-    socket.on('disconnect', () => {
-        socket.disconnect(true)
+    socket.on('leave', (room) => {
+        socket.leave(room)
+        console.log('left')
+    })
+
+    socket.on('disconnect', (room) => {
+        socket.leave(room)
         console.log('Disconnected')
     })
 })

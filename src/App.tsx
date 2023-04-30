@@ -12,6 +12,7 @@ import { userData } from './store/action-creator/user';
 import SignUp from './components/SignUp';
 import { Chat } from './components/Chat/Chat';
 import { Request } from './components/Request';
+import CreatePost from './components/CreatePost/CreatePost';
 
 function App() {
   const { error, loading, user } = useTypedSelector(state => state.user)
@@ -49,7 +50,7 @@ function App() {
           <Route path='/category/:id' element={<Profile></Profile>}></Route>
           <Route path='/content/:id' element={<PostList byWhat={{type: 'BY_POST_ID'}}></PostList>}></Route>
           <Route path='/search/:name' element={<PostList byWhat={{type: 'BY_DESCRIPTION'}}></PostList>}></Route>
-          <Route path='/createpost' element={<Profile></Profile>}></Route>
+          <Route path='/createpost' element={<CreatePost></CreatePost>}></Route>
           <Route path='/signup' element={<SignUp></SignUp>}></Route>
           <Route path='/signin' element={<ProtectedSign></ProtectedSign>}></Route>
           <Route path='/chat' element={<Chat></Chat>}></Route>

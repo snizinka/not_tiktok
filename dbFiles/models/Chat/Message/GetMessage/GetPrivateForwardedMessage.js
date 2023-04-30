@@ -7,7 +7,6 @@ const query = util.promisify(config.query).bind(config)
 
 class GetPrivateForwardedMessage extends Message {
     static async getMessages(message) {
-        console.log(message)
         if(message.forwarded === 'Group') {
             message.forwarded = await GetGroupMessageById.getMessages(message.forwarded_from)
         } else {

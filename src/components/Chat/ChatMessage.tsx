@@ -1,12 +1,14 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import io from 'socket.io-client'
 import ChatMessageReply from "./ChatMessageReply";
 import ChatMessageForwarded from "./ChatMessageForwarded";
+import img from '../../post_content/assets/reply-arrow.png'
 
 const ChatMessage = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
     const socket = io("http://localhost:5000")
+    const [displayMessageActions, setDisplayMessageActions] = useState(false)
 
     useEffect(() => {
 
@@ -14,31 +16,27 @@ const ChatMessage = (props: any) => {
 
     function ChatMessageHandler() {
         return <div className="message-action-container">
-            {props.message.user.userId === user[0].userId ? <button onClick={() => {
-                socket.emit('remove_message', { chat: props.contact, messageId: props.message.messageId });
-            }}>Remove</button> : ''}
-
-            {props.message.user.userId === user[0].userId ? <button onClick={() => {
-                if (props.chatMode.mode !== 'Editing') {
-                    props.changeMessage(props.message.message);
-                    props.changeChatMode({ mode: 'Editing', messageId: props.message.messageId, from: props.contact.type });
-                } else {
-                    props.changeMessage('');
-                    props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId, from: props.contact.type });
-                }
-
-            }}>Edit</button> : ''}
-
-            <button
+            {props.message.user.userId === user[0].userId ? <button
+                className="messageHandler remove"
                 onClick={() => {
-                    if (props.chatMode.mode !== 'Reply') {
-                        props.changeChatMode({ mode: 'Reply', message: props.message, from: props.contact.type });
+                    socket.emit('remove_message', { chat: props.contact, messageId: props.message.messageId });
+                }}>Remove</button> : ''}
+
+            {props.message.user.userId === user[0].userId ? <button
+                className="messageHandler"
+                onClick={() => {
+                    if (props.chatMode.mode !== 'Editing') {
+                        props.changeMessage(props.message.message);
+                        props.changeChatMode({ mode: 'Editing', messageId: props.message.messageId, from: props.contact.type });
                     } else {
                         props.changeMessage('');
                         props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId, from: props.contact.type });
                     }
-                }}>Reply</button>
+
+                }}>Edit</button> : ''}
+
             <button
+                className="messageHandler"
                 onClick={() => {
                     if (props.chatMode.mode !== 'Forward') {
                         props.changeChatMode({ mode: 'Forward', message: props.message.messageId, from: props.contact.type });
@@ -52,7 +50,20 @@ const ChatMessage = (props: any) => {
 
     return (
         <><div>
-            <div className="message">
+            <div className="message" onContextMenu={(e) => {
+                e.preventDefault()
+                setDisplayMessageActions(!displayMessageActions)
+            }}>
+                <button
+                    className="replyHandler"
+                    onClick={() => {
+                        if (props.chatMode.mode !== 'Reply') {
+                            props.changeChatMode({ mode: 'Reply', message: props.message, from: props.contact.type });
+                        } else {
+                            props.changeMessage('');
+                            props.changeChatMode({ mode: 'Typing', messageId: props.message.messageId, from: props.contact.type });
+                        }
+                    }}><img className="replyAsset" src={img} alt='' /></button>
                 {props.message?.user?.userImage ? <img className="chat-img" src={require(`../../post_content/pictures/${props.message?.user?.userImage}`)} alt="" /> : ''}
                 <div className="message-info">
                     <p className="username">{props.message?.user?.username}</p>
@@ -64,7 +75,7 @@ const ChatMessage = (props: any) => {
             </div>
         </div>
             <div className="message-action">
-                <ChatMessageHandler />
+                {displayMessageActions ? <ChatMessageHandler /> : ''}
             </div></>
     )
 };

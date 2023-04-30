@@ -55,7 +55,10 @@ const ChatGroupAdd = (props: any) => {
     }
 
     return (
-        <div className="bluring_back">
+        <div>
+            <div className="bluring_back" onClick={props.changeAddNewChat}>
+
+            </div>
             <div className="create_chat">
                 <div className="create_chat_container">
                     <div className="input_field">

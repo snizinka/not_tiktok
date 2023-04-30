@@ -38,12 +38,12 @@ const ChatAddUser = (props: any) => {
 
     return (
         <div>
-            <div>
+            <div className="add_users_container">
                 {
                     availableUsers?.map((available: any) => {
-                        return <div>
-                            <p>{available?.username}</p>
-                            <button onClick={() => {
+                        return <div className="chat_users">
+                            <p className="chat_user_link">{available?.username}</p>
+                            <button className="chat_user_button" onClick={() => {
                                 if (checkSelected(available?.userId) > 0) {
                                     removeUser(available?.userId)
                                 } else {
@@ -54,7 +54,7 @@ const ChatAddUser = (props: any) => {
                     })
                 }
             </div>
-            <button onClick={addUsersToGroup}>Add to chat</button>
+            <button className="accent-btn" onClick={addUsersToGroup}>Add to chat</button>
         </div>
     )
 };
