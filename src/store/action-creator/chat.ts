@@ -5,7 +5,7 @@ export const fetchChatUsers = (userId: number) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.FETCH_USERS })
-            const data = await fetch('http://localhost:5000/chatusers', {
+            const data = await fetch('http://localhost:9000/chatusers', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -27,7 +27,7 @@ export const fetchChatMessages = (contact: number) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.FETCH_MESSAGES })
-            const data = await fetch('http://localhost:5000/messages', {
+            const data = await fetch('http://localhost:9000/messages', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -73,7 +73,7 @@ export const createChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.CREATE_CHAT })
-            const data = await fetch('http://localhost:5000/createchat', {
+            const data = await fetch('http://localhost:9000/createchat', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -97,7 +97,7 @@ export const getUsersNotFromChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.GET_USERS_FOR_CHAT })
-            const data = await fetch('http://localhost:5000/availableforchat', {
+            const data = await fetch('http://localhost:9000/availableforchat', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -121,7 +121,7 @@ export const addUsersToChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.ADD_USERS_TO_CHAT })
-            const data = await fetch('http://localhost:5000/adduserstochat', {
+            const data = await fetch('http://localhost:9000/adduserstochat', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -145,7 +145,7 @@ export const removeUserFromChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.REMOVE_USERS_FROM_CHAT })
-            const data = await fetch('http://localhost:5000/removeuserfromchat', {
+            const data = await fetch('http://localhost:9000/removeuserfromchat', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -169,7 +169,7 @@ export const leaveChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.LEAVE_CHAT })
-            const data = await fetch('http://localhost:5000/leavechat', {
+            const data = await fetch('http://localhost:9000/leavechat', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',

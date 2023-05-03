@@ -2,10 +2,10 @@ const config = require('../../dbConfig');
 const util = require('util');
 const Comment = require('../Comment');
 const User = require('../User');
-const Picture = require('../Picture');
-const Video = require('../Video');
+const Picture = require('../Picture/Picture');
+const Video = require('../Video/Video');
 const Category = require('../Category');
-const Text = require('../Text');
+const Text = require('../Text/Text');
 
 const query = util.promisify(config.query).bind(config)
 class Post {

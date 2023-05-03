@@ -1,4 +1,4 @@
-const config = require('../dbConfig');
+const config = require('../../dbConfig');
 const util = require('util');
 const query = util.promisify(config.query).bind(config)
 
@@ -20,6 +20,8 @@ class Picture {
 
         return _pictures;
     }
+
+    static async uploadPicture(data) { }
 }
 
 module.exports = Picture;

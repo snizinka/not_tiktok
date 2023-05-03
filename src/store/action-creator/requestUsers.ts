@@ -6,7 +6,7 @@ export const fetchUsersToAccomplish = (categories:string[], userToFind:string) =
     return async (dispatch:Dispatch<RequestUsersAction>) => {
         try {
             dispatch({type: RequestUsersActionTypes.LOAD_USERS})
-                const data = await fetch('http://localhost:5000/userstoaccomplish', {
+                const data = await fetch('http://localhost:9000/userstoaccomplish', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
@@ -36,7 +36,7 @@ export const makeRequest = (request: any | any[]) => {
     return async (dispatch:Dispatch<RequestUsersAction>) => {
         try {
             dispatch({type: RequestUsersActionTypes.MAKE_REQUEST})
-                const data = await fetch('http://localhost:5000/request', {
+                const data = await fetch('http://localhost:9000/request', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',

@@ -1,10 +1,11 @@
-import React, { useState } from "react"
+import React from "react"
 
-const NextButton = () => {
-    const [clicked, setClicked] = useState(false)
+const NextButton = (props: any) => {
 
     return (
-        <button onClick={() => setClicked(true)} className="next-button">Next</button>
+        <button onClick={() => { 
+            props.slide('down')
+         }} className="next-button">Next</button>
     )
 };
 

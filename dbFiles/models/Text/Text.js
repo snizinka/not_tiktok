@@ -1,4 +1,4 @@
-const config = require('../dbConfig');
+const config = require('../../dbConfig');
 const util = require('util');
 const query = util.promisify(config.query).bind(config)
 
@@ -21,6 +21,8 @@ class Text {
 
         return textArray;
     }
+
+    static async uploadTextContent(data) { }
 }
 
 module.exports = Text;

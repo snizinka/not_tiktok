@@ -23,6 +23,7 @@ export const CreatePostStyles = styled.div`
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
+    overflow: hidden;
 }
 
 .content-type {
@@ -48,7 +49,7 @@ export const CreatePostStyles = styled.div`
 .text-content-type, .photo-content-type, .video-content-type {
     font-family: 'Signika Negative',sans-serif;
     width: 100%;
-    height: 100%;
+    height: 80%;
 }
 
 .text-content-type p {
@@ -99,6 +100,7 @@ export const CreatePostStyles = styled.div`
     height: 100%;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    transition: .4s ease;
 }
 
 .content-type-slide {
@@ -130,10 +132,81 @@ export const CreatePostStyles = styled.div`
     padding: 10px 0;
     border: none;
     border-radius: 6px;
+    cursor: pointer;
+    transition: .4s ease;
+}
+
+.content-type-slider-switches button:hover {
+    transition: .4s ease;
+    background: #BDB4B4;
 }
 
 .content-type-slider-wrapper {
     width: 100%;
     height: 100%;
+}
+
+.cancel-button {
+    font-family: 'Signika Negative',sans-serif;
+    font-size: 18px;
+    padding: 8px 30px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: #F32828;
+}
+
+.content-slider-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.previewTitle {
+    font-family: 'Signika Negative',sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.previewBody {
+    font-family: 'Signika Negative',sans-serif;
+    font-size: 18px;
+}
+
+.previewCard {
+    height: 300px;
+    width: 200px;
+    border: solid black 2px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-type-slidr {
+    display: flex;
+}
+
+.content-type-slider-wrappe {
+    width: 100%;
+}
+
+.content-type-slidr {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.photo-card-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.preview-video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 `

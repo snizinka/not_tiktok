@@ -11,14 +11,14 @@ import { ChatStyle } from "./ChatStyle";
 import ChatContactFactory from "./ChatContactFactory/ChatContactFactory";
 import ChatGroupAdd from "./ChatGroupAdd";
 import ChatUsers from "./ChatUsers";
-import { unescape } from "querystring";
 
 export const Chat = () => {
-    const socket = io("http://localhost:5000")
+    const socket = io("http://localhost:9000")
 
     const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
     const { user } = useTypedSelector(state => state.user)
-    const { fetchChatUsers,
+    const { 
+        fetchChatUsers,
         fetchChatMessages,
         addChatMessage,
         removeChatMessage,

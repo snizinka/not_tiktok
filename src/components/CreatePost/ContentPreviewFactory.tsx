@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react"
-import PhotoContent from "./PhotoContent";
-import TextContent from "./TextContent";
-import VideoContent from "./VideoContent";
-import useCreatePostActions from "../../hooks/useCreatePostActions";
+import PhotoContentPreview from "./ContentPreview/PhotoContentPreview";
+import TextContentPreview from "./ContentPreview/TextContentPreview";
+import VideoContentPreview from "./ContentPreview/VideoContentPreview";
 
-const CreatePostFactory = (props: any) => {
-    const { inputTitleText, inputBodyText } = useCreatePostActions()
+const ContentPreviewFactory = (props: any) => {
     const [contentType, setContentType] = useState(props.contentType)
     let content: any = [];
 
@@ -15,22 +13,20 @@ const CreatePostFactory = (props: any) => {
 
     switch (contentType.content.type) {
         case 'textContent':
-            content.push(<TextContent
+            content.push(<TextContentPreview
                 id={contentType.id}
-                onInputTitleText={inputTitleText}
-                onInputBodyText={inputBodyText}
                 titleContent={contentType.content.title}
                 bodyContent={contentType.content.body}
             />)
             break;
         case 'videoContent':
-            content.push(<VideoContent
+            content.push(<VideoContentPreview
                 id={contentType.id}
                 content={contentType.content.link}
             />)
             break;
         case 'photoContent':
-            content.push(<PhotoContent
+            content.push(<PhotoContentPreview
                 id={contentType.id}
                 content={contentType.content.link}
             />)
@@ -40,10 +36,10 @@ const CreatePostFactory = (props: any) => {
             break
     }
     return (
-        <React.Fragment key={`createPostFactory`}>
+        <React.Fragment key={`sortContent`}>
             {
                 content?.map((cont: any, index: number) => {
-                    return <React.Fragment key={`CreatePostFactory${index}`}>
+                    return <React.Fragment key={`sortedContent${index}`}>
                         {cont}
                     </React.Fragment>
                 })
@@ -52,4 +48,4 @@ const CreatePostFactory = (props: any) => {
     )
 };
 
-export default CreatePostFactory;
+export default ContentPreviewFactory;

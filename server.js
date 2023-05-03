@@ -6,7 +6,7 @@ const http = require('http')
 const multer = require('multer')
 const { Server } = require('socket.io');
 
-const API_PORT = process.env.PORT || 5000;
+const API_PORT = process.env.PORT || 9000;
 const app = express();
 const server = http.createServer(app)
 
@@ -180,6 +180,12 @@ app.post('/leavechat', async function (req, res) {
 
     res.send({ result: data })
 })
+
+app.post('/uploadpost', async function (req, res) {
+    console.log(req.body.content)
+    res.send({ result: req.body.content })
+})
+
 
 app.post('/uploadfile', upload.single('file'), async function (req, res) {
     const searchString = 'pictures\\';

@@ -8,7 +8,7 @@ export const fetchPosts = (parameter:string, id:any = 0, userId:number) => {
     return async (dispatch:Dispatch<PostAction>) => {
         try {
             dispatch({type: PostActionTypes.FETCH_POSTS})
-                const data = await fetch('http://localhost:5000/api', {
+                const data = await fetch('http://localhost:9000/api', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
@@ -37,7 +37,7 @@ export const fetchProfile = (id:number) => {
         try {
             console.log('in')
             dispatch({type: PostActionTypes.FETCH_PROFILE})
-            const data = await fetch('http://localhost:5000/profile', {
+            const data = await fetch('http://localhost:9000/profile', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
@@ -75,7 +75,7 @@ export const handleLikes = (postId:number, userId:number) => {
     return async (dispatch:Dispatch<PostAction>) => {
         try{
             dispatch({type: PostActionTypes.HANDLE_LIKES})
-            const data = await fetch(`http://localhost:5000/likehandle`, {
+            const data = await fetch(`http://localhost:9000/likehandle`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -102,7 +102,7 @@ export const handleFollow = (authorId:number, userId:number) => {
     return async (dispatch:Dispatch<PostAction>) => {
         try{
             dispatch({type: PostActionTypes.HANDLE_FOLLOW})
-            const data = await fetch(`http://localhost:5000/followhandle`, {
+            const data = await fetch(`http://localhost:9000/followhandle`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',

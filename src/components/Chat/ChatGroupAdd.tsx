@@ -35,7 +35,7 @@ const ChatGroupAdd = (props: any) => {
         formData.append("file", chatImage)
 
         try {
-            const { data } = await axios.post('http://localhost:5000/uploadfile', formData)
+            const { data } = await axios.post('http://localhost:9000/uploadfile', formData)
             let copiedImage = data.result.replace(/\\/g, '/')
 
             const creationData = {

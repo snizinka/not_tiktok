@@ -1,4 +1,4 @@
-const config = require('../dbConfig');
+const config = require('../../dbConfig');
 const util = require('util');
 const query = util.promisify(config.query).bind(config)
 
@@ -21,6 +21,8 @@ class Video {
 
         return videoArray;
     }
+
+    static async uploadVideo(data) { }
 }
 
 module.exports = Video;
