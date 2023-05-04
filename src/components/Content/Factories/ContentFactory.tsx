@@ -3,6 +3,7 @@ import Content from '../Content';
 import PhotoContent from '../PhotoContent';
 import TextContent from '../TextContent';
 import postStyles from '../../../style/post.module.css'
+import VideoContent from '../VideoContent';
 
 const ContentFactory = (props: any) => {
     const [contentType, setContentType] = useState('')
@@ -25,10 +26,14 @@ const ContentFactory = (props: any) => {
             break;
         case 'TEXT':
             contentData.map((cont: any) => {
-                let text: Content = { contentId: cont.textContentId, source: cont.textContent }
-                content.push(<TextContent props={text} />)
+                content.push(<TextContent props={cont} />)
             })
-
+            break;
+        case 'VIDEO':
+            contentData.map((cont: any) => {
+                let video: Content = { contentId: cont.videoId, source: cont.videoLink }
+                content.push(<VideoContent props={video} />)
+            })
             break
         default:
             content = []

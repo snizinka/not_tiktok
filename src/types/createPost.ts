@@ -1,9 +1,9 @@
 export interface CreatePostState {
     content: any[] | any;
-    textContent: any[]
-    photoContent: any[]
-    videContent: any[]
     loading: boolean;
+    description: string;
+    tags: any[];
+    previewImage: any;
     error: null | string;
 }
 
@@ -27,6 +27,15 @@ export enum CreatePostActionTypes {
     UPLOAD_POST = 'UPLOAD_POST',
     UPLOAD_POST_SUCCESS = 'UPLOAD_POST_SUCCESS',
     UPLOAD_POST_ERROR = 'UPLOAD_POST_ERROR',
+
+    ADD_TAG = 'ADD_TAG',
+    REMOVE_TAG = 'REMOVE_TAG',
+
+    INPUT_DESCRIPTION = 'INPUT_DESCRIPTION',
+
+    UPLOAD_PREVIEW_IMAGE = 'UPLOAD_PREVIEW_IMAGE',
+    UPLOAD_PREVIEW_IMAGE_SUCCESS = 'UPLOAD_PREVIEW_IMAGE_SUCCESS',
+    UPLOAD_PREVIEW_IMAGE_ERROR = 'UPLOAD_PREVIEW_IMAGE_ERROR',
 }
 
 interface AddCreatePostsAction {
@@ -101,9 +110,41 @@ interface UploadPostErrorAction {
     payload: any[] | any
 }
 
+interface AddPostTagAction {
+    type: CreatePostActionTypes.ADD_TAG,
+    payload: any[] | any
+}
+
+interface RemovePostTagAction {
+    type: CreatePostActionTypes.REMOVE_TAG,
+    payload: any[] | any
+}
+
+interface InputPostDescriptionAction {
+    type: CreatePostActionTypes.INPUT_DESCRIPTION,
+    payload: any
+}
+
+interface UploadPreviewImageCreatePostsAction {
+    type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE
+}
+
+interface UploadPreviewImageSuccessCreatePostsAction {
+    type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_SUCCESS,
+    payload: any[] | any
+}
+
+interface UploadPreviewImageErrorCreatePostsAction {
+    type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_ERROR,
+    payload: any[] | any
+}
+
 export type CreatePostAction = AddCreatePostsAction | RemoveCreatePostsSuccessAction | EditCreatePostsErrorAction
 | InputTitleTextCreatePostsErrorAction | InputBodyTextCreatePostsErrorAction
 | UploadImageCreatePostsAction | UploadImageSuccessCreatePostsAction | UploadImageErrorCreatePostsAction
 | UploadVideoCreatePostsAction | UploadVideoSuccessCreatePostsAction | UploadVideoErrorCreatePostsAction
 | UpdateCreatePostsAction
 | UploadPostAction | UploadPostSuccessAction | UploadPostErrorAction
+| AddPostTagAction | RemovePostTagAction
+| InputPostDescriptionAction
+| UploadPreviewImageCreatePostsAction | UploadPreviewImageSuccessCreatePostsAction | UploadPreviewImageErrorCreatePostsAction

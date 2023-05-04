@@ -21,7 +21,7 @@ const getProfile = async (id) => {
         userProfile.following = await userProfile.getAmmountOfFollowing()
         posts = await GetPostsByUserId.getPosts(userProfile.userId)
 
-        await Promise.all(posts.map(post => post.getData(2)))
+        await Promise.all(posts.map(post => post.getData(id)))
     } catch (err) {
         console.log(err)
     }

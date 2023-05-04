@@ -3,11 +3,12 @@ const util = require('util');
 const query = util.promisify(config.query).bind(config)
 
 class Text {
-    constructor(textContentId, userId, postId, textContent, datePublished) {
+    constructor(textContentId, userId, postId, textContent, textTitle, datePublished) {
         this.textContentId = textContentId;
         this.userId = userId;
         this.postId = postId;
         this.textContent = textContent;
+        this.textTitle = textTitle;
         this.datePublished = datePublished;
     }
 
@@ -16,13 +17,13 @@ class Text {
         let textArray = [];
 
         for(let text of textContent) {
-            textArray.push(new Text(text.textContentId, text.userId, text.postId, text.textContent, text.datePublished))
+            textArray.push(new Text(text.textContentId, text.userId, text.postId, text.textContent, text.textTitle, text.datePublished))
         }
 
         return textArray;
     }
 
-    static async uploadTextContent(data) { }
+    static async uploadContent(data) { }
 }
 
 module.exports = Text;

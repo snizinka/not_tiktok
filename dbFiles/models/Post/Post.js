@@ -9,9 +9,10 @@ const Text = require('../Text/Text');
 
 const query = util.promisify(config.query).bind(config)
 class Post {
-    constructor(postId, description, user) {
+    constructor(postId, description, previewImage, user) {
         this.postId = postId;
         this.description = description;
+        this.previewImage = previewImage;
         this._user = user;
     }
 
@@ -77,6 +78,7 @@ class Post {
         return {
             postId: this.postId,
             description: this.description,
+            previewImage: this.previewImage,
             _user: this._user,
             _picture: this._picture,
             _video: this._videos,

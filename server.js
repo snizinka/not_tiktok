@@ -1,4 +1,5 @@
 const express = require('express');
+const dbContent = require('./dbFiles/dbContent');
 const dbOperation = require('./dbFiles/dbOperation');
 const dbChat = require('./dbFiles/dbChat');
 const cors = require('cors');
@@ -182,8 +183,11 @@ app.post('/leavechat', async function (req, res) {
 })
 
 app.post('/uploadpost', async function (req, res) {
-    console.log(req.body.content)
-    res.send({ result: req.body.content })
+    let data = await dbContent.uploadContent(req.body.content).then(res => {
+        return res;
+    })
+    
+    res.send({ result: data })
 })
 
 

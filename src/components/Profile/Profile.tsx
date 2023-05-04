@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom'
-import useActions from '../hooks/useActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import profile from '../style/profile.module.css'
-import Header from './Header';
-import { fetchProfile } from '../store/action-creator/post';
-import '../style/profile.css'
+import useActions from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import profile from '../../style/profile.module.css'
+import Header from '../Header';
+import { fetchProfile } from '../../store/action-creator/post';
+import '../../style/profile.css'
 
 const Profile = (props: any) => {
     const params = useParams()
@@ -36,7 +36,7 @@ const Profile = (props: any) => {
                         <div className={profile.profile}>
                             <div className={profile.top_left}>
                                 <div className={profile.profile_img}>
-                                    <img src={require(`../post_content/pictures/${posts.userProfile.userImage}`)} alt="" />
+                                    <img src={require(`../../post_content/pictures/${posts.userProfile.userImage}`)} alt="" />
                                 </div>
 
                                 <div className={profile.middle}>
@@ -70,7 +70,7 @@ const Profile = (props: any) => {
                                 {
                                     posts.userProfile.userId === user[0].userId ? <button>Edit</button> : ''
                                 }
-
+                                <button>Send a message</button>
                             </div>
 
                             <div className={profile.posts_wrapper}>

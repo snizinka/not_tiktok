@@ -2,9 +2,9 @@ import { CreatePostAction, CreatePostActionTypes, CreatePostState } from "../../
 
 const initialState: CreatePostState = {
     content: [],
-    textContent: [],
-    photoContent: [],
-    videContent: [],
+    tags: [],
+    description: '',
+    previewImage: '',
     loading: false,
     error: null
 }
@@ -15,9 +15,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: true,
                 content: [...state.content, action.payload],
-                textContent: action.payload.content === 'textContent' ? [...state.textContent, { id: action.payload.id, textContent: '' }] : state.textContent,
-                photoContent: action.payload.content === 'photoContent' ? [...state.photoContent, { id: action.payload.id, photoContent: '' }] : state.photoContent,
-                videContent: action.payload.content === 'videoContent' ? [...state.videContent, { id: action.payload.id, videoContent: '' }] : state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -25,9 +25,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: state.content.filter((content: any) => content.id !== action.payload),
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -35,9 +35,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: [],
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -47,9 +47,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
                 content: state.content.map((text: any) => text.id === action.payload.id ?
                     { ...text, content: { title: action.payload.textContent, type: text.content.type, body: text.content.body } } : text
                 ),
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -59,9 +59,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
                 content: state.content.map((text: any) => text.id === action.payload.id ?
                     { ...text, content: { title: text.content.title, type: text.content.type, body: action.payload.bodyText } } : text
                 ),
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -69,9 +69,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: state.content,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -81,9 +81,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
                 content: state.content.map((image: any) => image.id === action.payload.id ?
                     { ...image, content: { link: action.payload.copiedImage, type: image.content.type, description: image.content.description } } : image
                 ),
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -91,9 +91,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: state.content,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: action.payload
             }
 
@@ -102,9 +102,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: state.content,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -114,9 +114,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
                 content: state.content.map((video: any) => video.id === action.payload.id ?
                     { ...video, content: { link: action.payload.copiedVideo, type: video.content.type, description: video.content.description } } : video
                 ),
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -124,9 +124,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: state.content,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: action.payload
             }
 
@@ -134,9 +134,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: action.payload,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -144,9 +144,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: true,
                 content: state.content,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: null
             }
 
@@ -154,9 +154,9 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: [],
-                textContent: [],
-                photoContent: [],
-                videContent: [],
+                tags: [],
+                description: '',
+                previewImage: '',
                 error: null
             }
 
@@ -164,9 +164,69 @@ export default function createPostReducer(state = initialState, action: CreatePo
             return {
                 loading: false,
                 content: state.content,
-                textContent: state.textContent,
-                photoContent: state.photoContent,
-                videContent: state.videContent,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
+                error: action.payload
+            }
+
+        case CreatePostActionTypes.ADD_TAG:
+            return {
+                loading: false,
+                content: state.content,
+                tags: [...state.tags, action.payload],
+                description: state.description,
+                previewImage: state.previewImage,
+                error: state.error
+            }
+
+        case CreatePostActionTypes.REMOVE_TAG:
+            return {
+                loading: false,
+                content: state.content,
+                tags: state.tags.filter((tag: any) => tag.tagId !== action.payload),
+                description: state.description,
+                previewImage: state.previewImage,
+                error: state.error
+            }
+
+        case CreatePostActionTypes.INPUT_DESCRIPTION:
+            return {
+                loading: false,
+                content: state.content,
+                tags: state.tags,
+                description: action.payload,
+                previewImage: state.previewImage,
+                error: state.error
+            }
+
+        case CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE:
+            return {
+                loading: false,
+                content: state.content,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
+                error: null
+            }
+
+        case CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_SUCCESS:
+            return {
+                loading: false,
+                content: state.content,
+                tags: state.tags,
+                description: state.description,
+                previewImage: action.payload,
+                error: null
+            }
+
+        case CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_ERROR:
+            return {
+                loading: false,
+                content: state.content,
+                tags: state.tags,
+                description: state.description,
+                previewImage: state.previewImage,
                 error: action.payload
             }
         default:

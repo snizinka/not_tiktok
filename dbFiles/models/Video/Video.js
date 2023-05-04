@@ -17,12 +17,12 @@ class Video {
         let videoArray = [];
 
         for (let video of videos)
-            videoArray.push(new Video(video.videoId, video.userId, video.postId, video.videoLink, video.videoLength, video.datePublished));
+            videoArray.push(new Video(video.videoContentId, video.userId, video.postId, video.videoLink, video.videoLength, video.datePublished));
 
         return videoArray;
     }
 
-    static async uploadVideo(data) { }
+    static async uploadContent(data) { }
 }
 
 module.exports = Video;

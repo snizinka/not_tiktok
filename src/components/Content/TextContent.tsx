@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import Content from "./Content";
+import { ContentStyles } from "./ContentStyles";
 
-const TextContent = (props: { props: Content }) => {
-  const [textData, setTextData] = useState<Content>()
+const TextContent = (props: any) => {
+  const [textData, setTextData] = useState<any>()
 
   useEffect(() => {
     setTextData(props.props)
   }, [props])
 
   return (
-    <p>{textData?.source}</p>
+    <TextContentStyle style={{height: '100%', width: '100%'}}>
+      <div className='text-title'>
+        <p>{textData?.textContent}</p>
+      </div>
+      <div className='text-body'>
+        <p>{textData?.textTitle}</p>
+      </div>
+    </TextContentStyle>
   )
 };
+
+const TextContentStyle = ContentStyles
 
 export default TextContent;

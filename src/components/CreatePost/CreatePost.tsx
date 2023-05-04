@@ -10,17 +10,20 @@ import { useTypedSelector } from "../../hooks/useTypedSelector";
 import ContentPreviewFactory from "./ContentPreviewFactory";
 
 const CreatePost = () => {
+    const { user } = useTypedSelector(state => state.user)
     const dragItem = React.useRef<any>(null)
     const dragOverItem = React.useRef<any>(null)
-    const { content } = useTypedSelector(state => state.createPost)
-    const { addContent, removeContent, updateContentArray } = useCreatePostActions()
+    const { content, description, previewImage, tags } = useTypedSelector(state => state.createPost)
+    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription, uploadPreviewImage } = useCreatePostActions()
 
     const [currentId, setCurrentId] = useState<any>(0)
+    const [tagId, setTagId] = useState<any>(0)
     const [currentSlide, setCurrentSlide] = useState(0)
     const [currentHorizontalSlide, setCurrentHorizontalSlide] = useState(0)
     const [contentToRemove, setContentToRemove] = useState<any>(null)
     const [addedNewType, setAddedNewType] = useState<any>(false)
     const [horizontalSlide, setHorizontalSlide] = useState<any>(0)
+    const [tag, setTag] = useState<any>('')
 
     useEffect(() => {
         if (content.length > 0 && addedNewType) {
@@ -75,7 +78,7 @@ const CreatePost = () => {
 
     function switchHorizontalSlide(index: number) {
         setHorizontalSlide(index)
-        let newPosition = index === 1 ? currentHorizontalSlide - 100 : currentHorizontalSlide + 100
+        let newPosition = index * (-100)
 
         setCurrentHorizontalSlide(newPosition)
         let dpc: any = document.getElementsByClassName('content-slider-wrapper')[0];
@@ -89,6 +92,37 @@ const CreatePost = () => {
         dragItem.current = null
         dragOverItem.current = null
         updateContentArray(_content)
+    }
+
+    function uploadContent() {
+        uploadPost(content, tags, description, previewImage, user[0].userId)
+    }
+
+    function addNewTag() {
+        addTag(tag, tagId)
+        setTagId((prev: any) => prev + 1)
+        setTag('')
+    }
+
+    function removeTagById(tagID: number) {
+        removeTag(tagID)
+    }
+
+    function RenderButtons() {
+        if (horizontalSlide === 0) {
+            return <>
+                <button onClick={() => scrollSlider('up')}>UP</button>
+                <button onClick={() => scrollSlider('down')}>DOWN</button>
+            </>
+        } else if (horizontalSlide === 1) {
+            return <button onClick={() => switchHorizontalSlide(2)}>Choose tags</button>
+        } else if (horizontalSlide === 2) {
+            return <button onClick={() => switchHorizontalSlide(3)}>Describe post</button>
+        } else if (horizontalSlide === 3) {
+            return <button onClick={() => switchHorizontalSlide(4)}>Preview</button>
+        } else {
+            return <button onClick={uploadContent}>Publish post</button>
+        }
     }
 
     return (
@@ -136,16 +170,48 @@ const CreatePost = () => {
                                 }
                             </div>
                         </div>
+
+                        <div className="content-type-slider-wrappe">
+                            <button onClick={() => switchHorizontalSlide(1)}>Back</button>
+                            <div>
+                                <input value={tag} onInput={(e: any) => setTag(e.target.value)} type="text" placeholder="#tag" />
+                                <button onClick={addNewTag}>Add tag</button>
+                            </div>
+                            <div className="content-type-slidr">
+                                {
+                                    tags.map((_tag: any, index: number) => {
+                                        return <div>
+                                            <p>{_tag.tag}</p>
+                                            <button onClick={() => removeTagById(_tag.tagId)}>x</button>
+                                        </div>
+                                    })
+                                }
+                            </div>
+                        </div>
+
+                        <div className="content-type-slider-wrappe">
+                            <button onClick={() => switchHorizontalSlide(2)}>Back</button>
+                            <div className="content-type-slidr">
+                                <textarea
+                                    className="text-content-value"
+                                    value={description}
+                                    onInput={(e: any) => inputDescription(e.target.value)}
+                                    placeholder="Post description"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="content-type-slider-wrappe">
+                            <button onClick={() => switchHorizontalSlide(3)}>Back</button>
+                            <div className="content-type-slidr">
+                                <p>Preview Image</p>
+                                <input onChange={(event: any) => {uploadPreviewImage(event.target.files[0]) }} type='file' />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="content-type-slider-switches">
-                    {
-                        horizontalSlide < 1 ? 
-                        <>
-                            <button onClick={() => scrollSlider('up')}>UP</button>
-                            <button onClick={() => scrollSlider('down')}>DOWN</button>
-                        </> : <button>Publish post</button>
-                    }
+                    <RenderButtons />
                 </div>
             </div>
         </CreatePostDiv>

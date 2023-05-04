@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import PostList from './components/PostList';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import Profile from './components/Profile';
+import Profile from './components/Profile/Profile';
 import SignIn from './components/SignIn';
 import { useTypedSelector } from './hooks/useTypedSelector';
 import { Navigate } from 'react-router-dom'

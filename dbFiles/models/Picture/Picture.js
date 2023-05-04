@@ -21,7 +21,7 @@ class Picture {
         return _pictures;
     }
 
-    static async uploadPicture(data) { }
+    static async uploadContent(data) { }
 }
 
 module.exports = Picture;

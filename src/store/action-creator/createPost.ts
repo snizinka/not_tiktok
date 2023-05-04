@@ -32,6 +32,24 @@ export const inputBodyText = (id: number, bodyText: string) => {
     }
 }
 
+export const addTag = (tag: string, tagId: number) => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        dispatch({ type: CreatePostActionTypes.ADD_TAG, payload: {tag, tagId} })
+    }
+}
+
+export const removeTag = (tagId: number) => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        dispatch({ type: CreatePostActionTypes.REMOVE_TAG, payload: tagId })
+    }
+}
+
+export const inputDescription = (description: number) => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        dispatch({ type: CreatePostActionTypes.INPUT_DESCRIPTION, payload: description })
+    }
+}
+
 export const uploadImage = (id: number, image: any) => {
     return async (dispatch: Dispatch<CreatePostAction>) => {
         try {
@@ -80,7 +98,7 @@ export const uploadVideo = (id: number, video: any) => {
     }
 }
 
-export const uploadPost = (content: any[]) => {
+export const uploadPost = (content: any[], tags: any[], description: string, previewImage: string, userId: number) => {
     return async (dispatch: Dispatch<CreatePostAction>) => {
         try {
             dispatch({ type: CreatePostActionTypes.UPLOAD_POST })
@@ -93,7 +111,7 @@ export const uploadPost = (content: any[]) => {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        content: content
+                        content: { content, userId, description, tags, previewImage }
                     })
                 }).then(res => res.json())
                 console.log(data)
@@ -101,10 +119,34 @@ export const uploadPost = (content: any[]) => {
                 console.error(error);
                 return;
             }
-            dispatch({ type: CreatePostActionTypes.UPLOAD_POST_SUCCESS, payload: { } })
+            dispatch({ type: CreatePostActionTypes.UPLOAD_POST_SUCCESS, payload: {} })
         } catch (e: any) {
             console.log(e)
             dispatch({ type: CreatePostActionTypes.UPLOAD_POST_ERROR, payload: e })
+        }
+    }
+}
+
+export const uploadPreviewImage = (image: any) => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        try {
+            dispatch({ type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE })
+            let formData: any = new FormData()
+            formData.append("file", image)
+            let copiedImage = ""
+            try {
+                const { data } = await axios.post('http://localhost:9000/uploadfile', formData)
+                copiedImage = data.result.replace(/\\/g, '/')
+
+                console.log(copiedImage)
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+            dispatch({ type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_SUCCESS, payload: copiedImage })
+        } catch (e: any) {
+            console.log(e)
+            dispatch({ type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_ERROR, payload: e })
         }
     }
 }

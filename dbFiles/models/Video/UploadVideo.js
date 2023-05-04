@@ -4,9 +4,10 @@ const Video = require('./Video');
 const query = util.promisify(config.query).bind(config)
 
 class UploadVideo extends Video {
-    static async uploadPicture(data) {
-        let queryString = `INSERT INTO nottiktok.photocontent (userId, postId, videoLink, videoLength) VALUES(${data.userId}, ${data.postId}, "${data.videoLink}", ${data.videoLength})`;
-        let newVideo = await query(queryString);
+    static async uploadContent(data) {
+        const queryString = `INSERT INTO nottiktok.videocontent (userId, postId, videoLink, videoLength) VALUES(${data.userId}, ${data.postId}, "${data.content.content.link}", 0)`;
+        const newVideo = await query(queryString);
+        
         return newVideo;
     }
 }
