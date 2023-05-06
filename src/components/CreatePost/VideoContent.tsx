@@ -7,7 +7,7 @@ const VideoContent = (props: any) => {
     return (
         <div className="video-content-type">
             <p className="video-content-type-title">Select video to upload</p>
-            <input type="file" accept="video/mp4,video/mkv, video/x-m4v,video/*" onChange={(event: any) => {uploadVideo(props.id, event.target.files[0]) }} />
+            <input type="file" onChange={(event: any) => {uploadVideo(props.id, event.target.files[0]) }} />
         </div>
     )
 };

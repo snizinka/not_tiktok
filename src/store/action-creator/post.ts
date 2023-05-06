@@ -1,8 +1,5 @@
-import axios from "axios";
 import { Dispatch } from "redux";
 import { PostAction, PostActionTypes } from "../../types/post";
-import { useTypedSelector } from '../../hooks/useTypedSelector'
-
 
 export const fetchPosts = (parameter:string, id:any = 0, userId:number) => {
     return async (dispatch:Dispatch<PostAction>) => {
@@ -28,30 +25,6 @@ export const fetchPosts = (parameter:string, id:any = 0, userId:number) => {
                 type: PostActionTypes.FETCH_POSTS_ERROR,
                 payload: 'Shit happens'
             })
-        }
-    }
-}
-
-export const fetchProfile = (id:number) => {
-    return async (dispatch: Dispatch<PostAction>) => {
-        try {
-            console.log('in')
-            dispatch({type: PostActionTypes.FETCH_PROFILE})
-            const data = await fetch('http://localhost:9000/profile', {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: id
-                    })
-                }).then(res => res.json());
-                console.log(data.result.data)
-                dispatch({type: PostActionTypes.FETCH_PROFILE_SUCCESS, payload: data.result.data})
-        }catch(err) {
-            console.log(err)
-            dispatch({type: PostActionTypes.FETCH_PROFILE_ERROR, payload: 'Not found'})
         }
     }
 }

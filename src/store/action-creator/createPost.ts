@@ -98,7 +98,7 @@ export const uploadVideo = (id: number, video: any) => {
     }
 }
 
-export const uploadPost = (content: any[], tags: any[], description: string, previewImage: string, userId: number) => {
+export const uploadPost = (content: any[], tags: any[], description: string, previewImage: string, userId: number, requstedPostId: number) => {
     return async (dispatch: Dispatch<CreatePostAction>) => {
         try {
             dispatch({ type: CreatePostActionTypes.UPLOAD_POST })
@@ -111,7 +111,7 @@ export const uploadPost = (content: any[], tags: any[], description: string, pre
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        content: { content, userId, description, tags, previewImage }
+                        content: { content, userId, description, tags, previewImage, requstedPostId }
                     })
                 }).then(res => res.json())
                 console.log(data)

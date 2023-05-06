@@ -2,6 +2,7 @@ const express = require('express');
 const dbContent = require('./dbFiles/dbContent');
 const dbOperation = require('./dbFiles/dbOperation');
 const dbChat = require('./dbFiles/dbChat');
+const dbRequests = require('./dbFiles/dbRequests');
 const cors = require('cors');
 const http = require('http')
 const multer = require('multer')
@@ -38,6 +39,30 @@ app.use(cors());
 
 app.post('/profile', async function (req, res) {
     let data = await dbOperation.getProfile(req.body.id).then(res => {
+        return res
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/recentprofile', async function (req, res) {
+    let data = await dbOperation.getRecentProfile(req.body.id).then(res => {
+        return res
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/allprofileposts', async function (req, res) {
+    let data = await dbOperation.getAllProfilePosts(req.body.id).then(res => {
+        return res
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/savedprofileposts', async function (req, res) {
+    let data = await dbOperation.getSavedProfilePosts(req.body.id).then(res => {
         return res
     })
 
@@ -151,6 +176,14 @@ app.post('/availableforchat', async function (req, res) {
 
 app.post('/adduserstochat', async function (req, res) {
     let data = await dbChat.addUsersToChat(req.body.chat).then(res => {
+        return res;
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/allrequestsforcreator', async function (req, res) {
+    let data = await dbRequests.getRequestsByCreatorId(req.body.id).then(res => {
         return res;
     })
 

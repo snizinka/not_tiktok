@@ -58,3 +58,30 @@ export const makeRequest = (request: any | any[]) => {
         }
     }
 }
+
+export const fetchRequestsByCreator = (id: number) => {
+    return async (dispatch:Dispatch<RequestUsersAction>) => {
+        try {
+            dispatch({type: RequestUsersActionTypes.FETCH_REQUESTS_BY_CREATOR})
+                const data = await fetch('http://localhost:9000/allrequestsforcreator', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id
+                    })
+                }).then(res => res.json());
+        
+                console.log(data.result.data)
+
+                dispatch({type: RequestUsersActionTypes.FETCH_REQUESTS_BY_CREATOR_SUCCESS, payload: data.result.data})
+        }catch {
+            dispatch({
+                type: RequestUsersActionTypes.FETCH_REQUESTS_BY_CREATOR_ERROR,
+                payload: 'Loading problems ...'
+            })
+        }
+    }
+}

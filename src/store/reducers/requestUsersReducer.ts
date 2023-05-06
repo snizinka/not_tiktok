@@ -3,6 +3,7 @@ import { RequestUsersAction, RequestUsersActionTypes, RequestUsersState } from "
 const initialState: RequestUsersState = {
     requestStatus: false,
     users: [],
+    request: [],
     loading: false,
     error: null
 }
@@ -14,6 +15,7 @@ export default function requestUsersReducer(state = initialState, action: Reques
                 requestStatus: state.requestStatus,
                 loading: true,
                 users: [],
+                request: state.request,
                 error: null
             }
 
@@ -22,6 +24,7 @@ export default function requestUsersReducer(state = initialState, action: Reques
                 requestStatus: state.requestStatus,
                 loading: false,
                 users: action.payload,
+                request: state.request,
                 error: null
             }
 
@@ -30,6 +33,7 @@ export default function requestUsersReducer(state = initialState, action: Reques
                 requestStatus: state.requestStatus,
                 loading: false,
                 users: [],
+                request: state.request,
                 error: action.payload
             }
 
@@ -41,6 +45,7 @@ export default function requestUsersReducer(state = initialState, action: Reques
                 requestStatus: false,
                 loading: true,
                 users: [],
+                request: state.request,
                 error: null
             }
 
@@ -49,6 +54,7 @@ export default function requestUsersReducer(state = initialState, action: Reques
                 requestStatus: action.payload,
                 loading: false,
                 users: state.users,
+                request: state.request,
                 error: null
             }
 
@@ -57,9 +63,38 @@ export default function requestUsersReducer(state = initialState, action: Reques
                 requestStatus: false,
                 loading: false,
                 users: [],
+                request: state.request,
                 error: action.payload
             }
 
+
+            
+            case RequestUsersActionTypes.FETCH_REQUESTS_BY_CREATOR:
+                return {
+                    requestStatus: state.requestStatus,
+                    loading: true,
+                    users: [],
+                    request: [],
+                    error: null
+                }
+    
+            case RequestUsersActionTypes.FETCH_REQUESTS_BY_CREATOR_SUCCESS:
+                return {
+                    requestStatus: state.requestStatus,
+                    loading: false,
+                    users: [],
+                    request: action.payload,
+                    error: null
+                }
+    
+            case RequestUsersActionTypes.FETCH_REQUESTS_BY_CREATOR_ERROR:
+                return {
+                    requestStatus: state.requestStatus,
+                    loading: false,
+                    users: [],
+                    request: [],
+                    error: action.payload
+                }
         default:
             return state
     }

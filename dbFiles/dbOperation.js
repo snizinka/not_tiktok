@@ -1,6 +1,8 @@
 const config = require('./dbConfig');
 const util = require('util');
 const GetPostsByUserId = require('./models/Post/GetPostsByUserId');
+const GetRecentPosts = require('./models/Post/GetRecentPosts');
+const GetSavedPosts = require('./models/Post/GetSavedPosts');
 const GetPostsFactory = require('./models/Post/Factories/GetPostsFactory');
 const PostType = require('./models/Post/PostType');
 const CategoryByUser = require('./models/Category/CategoryByUser');
@@ -27,6 +29,45 @@ const getProfile = async (id) => {
     }
 
     return { data: { categories, posts, userProfile } }
+}
+
+const getRecentProfile = async (id) => {
+    let posts = []
+
+    try {
+        posts = await GetRecentPosts.getPosts(id)
+        await Promise.all(posts.map(post => post.getData(id)))
+    } catch (err) {
+        console.log(err)
+    }
+
+    return { data: posts }
+}
+
+const getAllProfilePosts = async (id) => {
+    let posts = []
+
+    try {
+        posts = await GetPostsByUserId.getPosts(id)
+        await Promise.all(posts.map(post => post.getData(id)))
+    } catch (err) {
+        console.log(err)
+    }
+
+    return { data: posts }
+}
+
+const getSavedProfilePosts = async (id) => {
+    let posts = []
+
+    try {
+        posts = await GetSavedPosts.getPosts(id)
+        await Promise.all(posts.map(post => post.getData(id)))
+    } catch (err) {
+        console.log(err)
+    }
+
+    return { data: posts }
 }
 
 const getPosts = async (parameter = PostType.DEFAULT, id = 0, userId) => {
@@ -160,5 +201,8 @@ module.exports = {
     changeFollowState,
     getProfile,
     createRequest,
-    usersToAccomplish
+    usersToAccomplish,
+    getRecentProfile,
+    getAllProfilePosts,
+    getSavedProfilePosts
 };

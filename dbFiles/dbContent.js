@@ -1,5 +1,6 @@
 const CreateTag = require('./models/Tags/CreateTag')
 const CreatePost = require('./models/Post/CreatePost')
+const AddCompletedRequest = require('./models/Request/AddCompletedRequest')
 const UploadContentFactory = require('./models/Content/UploadContentFactory')
 
 const uploadContent = async (contentData) => {
@@ -14,6 +15,10 @@ const uploadContent = async (contentData) => {
 
     for (let i = 0; i < tags.length; i++) {
         const newTag = await CreateTag.createTag(tags[i].tag, createdPost.insertId)
+    }
+
+    if (contentData.requstedPostId) {
+        const completedRequest = AddCompletedRequest.addRequest(createdPost.insertId, contentData.requstedPostId)
     }
 
     return { data: createdPost }

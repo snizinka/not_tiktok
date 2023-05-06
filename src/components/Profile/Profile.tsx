@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom'
-import useActions from '../../hooks/useActions';
+import useProfileActions from '../../hooks/useProfileActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import profile from '../../style/profile.module.css'
 import Header from '../Header';
-import { fetchProfile } from '../../store/action-creator/post';
 import '../../style/profile.css'
+import ProfilePosts from './ProfilePosts';
 
 const Profile = (props: any) => {
     const params = useParams()
-    const { error, posts, loading } = useTypedSelector(state => state.post)
+    const { profile: userProfile, posts } = useTypedSelector(state => state.profile)
     const { user } = useTypedSelector(state => state.user)
 
-    const { fetchProfile } = useActions()
+    const { fetchProfile, fetchAllProfilePosts, fetchRecentPostProfile, fetchSavedProfilePosts } = useProfileActions()
 
     useEffect(() => {
         fetchProfile(Number(params.id))
         console.log(posts)
+        console.log(userProfile)
     }, [])
 
     function switchTab() {
@@ -26,27 +27,26 @@ const Profile = (props: any) => {
         document.getElementById('scnd')
     }
 
-
     return (
         <div>
             <Header></Header>
             {
-                typeof posts === 'object' && posts !== null && posts.userProfile ?
+                userProfile ?
                     <div className={profile.profile_wrapper}>
                         <div className={profile.profile}>
                             <div className={profile.top_left}>
                                 <div className={profile.profile_img}>
-                                    <img src={require(`../../post_content/pictures/${posts.userProfile.userImage}`)} alt="" />
+                                    { userProfile?.userImage ? <img src={require(`../../post_content/pictures/${userProfile?.userImage}`)} alt="" /> : '' }
                                 </div>
 
                                 <div className={profile.middle}>
                                     <div className={profile.couple}>
-                                        <button>Posts: {posts.posts.length}</button>
-                                        <button>Followers: {posts.userProfile.followers}</button>
+                                        <button>Posts: {posts.length}</button>
+                                        <button>Followers: {userProfile.followers}</button>
                                     </div>
                                     <div className={profile.couple}>
                                         <button>Rating: 200</button>
-                                        <button>Following: {posts.userProfile.following}</button>
+                                        <button>Following: {userProfile.following}</button>
                                     </div>
                                 </div>
 
@@ -66,9 +66,9 @@ const Profile = (props: any) => {
                             </div>
 
                             <div className={profile.middle_line}>
-                                <button>@{posts.userProfile.username}</button>
+                                <button>@{userProfile?.username}</button>
                                 {
-                                    posts.userProfile.userId === user[0].userId ? <button>Edit</button> : ''
+                                    userProfile.userId === user[0].userId ? <button>Edit</button> : ''
                                 }
                                 <button>Send a message</button>
                             </div>
@@ -76,16 +76,16 @@ const Profile = (props: any) => {
                             <div className={profile.posts_wrapper}>
                                 <div className={profile.tabs}>
                                     <div className={profile.tabs_container}>
-                                        <button id='frst' onClick={()=>{switchTab()}}>All posts <div id='ubderln' className={profile.underln}></div></button>
-                                        <button id='scnd'>Recent</button>
-                                        <button id='thrd'>Saved</button>
+                                        <button id='frst' onClick={()=> fetchAllProfilePosts(user[0].userId)}>All posts</button>
+                                        <button id='scnd' onClick={() => fetchRecentPostProfile(user[0].userId)}>Recent</button>
+                                        <button id='thrd' onClick={() => fetchSavedProfilePosts(user[0].userId)}>Saved</button>
                                         <button id='frth'>Collections</button>
                                         <button id='fvth'>Acted in</button>
                                         <button id='sxth'>Responses</button>
                                     </div>
                                 </div>
                                 <div className={profile.posts_container}>
-                                 
+                                    <ProfilePosts posts={posts} />
                                 </div>
                             </div>
                         </div>
