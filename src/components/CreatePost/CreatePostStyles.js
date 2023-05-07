@@ -526,4 +526,71 @@ export const CreatePostStyles = styled.div`
     white-space: nowrap; 
     width: 1px;
   }
+
+
+
+
+
+
+
+  .file-drop-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 50%;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    width: 450px;
+    max-width: 100%;
+    padding: 25px;
+    border: 2px dashed #FC6E74;
+    border-radius: 3px;
+    transition: 0.2s;
+  }
+
+  .file-drop-are .is-active {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .fake-btn {
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: 300;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+  
+  .file-msg {
+    font-size: 18px;
+    font-weight: 300;
+    color: #fff;
+  }
+  
+  .file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  .file-input:focus {
+    outline: none;
+  }
+
+  h6 {
+    font-size: 20px;
+    font-weight: 300;
+    color: #fff;
+  }
 `

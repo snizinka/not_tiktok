@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 
 const CreatePostType = (props: any) => {
     return (
@@ -16,4 +16,4 @@ const CreatePostType = (props: any) => {
     )
 };
 
-export default CreatePostType;
+export default memo(CreatePostType);

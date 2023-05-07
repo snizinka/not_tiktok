@@ -1,13 +1,22 @@
-import React from "react"
+import React, { memo } from "react"
 
 const VideoContentPreview = (props: any) => {
-  return (
-    <div className="previewCard">
-      <video className="preview-video" controls>
-        {props.content ? <source src={(require(`../../../post_content/pictures/${props.content}`))} /> : '' }
-      </video>
-    </div>
-  )
+  try {
+    const video = require(`../../../post_content/pictures/${props.content}`)
+    return (
+      <div className="previewCard">
+        <video className="preview-video" controls>
+          {props.content ? <source src={video} /> : ''}
+        </video>
+      </div>
+    )
+  } catch (e) {
+    return (
+      <div className="previewCard">
+
+      </div>
+    )
+  }
 };
 
-export default VideoContentPreview;
+export default memo(VideoContentPreview);

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import useRequestUsersActions from "../../hooks/useRequestUsersActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 
@@ -56,4 +56,4 @@ const CreatePostPurpose = (props: any) => {
     )
 };
 
-export default CreatePostPurpose;
+export default memo(CreatePostPurpose);

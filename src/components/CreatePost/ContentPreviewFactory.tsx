@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { memo, useEffect, useState } from "react"
 import PhotoContentPreview from "./ContentPreview/PhotoContentPreview";
 import TextContentPreview from "./ContentPreview/TextContentPreview";
 import VideoContentPreview from "./ContentPreview/VideoContentPreview";
@@ -48,4 +48,4 @@ const ContentPreviewFactory = (props: any) => {
     )
 };
 
-export default ContentPreviewFactory;
+export default memo(ContentPreviewFactory);
