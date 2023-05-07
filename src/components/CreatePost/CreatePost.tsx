@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import Header from "../Header";
 import CancelButton from "./CancelButton";
 import CreatePostFactory from "./CreatePostFactory";
@@ -10,6 +10,9 @@ import { useTypedSelector } from "../../hooks/useTypedSelector";
 import ContentPreviewFactory from "./ContentPreviewFactory";
 import CreatePostPurpose from "./CreatePostPurpose";
 import CustomerCard from "./CustomerCard";
+import ContinueButton from "./ContinueButton";
+import PreviewImage from "./PreviewImage";
+import contentValidationFactory from "./ContentValidation/contentValidationFactory";
 
 const CreatePost = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -17,9 +20,10 @@ const CreatePost = () => {
     const dragItem = React.useRef<any>(null)
     const dragOverItem = React.useRef<any>(null)
     const { content, description, previewImage, tags } = useTypedSelector(state => state.createPost)
-    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription, uploadPreviewImage } = useCreatePostActions()
+    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription } = useCreatePostActions()
 
     const [currentId, setCurrentId] = useState<any>(0)
+    const [error, setError] = useState<any>(null)
     const [requstedPostId, setRequestedPostId] = useState<any>(null)
     const [tagId, setTagId] = useState<any>(0)
     const [isPostOrdered, setIsPostOrdered] = useState(false)
@@ -149,6 +153,16 @@ const CreatePost = () => {
         setRequestedPostId(e.currentTarget.value)
     }
 
+    function validateContet() {
+        setError((prev: any) => '')
+        content.map((item: any) => {
+            if(!contentValidationFactory(item)) {
+                setError('Check all fields before continue')
+                return
+            }
+        })
+    }
+
     return (
         <CreatePostDiv>
             <Header />
@@ -167,7 +181,8 @@ const CreatePost = () => {
                             <div className="content-type-slider">
                                 <div className="content-type-slide" key={`content-type-zero`}>
                                     <CreatePostType setContentType={addContentType} />
-                                    {content.length > 0 ? <button onClick={() => switchHorizontalSlide(2)}>Place post content in order</button> : ''}
+                                    {error}
+                                    {content.length > 0 ? <ContinueButton validateContet={validateContet} switchHorizontalSlide={switchHorizontalSlide} /> : ''}
                                 </div>
                                 {
                                     horizontalSlide === 1 ? content?.map((cnt: any, index: number) => {
@@ -237,8 +252,7 @@ const CreatePost = () => {
                             <button onClick={() => switchHorizontalSlide(4)}>Back</button>
                             <div className="content-type-slidr">
                                 <div>
-                                    <p>Preview Image</p>
-                                    <input onChange={(event: any) => { uploadPreviewImage(event.target.files[0]) }} type='file' />
+                                    <PreviewImage previewImage={previewImage} />
                                 </div>
                                 <div>
                                     <CustomerCard assignPostCustomerId={assignPostCustomerId} />
