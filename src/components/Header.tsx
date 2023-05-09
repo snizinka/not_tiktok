@@ -29,10 +29,10 @@ export default function Header() {
                 <ul className={headerStyles.ul}>
                     <DropdownMenu>
                         <li>
-                            <Link to='/createpost'>Add post</Link>
+                            <Link to='/createpost' style={{width: '100%', display: 'block'}}>Add post</Link>
                         </li>
                         <li>
-                            <Link to='/request'>Create a request</Link>
+                            <Link to='/request' style={{width: '100%', display: 'block'}}>Create a request</Link>
                         </li>
                     </DropdownMenu>
                     <li className={headerStyles.nav_element}>
@@ -43,7 +43,7 @@ export default function Header() {
                     <DropdownMenu>
                         <p>User</p>
                         <li>
-                            <Link to={`/profile/${user[0].userId}`}>Profile</Link>
+                            <Link to={`/profile/${user[0].userId}`} style={{width: '100%', display: 'block'}}>Profile</Link>
                         </li>
                         <li>Settings</li>
                         <li onClick={() => { userLogout() }}>Log out</li>

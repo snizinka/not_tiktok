@@ -56,7 +56,7 @@ export const Search = (props: any) => {
                          postImage !== '' ? <img className={postStyles.searchImage} src={ (postImage) } alt="" /> : ''
                     }
                 </div>
-                <p>{title}</p>
+                <p className={postStyles.userName}>{title}</p>
                 <div className={postStyles.userField}>
                     {
                         userImage !== null ? <img className={postStyles.userImage} src={require(`../post_content/pictures/${userImage}`)} alt="" /> : ''

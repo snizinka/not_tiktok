@@ -13,6 +13,7 @@ import SignUp from './components/SignUp';
 import { Chat } from './components/Chat/Chat';
 import { Request } from './components/Request';
 import CreatePost from './components/CreatePost/CreatePost';
+import PageWasNotFound from './components/PageWasNotFound';
 
 function App() {
   const { error, loading, user } = useTypedSelector(state => state.user)
@@ -55,7 +56,7 @@ function App() {
           <Route path='/signin' element={<ProtectedSign></ProtectedSign>}></Route>
           <Route path='/chat' element={<Chat></Chat>}></Route>
           <Route path='/request' element={<Request></Request>}></Route>
-          <Route path='*' element={<PostList></PostList>}></Route>
+          <Route path='*' element={<PageWasNotFound></PageWasNotFound>}></Route>
         </Routes>
       </Router>
     </div>

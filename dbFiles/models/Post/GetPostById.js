@@ -6,7 +6,7 @@ const query = util.promisify(config.query).bind(config)
 
 class GetPostById extends Post {
     static async getPosts(id) {
-        let queryString = `SELECT pt.postId, pt.description, us.userId, us.userLink, us.username, us.userImage, pt.previewImage FROM nottiktok.post as pt LEFT JOIN nottiktok.users as us ON us.userId = pt.userId WHERE pt.userId = ${id}`;
+        let queryString = `SELECT pt.postId, pt.description, us.userId, us.userLink, us.username, us.userImage, pt.previewImage FROM nottiktok.post as pt LEFT JOIN nottiktok.users as us ON us.userId = pt.userId WHERE pt.postId = ${id}`;
         let posts = await query(queryString);
         const postclass = [];
 

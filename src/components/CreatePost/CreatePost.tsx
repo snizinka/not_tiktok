@@ -13,6 +13,7 @@ import CustomerCard from "./CustomerCard";
 import ContinueButton from "./ContinueButton";
 import PreviewImage from "./PreviewImage";
 import contentValidationFactory from "./ContentValidation/contentValidationFactory";
+import BackButton from "./BackButton";
 
 const CreatePost = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -154,13 +155,16 @@ const CreatePost = () => {
     }
 
     function validateContet() {
-        setError((prev: any) => '')
+        let hasError = false
         content.map((item: any) => {
-            if(!contentValidationFactory(item)) {
-                setError('Check all fields before continue')
+            if (!contentValidationFactory(item)) {
+                hasError = true
                 return
             }
         })
+        setError(hasError ? 'Fill all fields' : '')
+
+        return hasError
     }
 
     return (
@@ -182,7 +186,7 @@ const CreatePost = () => {
                                 <div className="content-type-slide" key={`content-type-zero`}>
                                     <CreatePostType setContentType={addContentType} />
                                     {error}
-                                    {content.length > 0 ? <ContinueButton validateContet={validateContet} switchHorizontalSlide={switchHorizontalSlide} /> : ''}
+                                    {content.length > 0 ? <ContinueButton error={error} validateContet={validateContet} switchHorizontalSlide={switchHorizontalSlide} /> : ''}
                                 </div>
                                 {
                                     horizontalSlide === 1 ? content?.map((cnt: any, index: number) => {
@@ -197,7 +201,7 @@ const CreatePost = () => {
                         </div>
 
                         <div className="content-type-slider-wrappe">
-                            <button onClick={() => switchHorizontalSlide(1)}>Back</button>
+                            <BackButton switchHorizontalSlide={switchHorizontalSlide} slide={1} />
                             <div className="content-type-slidr">
                                 {
                                     horizontalSlide > 0 ? content?.map((cnt: any, index: number) => {
@@ -219,17 +223,17 @@ const CreatePost = () => {
                         </div>
 
                         <div className="content-type-slider-wrappe">
-                            <button onClick={() => switchHorizontalSlide(2)}>Back</button>
-                            <div>
-                                <input value={tag} onInput={(e: any) => setTag(e.target.value)} type="text" placeholder="#tag" />
-                                <button onClick={addNewTag}>Add tag</button>
+                            <BackButton switchHorizontalSlide={switchHorizontalSlide} slide={2} />
+                            <div className="tag-add-container">
+                                <input className="tag-add" value={tag} onInput={(e: any) => setTag(e.target.value)} type="text" placeholder="#tag" />
+                                <button className="tag-add-btn" onClick={addNewTag}>Add tag</button>
                             </div>
-                            <div className="content-type-slidr">
+                            <div className="content-type-slidr tag-slide">
                                 {
                                     tags.map((_tag: any, index: number) => {
-                                        return <div>
+                                        return <div className="tag-item">
                                             <p>{_tag.tag}</p>
-                                            <button onClick={() => removeTagById(_tag.tagId)}>x</button>
+                                            <button className="delete-tag" onClick={() => removeTagById(_tag.tagId)}>x</button>
                                         </div>
                                     })
                                 }
@@ -237,7 +241,7 @@ const CreatePost = () => {
                         </div>
 
                         <div className="content-type-slider-wrappe">
-                            <button onClick={() => switchHorizontalSlide(3)}>Back</button>
+                            <BackButton switchHorizontalSlide={switchHorizontalSlide} slide={3} />
                             <div className="content-type-slidr">
                                 <textarea
                                     className="text-content-value"
@@ -249,7 +253,7 @@ const CreatePost = () => {
                         </div>
 
                         <div className="content-type-slider-wrappe">
-                            <button onClick={() => switchHorizontalSlide(4)}>Back</button>
+                            <BackButton switchHorizontalSlide={switchHorizontalSlide} slide={4} />
                             <div className="content-type-slidr">
                                 <div>
                                     <PreviewImage previewImage={previewImage} />

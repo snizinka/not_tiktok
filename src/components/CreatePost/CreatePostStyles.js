@@ -864,4 +864,138 @@ export const CreatePostStyles = styled.div`
     justify-content : center ;
     align-items : center ;
 }
+
+.tag-add {
+  padding: 7px 10px;
+  border: solid white 2px;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  font-family: 'Signika Negative', sans-serif;
+  background: #212121;
+}
+
+.tag-add-btn {
+  font-family: 'Signika Negative', sans-serif;
+  cursor: pointer;
+  padding: 8px 12px;
+    background: #FFF9D7;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+.tag-add-container {
+  display: flex;
+    gap: 10px;
+}
+
+.back-btn {
+  border: none;
+  padding: 6px 10px;
+  font-size: 18px;
+  position: relative;
+  background: transparent;
+  color: black;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 3px solid #ff4040;
+  cursor: pointer;
+  -webkit-transition: all 0.7s;
+  transition: all 0.7s;
+  overflow: hidden;
+  border-radius: 100px;
+}
+
+.back-btn:hover {
+  color: #ff4040;
+}
+.back-btn span {
+  transition: all 0.7s;
+  z-index: -1;
+}
+
+.back-btn .first {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: 25%;
+  height: 100%;
+  background: black;
+}
+
+.back-btn:hover .first {
+  top: 0;
+  right: 0;
+}
+.back-btn .second {
+  content: "";
+  position: absolute;
+  left: 25%;
+  top: -100%;
+  height: 100%;
+  width: 25%;
+  background: black;
+}
+
+.back-btn:hover .second {
+  top: 0;
+  left: 50%;
+}
+
+.back-btn .third {
+  content: "";
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  top: 100%;
+  width: 25%;
+  background: #ffa500;
+}
+
+.back-btn:hover .third {
+  top: 0;
+  left: 25%;
+}
+
+.back-btn .fourth {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 0;
+  height: 100%;
+  width: 25%;
+  background: #ffa500;
+}
+
+.back-btn:hover .fourth {
+  top: 0;
+  left: 0;
+}
+
+.tag-slide {
+  background: #212121;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  flex-direction: column;
+}
+
+.tag-item {
+  font-family: 'Signika Negative',sans-serif;
+    font-size: 17px;
+    display: flex;
+    gap: 4px;
+}
+
+.delete-tag {
+  padding: 2px 10px;
+  border: none;
+  border-radius: 2px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 `

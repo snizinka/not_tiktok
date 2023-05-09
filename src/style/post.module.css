@@ -336,6 +336,7 @@
 .searchCard {
     height: 400px;
     width: 250px;
+    width: min-content;
 }
 
 .searchImageField {
@@ -378,4 +379,11 @@
     font-size: 19px;
     font-family: 'Signika Negative', sans-serif;
     margin-bottom: 40px;
+}
+
+.userName {
+    font-family: 'Signika Negative', sans-serif;
+    color: black;
+    height: 40px;
+    overflow: hidden;
 }

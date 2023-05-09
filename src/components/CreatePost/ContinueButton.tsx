@@ -1,11 +1,13 @@
-import React from "react"
+import React, { memo } from "react"
 
 const ContinueButton = (props: any) => {
     return (
         <div className="container">
             <button onClick={() => { 
-                props.validateContet()
-                //props.switchHorizontalSlide(2) 
+                if (props.validateContet() === false) {
+                    props.switchHorizontalSlide(2) 
+                }
+                
                 }} className="button">
                 <div className="button__line"></div>
                 <div className="button__line"></div>
@@ -17,4 +19,4 @@ const ContinueButton = (props: any) => {
     )
 };
 
-export default ContinueButton;
+export default memo(ContinueButton);

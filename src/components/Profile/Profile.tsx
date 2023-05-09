@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { useParams } from 'react-router-dom'
 import useProfileActions from '../../hooks/useProfileActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
@@ -76,11 +76,9 @@ const Profile = (props: any) => {
                             <div className={profile.posts_wrapper}>
                                 <div className={profile.tabs}>
                                     <div className={profile.tabs_container}>
-                                        <button id='frst' onClick={()=> fetchAllProfilePosts(user[0].userId)}>All posts</button>
-                                        <button id='scnd' onClick={() => fetchRecentPostProfile(user[0].userId)}>Recent</button>
-                                        <button id='thrd' onClick={() => fetchSavedProfilePosts(user[0].userId)}>Saved</button>
-                                        <button id='frth'>Collections</button>
-                                        <button id='fvth'>Acted in</button>
+                                        <button id='frst' onClick={()=> fetchAllProfilePosts(Number(params.id))}>All posts</button>
+                                        <button id='scnd' onClick={() => fetchRecentPostProfile(Number(params.id))}>Recent</button>
+                                        <button id='thrd' onClick={() => fetchSavedProfilePosts(Number(params.id))}>Saved</button>
                                         <button id='sxth'>Responses</button>
                                     </div>
                                 </div>
@@ -95,4 +93,4 @@ const Profile = (props: any) => {
     );
 };
 
-export default Profile;
+export default memo(Profile);

@@ -3,5 +3,7 @@ export default function textContentValidator(item: any) {
         return false
     } else if (item.title === '') {
         return false
+    } else {
+        return true
     }
 }

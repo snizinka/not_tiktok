@@ -13,7 +13,8 @@ const PostSlider = (props: { props: any }) => {
 
 
     function amountOfSlides() {
-        return renderedContent.length
+        const slidesAmount = renderedContent.map((slide: any) => slide[1].length)
+        return slidesAmount.reduce((acc, curr) => acc + curr, 0)
     }
 
     function switchToRightSlides() {
@@ -39,13 +40,11 @@ const PostSlider = (props: { props: any }) => {
             </div>
             <div className={postStyles.middle_wrapper}>
                 <div style={{ transform: `translateX(${currentSlide}px)` }} className={postStyles.middle_container}>
-
                     {
                         content.map((contentInstance: any) => {
                             return <ContentFactory props={contentInstance} />
                         })
                     }
-
                 </div>
             </div>
             <div className={postStyles.right_switch}>
