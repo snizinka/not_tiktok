@@ -5,9 +5,11 @@ import postReducer from "./postReducer";
 import profileReducer from "./profileReducer";
 import requestUsersReducer from "./requestUsersReducer";
 import searchReducer from "./searchReducer";
+import socketReducer from "./socketReducer";
 import userReducer from "./userReducer";
 
 export const rootReducer = combineReducers({
+    socket: socketReducer,
     profile: profileReducer,
     createPost: createPostReducer,
     post: postReducer,

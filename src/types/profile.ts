@@ -1,6 +1,7 @@
 export interface ProfileState {
     profile: any;
     posts: any[] | any;
+    postType: string;
     loading: boolean;
     error: null | string;
 }
@@ -20,7 +21,11 @@ export enum ProfileActionTypes {
 
     FETCH_SAVED_PROFILE_POSTS = 'FETCH_SAVED_PROFILE_POSTS',
     FETCH_SAVED_PROFILE_POSTS_SUCCESS = 'FETCH_SAVED_PROFILE_POSTS_SUCCESS',
-    FETCH_SAVED_PROFILE_POSTS_ERROR = 'FETCH_SAVED_PROFILE_POSTS_ERROR' 
+    FETCH_SAVED_PROFILE_POSTS_ERROR = 'FETCH_SAVED_PROFILE_POSTS_ERROR',
+
+    FETCH_RESPONSE_PROFILE_POSTS = 'FETCH_RESPONSE_PROFILE_POSTS',
+    FETCH_RESPONSE_PROFILE_POSTS_SUCCESS = 'FETCH_RESPONSE_PROFILE_POSTS_SUCCESS',
+    FETCH_RESPONSE_PROFILE_POSTS_ERROR = 'FETCH_RESPONSE_PROFILE_POSTS_ERROR'
 }
 
 interface FetchProfilesAction {
@@ -79,7 +84,22 @@ interface FetchSavedProfilesPostsErrorAction {
     payload: string
 }
 
+interface FetchResponseProfilesPostsAction {
+    type: ProfileActionTypes.FETCH_RESPONSE_PROFILE_POSTS,
+}
+
+interface FetchResponseProfilesPostsSuccessAction {
+    type: ProfileActionTypes.FETCH_RESPONSE_PROFILE_POSTS_SUCCESS,
+    payload: any[] | any
+}
+
+interface FetchResponseProfilesPostsErrorAction {
+    type: ProfileActionTypes.FETCH_RESPONSE_PROFILE_POSTS_ERROR,
+    payload: string
+}
+
 export type ProfileAction = FetchProfilesAction | FetchProfilesSuccessAction | FetchProfilesErrorAction 
 | FetchRecentProfilesPostsAction | FetchRecentProfilesPostsSuccessAction | FetchRecentProfilesPostsErrorAction
 | FetchProfilesPostsAction | FetchProfilesPostsSuccessAction | FetchProfilesPostsErrorAction
 | FetchSavedProfilesPostsAction | FetchSavedProfilesPostsSuccessAction | FetchSavedProfilesPostsErrorAction
+| FetchResponseProfilesPostsAction | FetchResponseProfilesPostsSuccessAction | FetchResponseProfilesPostsErrorAction

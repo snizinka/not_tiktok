@@ -1,43 +1,55 @@
-import React, { memo } from "react"
+import React, { memo, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { ProfileStyles } from "./ProfileStyles"
+import { ProfileStyles } from "../ProfileStyles"
 
-const ProfilePosts = (props: any) => {
+const ProfileResponsesPosts = (props: any) => {
+    useEffect(() => {
+        console.log(props)
+    }, [props])
     return (
         <ProfileDiv style={{
             display: 'flex',
             flexWrap: 'wrap',
             width: '100%',
             gap: '10px',
+            rowGap: '50px',
             padding: '10px'
         }}>
             {
                 props.posts.map((post: any, index: number) => {
-                    return <Link to={`/content/${post.postId}`}>
+                    return <Link to={`/content/${post.post.postId}`}>
                         <div key={`profile-post-${index}`} className="profile-post-card">
-                            <div className="profile-post-image">
+                            <div className="profile-post-image" style={{ marginBottom: '6px' }}>
                                 {
-                                    post.previewImage ? <img
-                                        src={require(`../../post_content/pictures/${post.previewImage}`)}
+                                    post.post.previewImage ? <img className="profile-post-img"
+                                        src={require(`../../../post_content/pictures/${post.post.previewImage}`)}
                                         alt="" /> : ''
                                 }
                                 <div className="card-content">
                                     <h2>
-                                        {post.description}
+                                        {post.post.description}
                                     </h2>
                                     <div className="additional-refs">
                                         <div className="profile-post-categories">
                                             {
-                                                post._categories.map((category: any) => {
+                                                post.post._categories.map((category: any) => {
                                                     return <p>#{category.categoryName}</p>
                                                 })
                                             }
                                         </div>
                                         <p>
-                                            {post.description}
+                                            {post.post.description}
                                         </p>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="profile-response-customer">
+                                {
+                                    post.customer.userImage ? <img
+                                        src={require(`../../../post_content/pictures/${post.customer.userImage}`)}
+                                        alt="" /> : ''
+                                }
+                                <Link to={`/profile/${post.customer.userId}`}>{post.customer.userLink}</Link>
                             </div>
                         </div>
                     </Link>
@@ -49,4 +61,4 @@ const ProfilePosts = (props: any) => {
 
 const ProfileDiv = ProfileStyles
 
-export default memo(ProfilePosts);
+export default memo(ProfileResponsesPosts);

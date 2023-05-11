@@ -9,11 +9,11 @@ import Loading from './Loading';
 import { Search } from './Search';
 
 function PostList(props: any) {
+    const params = useParams()
     const { user } = useTypedSelector(state => state.user)
     const { search } = useTypedSelector(state => state.search);
     const { error, posts, loading } = useTypedSelector(state => state.post)
     const { fetchPosts } = useActions()
-    const params = useParams()
 
     function fetchPostsData() {
         switch (props.byWhat.type) {

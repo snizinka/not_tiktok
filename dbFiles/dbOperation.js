@@ -3,6 +3,7 @@ const util = require('util');
 const GetPostsByUserId = require('./models/Post/GetPostsByUserId');
 const GetRecentPosts = require('./models/Post/GetRecentPosts');
 const GetSavedPosts = require('./models/Post/GetSavedPosts');
+const GetResponsesPosts = require('./models/Post/GetResponsesPosts');
 const GetPostsFactory = require('./models/Post/Factories/GetPostsFactory');
 const PostType = require('./models/Post/PostType');
 const CategoryByUser = require('./models/Category/CategoryByUser');
@@ -63,6 +64,19 @@ const getSavedProfilePosts = async (id) => {
     try {
         posts = await GetSavedPosts.getPosts(id)
         await Promise.all(posts.map(post => post.getData(id)))
+    } catch (err) {
+        console.log(err)
+    }
+
+    return { data: posts }
+}
+
+const getProfileResponses = async (id) => {
+    let posts = []
+
+    try {
+        posts = await GetResponsesPosts.getPosts(id)
+        await Promise.all(posts.map(post => post.post.getData(id)))
     } catch (err) {
         console.log(err)
     }
@@ -204,5 +218,6 @@ module.exports = {
     usersToAccomplish,
     getRecentProfile,
     getAllProfilePosts,
-    getSavedProfilePosts
+    getSavedProfilePosts,
+    getProfileResponses
 };

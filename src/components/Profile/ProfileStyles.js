@@ -16,7 +16,7 @@ export const ProfileStyles = styled.div`
     transition: .4s ease;
 }
 
-.profile-post-card img {
+.profile-post-card .profile-post-img {
     height: 100%;
     width: 100%;
     object-fit: cover;
@@ -77,7 +77,7 @@ export const ProfileStyles = styled.div`
     transition: opacity .5s .1s ease-in;
   }
 
-  .profile-post-image:hover img {
+  .profile-post-image:hover .profile-post-img {
     transition: opacity .3s ease-in;
     opacity: .2;
     transition: opacity .3s .1s ease-in;
@@ -89,5 +89,22 @@ export const ProfileStyles = styled.div`
     height: 20px;
     width: 100%;
     overflow: hidden;
+  }
+
+  .profile-response-customer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .profile-response-customer a {
+    font-family: 'Signika Negative',sans-serif;
+  }
+
+  .profile-response-customer img {
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    object-fit: cover;
   }
 `

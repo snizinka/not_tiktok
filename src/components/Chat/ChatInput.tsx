@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 
 const ChatInput = (props: any) => {
     useEffect(() => {
-        console.log(props.chatMode?.message)
+        console.log(props.message)
     }, [props])
 
     return (

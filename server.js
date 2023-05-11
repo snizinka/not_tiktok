@@ -8,8 +8,12 @@ const http = require('http')
 const multer = require('multer')
 const { Server } = require('socket.io');
 
-const API_PORT = process.env.PORT || 9000;
+const API_PORT = 9000;
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(cors());
+
 const server = http.createServer(app)
 
 const storage = multer.diskStorage({
@@ -31,12 +35,6 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({ storage: storage })
-
-
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(cors());
-
 app.post('/profile', async function (req, res) {
     let data = await dbOperation.getProfile(req.body.id).then(res => {
         return res
@@ -63,6 +61,14 @@ app.post('/allprofileposts', async function (req, res) {
 
 app.post('/savedprofileposts', async function (req, res) {
     let data = await dbOperation.getSavedProfilePosts(req.body.id).then(res => {
+        return res
+    })
+
+    res.send({ result: data })
+})
+
+app.post('/responseprofileposts', async function (req, res) {
+    let data = await dbOperation.getProfileResponses(req.body.id).then(res => {
         return res
     })
 
@@ -249,7 +255,7 @@ async function run() {
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: '*',
         methods: ["GET", "POST"]
     },
 })
@@ -257,7 +263,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     socket.on('join_chat', (data) => {
         socket.join(data)
-        console.log(socket.rooms)
+        console.log(data)
     })
 
     socket.on('send_message', async (data) => {
@@ -269,9 +275,9 @@ io.on('connection', (socket) => {
             insert = await dbChat.insertMessagesToGroupChat(data).then(res => { return res })
         }
 
-        console.log(insert.data.contactId)
+        console.log(insert.data)
 
-        socket.broadcast.to(insert.data.contactId).emit('receive_message', insert.data)
+        io.to(insert.data.contactId).emit('receive_message', insert.data)
     })
 
     socket.on('remove_message', async (data) => {
@@ -280,7 +286,7 @@ io.on('connection', (socket) => {
         } else {
             await dbChat.removeMessagesFromGroupChat(data.messageId)
         }
-        socket.to(data.chat.id).emit('message_removed', data.messageId);
+        io.to(data.chat.id).emit('message_removed', data.messageId);
     })
 
     socket.on('edit_message', async (data) => {
@@ -290,7 +296,7 @@ io.on('connection', (socket) => {
             await dbChat.editGroupMessagesFromChat(data)
         }
 
-        socket.to(data.chat.id).emit('message_edited', data)
+        io.to(data.chat.id).emit('message_edited', data)
     })
 
     socket.on('leave', (room) => {

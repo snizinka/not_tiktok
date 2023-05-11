@@ -5,14 +5,15 @@ import { useTypedSelector } from '../../hooks/useTypedSelector';
 import profile from '../../style/profile.module.css'
 import Header from '../Header';
 import '../../style/profile.css'
-import ProfilePosts from './ProfilePosts';
+import ProfilePosts from './ProfilePostsFactory/ProfilePosts';
+import ProfilePostsFactory from './ProfilePostsFactory/ProfilePostsFactory';
 
 const Profile = (props: any) => {
     const params = useParams()
     const { profile: userProfile, posts } = useTypedSelector(state => state.profile)
     const { user } = useTypedSelector(state => state.user)
 
-    const { fetchProfile, fetchAllProfilePosts, fetchRecentPostProfile, fetchSavedProfilePosts } = useProfileActions()
+    const { fetchProfile, fetchAllProfilePosts, fetchRecentPostProfile, fetchSavedProfilePosts, fetchResponseProfilePosts } = useProfileActions()
 
     useEffect(() => {
         fetchProfile(Number(params.id))
@@ -79,11 +80,11 @@ const Profile = (props: any) => {
                                         <button id='frst' onClick={()=> fetchAllProfilePosts(Number(params.id))}>All posts</button>
                                         <button id='scnd' onClick={() => fetchRecentPostProfile(Number(params.id))}>Recent</button>
                                         <button id='thrd' onClick={() => fetchSavedProfilePosts(Number(params.id))}>Saved</button>
-                                        <button id='sxth'>Responses</button>
+                                        <button id='sxth' onClick={() => fetchResponseProfilePosts(Number(params.id))}>Responses</button>
                                     </div>
                                 </div>
                                 <div className={profile.posts_container}>
-                                    <ProfilePosts posts={posts} />
+                                    <ProfilePostsFactory posts={posts} />
                                 </div>
                             </div>
                         </div>

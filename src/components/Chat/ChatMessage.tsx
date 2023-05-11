@@ -7,7 +7,7 @@ import img from '../../post_content/assets/reply-arrow.png'
 
 const ChatMessage = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
-    const socket = io("http://localhost:5000")
+    const socket = io("http://localhost:9000")
     const [displayMessageActions, setDisplayMessageActions] = useState(false)
 
     useEffect(() => {
