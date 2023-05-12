@@ -15,7 +15,7 @@ const ChatContact = (props: any) => {
 
     function leavesChat() {
         const data = {
-            contactId: props?.chat?.contactId,
+            contactId: props?.chat?.receiver.userId,
             chatType: 'Private'
         }
         leaveChat(data)
@@ -23,7 +23,7 @@ const ChatContact = (props: any) => {
 
     function onContactSelect() {
         props.onChangeSelectedChat(null)
-        props.onChangeContact({ id: props.chat.contactId, type: 'Private', name: receiver?.username })
+        props.onChangeContact({ id: props.chat.contactId, receiver: props?.chat?.receiver.userId, type: 'Private', name: receiver?.username })
     }
 
     return (

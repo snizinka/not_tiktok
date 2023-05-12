@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import PostList from './components/PostList';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
@@ -13,20 +13,27 @@ import { Request } from './components/Request';
 import CreatePost from './components/CreatePost/CreatePost';
 import PageWasNotFound from './components/PageWasNotFound';
 import { ChatTest } from './components/Chat/ChatTest';
-import io, {Socket} from 'socket.io-client'
+import io from 'socket.io-client'
 
 function App() {
-  const socket = useRef<any>()
+  const [socket, setSocket]: any = useState()
   const { loading, user } = useTypedSelector(state => state.user)
   const { userData } = useUserActions()
 
   useEffect(() => {
-    socket.current = io("ws://localhost:9000", { reconnectionDelayMax: 10000 })
+    setSocket(io("http://localhost:9000", { reconnectionDelayMax: 10000,secure: false, transports: ['websocket', 'polling'],}))
+
     let login = JSON.parse(localStorage.getItem('user') || '{}')
     if(login[0] !== undefined && Object.keys(user).length > 0){
       userData(login[0].username, login[0].password)
     }
   }, [])
+
+  useEffect(() => {
+    socket?.on('receive_message_notification', (data: any) => {
+      console.log(data)
+   })
+  }, [socket])
 
   const ProtectedComponent = () => {
     if (Object.keys(user).length === 0)

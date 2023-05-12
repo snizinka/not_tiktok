@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useTypedSelector } from "../../hooks/useTypedSelector";
-import io from 'socket.io-client'
 import ChatMessageReply from "./ChatMessageReply";
 import ChatMessageForwarded from "./ChatMessageForwarded";
 import img from '../../post_content/assets/reply-arrow.png'
 
 const ChatMessage = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
-    const socket = io("http://localhost:9000")
     const [displayMessageActions, setDisplayMessageActions] = useState(false)
-
-    useEffect(() => {
-
-    }, [])
 
     function ChatMessageHandler() {
         return <div className="message-action-container">
             {props.message.user.userId === user[0].userId ? <button
                 className="messageHandler remove"
                 onClick={() => {
-                    socket.emit('remove_message', { chat: props.contact, messageId: props.message.messageId });
+                    props.socket.emit('remove_message', { chat: props.contact, author: user[0].userId, messageId: props.message.messageId });
                 }}>Remove</button> : ''}
-
+            
             {props.message.user.userId === user[0].userId ? <button
                 className="messageHandler"
                 onClick={() => {

@@ -4,8 +4,6 @@ import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import useUserActions from './hooks/useUserActions';
-import { userData } from './store/action-creator/user';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

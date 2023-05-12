@@ -55,7 +55,7 @@
     height: 50px;
     position: relative;
     cursor: pointer;
-    border-radius: 100%; 
+    border-radius: 100%;
     background: #B1BCE6;
 }
 
@@ -74,6 +74,10 @@
 }
 
 .submenu {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index: 12;
     width: 150px;
     position: absolute;
     top: 50px;
@@ -90,6 +94,6 @@
     border-radius: 7px;
 }
 
-.submenu li + li {
+.submenu li+li {
     margin-top: 5px;
 }

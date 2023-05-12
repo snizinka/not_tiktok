@@ -4,7 +4,6 @@ import useChatActions from "../../hooks/useChatActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import Header from "../Header";
 import ScrollToBottom from 'react-scroll-to-bottom'
-import io, {Socket} from 'socket.io-client'
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { ChatStyle } from "./ChatStyle";
@@ -13,9 +12,12 @@ import ChatGroupAdd from "./ChatGroupAdd";
 import ChatUsers from "./ChatUsers";
 
 export const ChatTest = (props: any) => {
+    const [message, setMessage]: any = useState('')
+    const selectedChat: any = useRef<any>(false)
+    const selectedGroup = useRef<any>(null)
     const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
     const { user } = useTypedSelector(state => state.user)
-    const { 
+    const {
         fetchChatUsers,
         fetchChatMessages,
         addChatMessage,
@@ -23,49 +25,55 @@ export const ChatTest = (props: any) => {
         editChatMessage,
         sortContacts
     } = useChatActions()
-    const [selectedChat, setSelectedChat] = useState(false)
-    const [selectedGroup, setSelectedGroup] = useState<any>(null)
+
+    const contactt: any = useRef(undefined)
     const [contact, setContact]: any = useState({ id: undefined, type: 'Private', name: '' })
     const [addNewChat, setAddNewChat] = useState(false)
     const [showChatUsers, setShowChatUsers] = useState(false)
-    const [message, setMessage] = useState("")
     const [contactToSearch, setContactToSearch] = useState("")
     const [chatMode, setChatMode] = useState({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } }, from: '' })
 
     useEffect(() => {
-        //props.socket.current = io("http://localhost:9000", { reconnectionDelayMax: 10000 })
-        console.log(props.socket.current)
-        props.socket.current?.on('message_removed', (data: any) => {
-            removeChatMessage(data)
+        props.socket?.emit('join_chat', {
+            id: user[0].userId,
+            joinMethod: 'private'
         })
 
-        props.socket.current?.on('message_edited', (data: any) => {
-            editChatMessage(data)
-        })
-
-        props.socket.current?.on('receive_message', (data: any) => {
-            console.log('res')
-            if (data.user.userId !== user[0].userId) {
+        props.socket?.on('message_removed', (data: any) => {
+            if ((contactt.current === data.author) || (user[0].userId === data.author) || (selectedGroup.current?.chatId === data.chat.id)) {
+                removeChatMessage(data.messageId)
             }
-            addChatMessage(data)
         })
 
-        console.log(props.socket)
+        props.socket?.on('message_edited', (data: any) => {
+            if ((contactt.current === data.author) || (user[0].userId === data.author) || (selectedGroup.current?.chatId === data.chat.id)) {
+                editChatMessage(data)
+            }
+        })
+
+        props.socket?.on('receive_message', (data: any) => {
+            if ((contactt.current === data.user.userId) || (user[0].userId === data.user.userId) || (selectedGroup.current?.chatId === data.contactId)) {
+                addChatMessage(data)
+            }
+        })
+
+        props.socket?.on('added_to_chat', (data: any) => {
+           console.log(data)
+        })
 
         fetchChatUsers(user[0].userId)
-        return () => { props.socket.current?.disconnect(); }
+        return () => { props.socket?.removeAllListeners() }
     }, [])
 
     useEffect(() => {
-        console.log(chats)
-
-    }, [chats])
-
-    useEffect(() => {
-        console.log(contact)
         if (contact.id !== undefined) {
-            //props.socket.off('disconnect')
-            props.socket.current?.emit('join_chat', contact.id)
+            contactt.current = contact.receiver
+            if (contact.type === 'Group') {
+                props.socket?.emit('join_chat', {
+                    rooms: [user[0].userId, contact.id],
+                    joinMethod: 'group'
+                })
+            }
             fetchChatMessages(contact)
         }
     }, [contact])
@@ -78,6 +86,7 @@ export const ChatTest = (props: any) => {
     async function sendMessage(messageToSend: any, chatMode: any) {
         const message = {
             chat: contact.id,
+            receiver: contact.receiver,
             author: user[0].userId,
             message: messageToSend,
             time: '2022.12.15',
@@ -85,7 +94,10 @@ export const ChatTest = (props: any) => {
             chatMode: chatMode,
             chatType: contact.type
         }
-        props.socket.current?.emit('send_message', message)
+
+        console.log(message)
+
+        props.socket?.emit('send_message', message)
     }
 
     function operateMessage() {
@@ -95,7 +107,7 @@ export const ChatTest = (props: any) => {
             setMessage('')
         }
         else if (chatMode.mode === 'Editing' && message !== "") {
-            props.socket.current?.emit('edit_message', { newmessage: message, messageId: chatMode.messageId, chat: contact })
+            props.socket?.emit('edit_message', { newmessage: message, author: user[0].userId, messageId: chatMode.messageId, chat: contact })
             clearChatMode()
             setMessage('')
         } else if (chatMode.mode === 'Reply' && message !== "") {
@@ -114,13 +126,10 @@ export const ChatTest = (props: any) => {
     }
 
     function changeSelectedChat(chat: any) {
-        setSelectedGroup(chat)
+        selectedGroup.current = (chat)
     }
 
     function changeContact(contactId: any) {
-        if (contact.id !== undefined) {
-            props.socket.current?.emit('leave', contact.id)
-        }
         setContact(contactId)
     }
 
@@ -141,7 +150,7 @@ export const ChatTest = (props: any) => {
     }
 
     function changesetSelectedChat() {
-        setSelectedChat(!selectedChat)
+        selectedChat.current = (!selectedChat.current)
     }
 
     function changeAddNewChat() {
@@ -198,6 +207,7 @@ export const ChatTest = (props: any) => {
                                         messages.map((message: any[] | never[] | any | never) => {
                                             return <div key={`message-container-${message?.messageId}`} className="message-container" style={{ justifyContent: message?.user?.userId === user[0].userId ? 'flex-end' : 'flex-start' }}>
                                                 <ChatMessage
+                                                    socket={props.socket}
                                                     message={message}
                                                     contact={contact}
                                                     chatMode={chatMode}
@@ -208,14 +218,14 @@ export const ChatTest = (props: any) => {
                                         })
                                 }
                                 <div>
-                                    {selectedGroup && showChatUsers ? <ChatUsers
+                                    {selectedGroup.current && showChatUsers ? <ChatUsers
                                         changeShowChatUsers={changeShowChatUsers}
                                         contact={contact}
-                                        selectedChat={selectedChat}
+                                        selectedChat={selectedChat.current}
                                         changesetSelectedChat={changesetSelectedChat}
                                         chats={chats.filter((cht: any) => cht.chatType === 'Group')
                                             .flatMap((cht: any) => cht.chat)
-                                            .filter((group: any) => group.chatId === selectedGroup.chatId)[0]} /> : ''}
+                                            .filter((group: any) => group.chatId === selectedGroup.current.chatId)[0]} /> : ''}
                                 </div>
                             </ScrollToBottom>
                     }
