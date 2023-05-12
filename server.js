@@ -7,6 +7,7 @@ const cors = require('cors');
 const http = require('http')
 const multer = require('multer')
 const { Server } = require('socket.io');
+const e = require('express');
 
 const API_PORT = 9000;
 const app = express();
@@ -18,7 +19,7 @@ const server = http.createServer(app)
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'src/post_content/pictures')
+        cb(null, 'C:/Users/Snizinka/Desktop/not_tiktok/src/post_content/pictures')
     },
     filename: function (req, file, cb) {
         const searchString = '.';
@@ -225,7 +226,7 @@ app.post('/uploadpost', async function (req, res) {
     let data = await dbContent.uploadContent(req.body.content).then(res => {
         return res;
     })
-    
+
     res.send({ result: data })
 })
 
@@ -254,16 +255,27 @@ async function run() {
 
 
 const io = new Server(server, {
+    transports: ['websocket', 'polling'],
     cors: {
-        origin: '*',
+        origin: 'http://localhost:3000',
         methods: ["GET", "POST"]
     },
 })
 
+let rooms = {}
+
 io.on('connection', (socket) => {
     socket.on('join_chat', (data) => {
-        socket.join(data)
         console.log(data)
+        if (data.joinMethod === 'private') {
+            socket.join(data.id)
+            rooms[data.id] = [data.id]
+        } else {
+            socket.join(data.rooms)
+            rooms[data.rooms[0]] = data.rooms
+        }
+        console.log(data)
+        console.log(rooms)
     })
 
     socket.on('send_message', async (data) => {
@@ -275,9 +287,14 @@ io.on('connection', (socket) => {
             insert = await dbChat.insertMessagesToGroupChat(data).then(res => { return res })
         }
 
-        console.log(insert.data)
-
-        io.to(insert.data.contactId).emit('receive_message', insert.data)
+        if (data.chatType === 'Private') {
+            socket.to(data.receiver).emit('receive_message_notification', insert.data)
+            socket.to(data.receiver).emit('receive_message', insert.data)
+            io.to(data.author).emit('receive_message', insert.data)
+        } else {
+            socket.broadcast.to(data.chat).emit('receive_message', insert.data)
+            io.to(data.author).emit('receive_message', insert.data)
+        }
     })
 
     socket.on('remove_message', async (data) => {
@@ -286,26 +303,35 @@ io.on('connection', (socket) => {
         } else {
             await dbChat.removeMessagesFromGroupChat(data.messageId)
         }
-        io.to(data.chat.id).emit('message_removed', data.messageId);
+
+        if (data.chat.type === 'Private') {
+            socket.to(data.chat.receiver).emit('message_removed', data)
+            io.to(data.author).emit('message_removed', data)
+        } else {
+            socket.broadcast.to(data.chat.id).emit('message_removed', data)
+            io.to(data.author).emit('message_removed', data)
+        }
     })
 
     socket.on('edit_message', async (data) => {
+        console.log(data)
         if (data.chat.type === 'Private') {
             await dbChat.editMessagesFromChat(data)
         } else {
             await dbChat.editGroupMessagesFromChat(data)
         }
 
-        io.to(data.chat.id).emit('message_edited', data)
-    })
-
-    socket.on('leave', (room) => {
-        socket.leave(room)
-        console.log('left')
+        if (data.chat.type === 'Private') {
+            socket.to(data.chat.receiver).emit('message_edited', data)
+            io.to(data.author).emit('message_edited', data)
+        } else {
+            socket.broadcast.to(data.chat.id).emit('message_edited', data)
+            io.to(data.author).emit('message_edited', data)
+        }
     })
 
     socket.on('disconnect', (room) => {
-        socket.leave(room)
+
         console.log('Disconnected')
     })
 })
