@@ -71,25 +71,7 @@ export const sortContacts = (contactName: any) => {
 
 export const createChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        try {
-            dispatch({ type: ChatActionTypes.CREATE_CHAT })
-            const data = await fetch('http://localhost:9000/createchat', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat: chat
-                })
-            }).then(res => res.json())
-
-            console.log(data.result.data)
-            dispatch({ type: ChatActionTypes.CREATE_CHAT_SUCCESS, payload: data.result.data })
-        } catch (e: any) {
-            console.log(e)
-            dispatch({ type: ChatActionTypes.CREATE_CHAT_ERROR, payload: e })
-        }
+        dispatch({ type: ChatActionTypes.ADD_NEW_CHAT, payload: chat })
     }
 }
 
@@ -119,72 +101,18 @@ export const getUsersNotFromChat = (chat: any) => {
 
 export const addUsersToChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        try {
-            dispatch({ type: ChatActionTypes.ADD_USERS_TO_CHAT })
-            const data = await fetch('http://localhost:9000/adduserstochat', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat: chat
-                })
-            }).then(res => res.json());
-
-            console.log(data.result.data)
-
-            dispatch({ type: ChatActionTypes.ADD_USERS_TO_CHAT_SUCCESS, payload: data.result.data })
-        } catch (err: any) {
-            dispatch({ type: ChatActionTypes.ADD_USERS_TO_CHAT_ERROR, payload: "Couldn't load chats" })
-        }
+        dispatch({ type: ChatActionTypes.ADD_USERS_TO_CHAT, payload: chat })
     }
 }
 
 export const removeUserFromChat = (chat: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        try {
-            dispatch({ type: ChatActionTypes.REMOVE_USERS_FROM_CHAT })
-            const data = await fetch('http://localhost:9000/removeuserfromchat', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat: chat
-                })
-            }).then(res => res.json());
-
-            console.log(data.result.data)
-
-            dispatch({ type: ChatActionTypes.REMOVE_USERS_FROM_CHAT_SUCCESS, payload: data.result.data })
-        } catch (err: any) {
-            dispatch({ type: ChatActionTypes.REMOVE_USERS_FROM_CHAT_ERROR, payload: "Couldn't load chats" })
-        }
+        dispatch({ type: ChatActionTypes.REMOVE_USERS_FROM_CHAT, payload: chat })
     }
 }
 
-export const leaveChat = (chat: any) => {
+export const leftChat = (id: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
-        try {
-            dispatch({ type: ChatActionTypes.LEAVE_CHAT })
-            const data = await fetch('http://localhost:9000/leavechat', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat: chat
-                })
-            }).then(res => res.json());
-
-            console.log(data.result.data)
-
-            dispatch({ type: ChatActionTypes.LEAVE_CHAT_SUCCESS, payload: data.result.data })
-        } catch (err: any) {
-            dispatch({ type: ChatActionTypes.LEAVE_CHAT_ERROR, payload: "Couldn't load chats" })
-        }
+        dispatch({ type: ChatActionTypes.LEAVE_CHAT_SUCCESS, payload: id })
     }
 }

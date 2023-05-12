@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react"
-import useChatActions from "../../hooks/useChatActions";
+import React from "react"
+import LoadImage from "../../hooks/LoadImage";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 const GroupChatContact = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
-    const { leaveChat } = useChatActions()
 
     function leavesChat() {
         const data = {
@@ -12,7 +11,7 @@ const GroupChatContact = (props: any) => {
             userId: user[0].userId,
             chatType: 'Group'
         }
-        leaveChat(data)
+        props.socket.emit('remove_from_chat', data)
     }
 
     function onContactSelect() {
@@ -22,7 +21,8 @@ const GroupChatContact = (props: any) => {
 
     return (
         <div key={`chat-${props.chat?.chatId}`} className="chat" onClick={onContactSelect}>
-            {props.chat?.chat_image ? <img className="chat-img" loading="lazy" src={require(`../../post_content/pictures/${props.chat?.chat_image}`)} alt="" /> : ''}
+            <LoadImage className={'chat-img'} path={props.chat?.chat_image} />
+
             <div className="chat-textside">
                 <p className="chat-username">{props.chat?.chatName}</p>
                 <p className="chat-text">Last message</p>

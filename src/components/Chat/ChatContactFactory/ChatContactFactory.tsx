@@ -23,7 +23,10 @@ const ChatContactFactory = (props: any) => {
             break;
         case 'Group':
             contacts?.chat?.map((cont: any) => {
-                content.push(<GroupChatContact key={`chatContact-${cont?.chatId}`} chat={cont}
+                content.push(<GroupChatContact
+                    socket={props.socket}
+                    key={`chatContact-${cont?.chatId}`}
+                    chat={cont}
                     onChangeSelectedChat={props.changeSelectedChat}
                     onChangeContact={props.changeContact}
                 />)

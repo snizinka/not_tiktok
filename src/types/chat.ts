@@ -20,27 +20,21 @@ export enum ChatActionTypes {
 
     ADD_MESSAGE = 'ADD_MESSAGE',
 
+    ADD_NEW_CHAT = 'ADD_NEW_CHAT',
+
+    ADD_USERS_TO_CHAT = 'ADD_USERS_TO_CHAT',
+
     REMOVE_MESSAGE = 'REMOVE_MESSAGE',
+
+    REMOVE_USERS_FROM_CHAT = 'REMOVE_USERS_FROM_CHAT',
 
     EDIT_MESSAGE = 'EDIT_MESSAGE',
 
     SORT_CONTACTS = 'SORT_CONTACTS',
 
-    CREATE_CHAT = 'CREATE_CHAT',
-    CREATE_CHAT_SUCCESS = 'CREATE_CHAT_SUCCESS',
-    CREATE_CHAT_ERROR = 'CREATE_CHAT_ERROR',
-
     GET_USERS_FOR_CHAT = 'GET_USERS_FOR_CHAT', 
     GET_USERS_FOR_CHAT_SUCCESS = 'GET_USERS_FOR_CHAT_SUCCESS', 
     GET_USERS_FOR_CHAT_ERROR = 'GET_USERS_FOR_CHAT_ERROR',
-
-    ADD_USERS_TO_CHAT = 'ADD_USERS_TO_CHAT', 
-    ADD_USERS_TO_CHAT_SUCCESS = 'ADD_USERS_TO_CHAT_SUCCESS', 
-    ADD_USERS_TO_CHAT_ERROR = 'ADD_USERS_TO_CHAT_ERROR', 
-    
-    REMOVE_USERS_FROM_CHAT = 'REMOVE_USERS_FROM_CHAT', 
-    REMOVE_USERS_FROM_CHAT_SUCCESS = 'REMOVE_USERS_FROM_CHAT_SUCCESS', 
-    REMOVE_USERS_FROM_CHAT_ERROR = 'REMOVE_USERS_FROM_CHAT_ERROR', 
 
     LEAVE_CHAT = 'LEAVE_CHAT', 
     LEAVE_CHAT_SUCCESS = 'LEAVE_CHAT_SUCCESS', 
@@ -95,21 +89,6 @@ interface SortContactsAction {
     payload: any
 }
 
-interface CreateChatAction {
-    type: ChatActionTypes.CREATE_CHAT
-}
-
-interface CreateChatSuccessAction {
-    type: ChatActionTypes.CREATE_CHAT_SUCCESS,
-    payload: any[] | any
-}
-
-interface CreateChatErrorAction {
-    type: ChatActionTypes.CREATE_CHAT_ERROR,
-    payload: string
-}
-
-
 interface GetUsersForChatAction {
     type: ChatActionTypes.GET_USERS_FOR_CHAT
 }
@@ -126,33 +105,14 @@ interface GetUsersForChatErrorAction {
 
 
 interface AddUsersToChatAction {
-    type: ChatActionTypes.ADD_USERS_TO_CHAT
-}
-
-interface AddUsersToChatSuccessAction {
-    type: ChatActionTypes.ADD_USERS_TO_CHAT_SUCCESS,
+    type: ChatActionTypes.ADD_USERS_TO_CHAT,
     payload: any[] | any
-}
-
-interface AddUsersToChatErrorAction {
-    type: ChatActionTypes.ADD_USERS_TO_CHAT_ERROR,
-    payload: string
 }
 
 interface RemoveUsersFromChatAction {
-    type: ChatActionTypes.REMOVE_USERS_FROM_CHAT
-}
-
-interface RemoveUsersFromChatSuccessAction {
-    type: ChatActionTypes.REMOVE_USERS_FROM_CHAT_SUCCESS,
+    type: ChatActionTypes.REMOVE_USERS_FROM_CHAT,
     payload: any[] | any
 }
-
-interface RemoveUsersFromChatErrorAction {
-    type: ChatActionTypes.REMOVE_USERS_FROM_CHAT_ERROR,
-    payload: string
-}
-
 
 interface LeaveChatAction {
     type: ChatActionTypes.LEAVE_CHAT
@@ -168,6 +128,11 @@ interface LeaveChatErrorAction {
     payload: string
 }
 
+interface AddNewChatAction {
+    type: ChatActionTypes.ADD_NEW_CHAT,
+    payload: any[] | any
+}
+
 
 export type ChatAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsersErrorAction 
 | FetchMessagesAction | FetchMessagesSuccessAction | FetchMessagesErrorAction 
@@ -175,10 +140,8 @@ export type ChatAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsers
 | RemoveMessageAction
 | EditMessageAction
 | SortContactsAction
-| CreateChatAction
-| CreateChatSuccessAction
-| CreateChatErrorAction
 | GetUsersForChatAction | GetUsersForChatSuccessAction | GetUsersForChatErrorAction
-| AddUsersToChatAction | AddUsersToChatSuccessAction | AddUsersToChatErrorAction
-| RemoveUsersFromChatAction | RemoveUsersFromChatSuccessAction | RemoveUsersFromChatErrorAction
+| AddUsersToChatAction
+| RemoveUsersFromChatAction
 | LeaveChatAction | LeaveChatSuccessAction | LeaveChatErrorAction
+| AddNewChatAction

@@ -10,10 +10,11 @@ import { ChatStyle } from "./ChatStyle";
 import ChatContactFactory from "./ChatContactFactory/ChatContactFactory";
 import ChatGroupAdd from "./ChatGroupAdd";
 import ChatUsers from "./ChatUsers";
+import { socket } from "./ChatSocket";
 
 export const ChatTest = (props: any) => {
     const [message, setMessage]: any = useState('')
-    const selectedChat: any = useRef<any>(false)
+    const [selectedChat, setSelectedChat]: any = useState(false)
     const selectedGroup = useRef<any>(null)
     const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
     const { user } = useTypedSelector(state => state.user)
@@ -23,7 +24,11 @@ export const ChatTest = (props: any) => {
         addChatMessage,
         removeChatMessage,
         editChatMessage,
-        sortContacts
+        sortContacts,
+        createChat,
+        addUsersToChat,
+        removeUserFromChat,
+        leftChat
     } = useChatActions()
 
     const contactt: any = useRef(undefined)
@@ -58,7 +63,33 @@ export const ChatTest = (props: any) => {
         })
 
         props.socket?.on('added_to_chat', (data: any) => {
-           console.log(data)
+            createChat(data)
+        })
+
+        props.socket?.on('added_user_to_chat', (data: any) => {
+            let commit = true
+            data.users.map((use: any) => {
+                if (use.user.userId === user[0].userId) {
+                    commit = false
+                }
+            })
+            
+            if (commit) {
+                addUsersToChat(data)
+            }
+        })
+
+        props.socket?.on('removed_from_chat', (data: any) => {
+            if (data.userId === user[0].userId) {
+                const leave = {
+                    chatId: data.chatId,
+                    userId: user[0].userId,
+                    chatType: 'Group'
+                }
+                leftChat(leave)
+            } else {
+                removeUserFromChat(data)
+            }
         })
 
         fetchChatUsers(user[0].userId)
@@ -150,7 +181,7 @@ export const ChatTest = (props: any) => {
     }
 
     function changesetSelectedChat() {
-        selectedChat.current = (!selectedChat.current)
+        setSelectedChat(!selectedChat)
     }
 
     function changeAddNewChat() {
@@ -179,6 +210,7 @@ export const ChatTest = (props: any) => {
                             {
                                 chats?.map((user: any, id: number) => {
                                     return <ChatContactFactory
+                                        socket={socket}
                                         key={`chatfactory${id}`}
                                         contacts={user}
                                         chatType={user?.chatType}
@@ -219,9 +251,10 @@ export const ChatTest = (props: any) => {
                                 }
                                 <div>
                                     {selectedGroup.current && showChatUsers ? <ChatUsers
+                                        socket={socket}
                                         changeShowChatUsers={changeShowChatUsers}
                                         contact={contact}
-                                        selectedChat={selectedChat.current}
+                                        selectedChat={selectedChat}
                                         changesetSelectedChat={changesetSelectedChat}
                                         chats={chats.filter((cht: any) => cht.chatType === 'Group')
                                             .flatMap((cht: any) => cht.chat)
@@ -242,6 +275,7 @@ export const ChatTest = (props: any) => {
                     </div>
                     {
                         addNewChat ? <ChatGroupAdd
+                            socket={socket}
                             changeAddNewChat={changeAddNewChat}
                         /> : ''
                     }

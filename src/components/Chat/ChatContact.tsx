@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react"
-import useChatActions from "../../hooks/useChatActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 const ChatContact = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
-    const [owner, setOwner] = useState<any>()
     const [receiver, setReceiver] = useState<any>()
-    const { leaveChat } = useChatActions()
 
     useEffect(() => {
-        setOwner(props.chat.owner)
         setReceiver(props.chat.receiver)
     }, [props])
 
     function leavesChat() {
         const data = {
-            contactId: props?.chat?.receiver.userId,
+            chatId: props?.chat?.receiver.userId,
+            userId: user[0].userId,
             chatType: 'Private'
         }
-        leaveChat(data)
+        props.socket.emit('remove_from_chat', data)
     }
 
     function onContactSelect() {

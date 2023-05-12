@@ -1,12 +1,10 @@
 import React, { useState } from "react"
-import useChatActions from "../../hooks/useChatActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import UserList from "./UserList";
 import axios from 'axios';
 
 const ChatGroupAdd = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
-    const { createChat } = useChatActions()
     const [chatName, setChatName] = useState('')
     const [chatLink, setChatLink] = useState('')
     const [chatImage, setChatImage] = useState<any>('')
@@ -45,8 +43,7 @@ const ChatGroupAdd = (props: any) => {
                 chatType: 'Group',
                 userList: userList,
             }
-
-            createChat(creationData)
+            props.socket.emit('create_chat', creationData)
             clearFields()
         } catch (error) {
             console.error(error);

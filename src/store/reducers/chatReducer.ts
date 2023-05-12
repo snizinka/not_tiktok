@@ -65,22 +65,29 @@ function changeGroupChatMembers(state: any, action: any) {
 }
 
 function removeGroupChatMembers(state: any, action: any) {
-    let chatL: any = []
-    let chatR: any = []
-    state.chats?.map((cht: any) => {
-        if (cht?.chatType === 'Group') {
-            return cht?.chat?.map((group: any) => {
-                chatR.push({ ...group, users: group.users.filter((gu: any) => gu.userId !== action.payload) })
-                return { ...group, users: group.users.filter((gu: any) => gu.userId !== action.payload) }
-            })
-        } else {
-            chatL.push(cht)
+    const newChats = state.chats?.map((chat: any) => {
+        if (chat?.chatType !== 'Group') {
+            return chat;
         }
-        let data = [chatL[0], { chat: chatR, chatType: 'Group' }]
-        state.chats = data
+
+        const newChat = chat.chat?.map((group: any) => {
+            if (group.chatId === action.payload.chatId) {
+                return {
+                    ...group,
+                    users: group.users.filter((user: any) => user.userId !== action.payload.userId),
+                }
+            } else {
+                return group;
+            }
+        })
+
+        return {
+            ...chat,
+            chat: newChat,
+        }
     })
 
-    return state.chats
+    return newChats;
 }
 
 function addGroupToList(state: any, action: any) {
@@ -269,48 +276,6 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 )
             }
 
-        case ChatActionTypes.CREATE_CHAT:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: state.chats,
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-        case ChatActionTypes.CREATE_CHAT_SUCCESS:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: addGroupToList(state, action),
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-        case ChatActionTypes.CREATE_CHAT_ERROR:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: state.chats,
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-
-
-
-
-
-
         case ChatActionTypes.GET_USERS_FOR_CHAT:
             return {
                 availableUsers: [],
@@ -348,20 +313,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
             }
 
 
-
         case ChatActionTypes.ADD_USERS_TO_CHAT:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: state.chats,
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-        case ChatActionTypes.ADD_USERS_TO_CHAT_SUCCESS:
             return {
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
@@ -373,36 +325,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 messages: state.messages
             }
 
-        case ChatActionTypes.ADD_USERS_TO_CHAT_ERROR:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: state.chats,
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-
-
-
-
-
         case ChatActionTypes.REMOVE_USERS_FROM_CHAT:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: state.chats,
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-        case ChatActionTypes.REMOVE_USERS_FROM_CHAT_SUCCESS:
             return {
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
@@ -413,20 +336,6 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 user: state.user,
                 messages: state.messages
             }
-
-        case ChatActionTypes.REMOVE_USERS_FROM_CHAT_ERROR:
-            return {
-                availableUsers: state.availableUsers,
-                loadingMessages: false,
-                chats: state.chats,
-                error: null,
-                chat: state.chat,
-                storedChats: state.storedChats,
-                user: state.user,
-                messages: state.messages
-            }
-
-
 
         case ChatActionTypes.SORT_CONTACTS:
             return {
@@ -472,6 +381,18 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
+                error: null,
+                chat: state.chat,
+                storedChats: state.storedChats,
+                user: state.user,
+                messages: state.messages
+            }
+
+        case ChatActionTypes.ADD_NEW_CHAT:
+            return {
+                availableUsers: state.availableUsers,
+                loadingMessages: false,
+                chats: addGroupToList(state, action),
                 error: null,
                 chat: state.chat,
                 storedChats: state.storedChats,

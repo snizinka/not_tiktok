@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react"
-import useChatActions from "../../hooks/useChatActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import ChatAddUser from "./ChatAddUser";
 
 const ChatUsers = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
     const [chatUsers, setChatUsers] = useState<any>([])
-    const { removeUserFromChat } = useChatActions()
 
     useEffect(() => {
-        console.log(props)
         setChatUsers(props.chats?.users)
     }, [props])
 
@@ -18,7 +15,7 @@ const ChatUsers = (props: any) => {
             chatId: props.chats?.chatId,
             userId: userId
         }
-        removeUserFromChat(data)
+        props.socket.emit('remove_from_chat', data)
     }
 
     return (
@@ -29,7 +26,7 @@ const ChatUsers = (props: any) => {
                 <button className="chat_user_button" onClick={props.changesetSelectedChat}>Add users</button>
                 <div className="possible_chat_users">
                     {
-                        props.selectedChat ? <ChatAddUser key={`chat-add-user-${props.contact?.id}`} userId={user[0].userId} chatId={props.contact?.id} /> : ''
+                        props.selectedChat ? <ChatAddUser socket={props.socket} key={`chat-add-user-${props.contact?.id}`} userId={user[0].userId} chatId={props.contact?.id} /> : ''
                     }
                 </div>
                 <div className="chat_users_container_list">
@@ -47,7 +44,9 @@ const ChatUsers = (props: any) => {
                                 </a>
                                 {user[0].userId !== chatUsers?.userId ? <button
                                     className="chat_user_button"
-                                    onClick={() => removeFromChat(chatUsers.userId)}
+                                    onClick={() => {
+                                        removeFromChat(chatUsers.userId)
+                                    }}
                                 >Delete</button> : ''}
                             </div>
                         })

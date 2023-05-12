@@ -5,7 +5,7 @@ import { useTypedSelector } from "../../hooks/useTypedSelector";
 const ChatAddUser = (props: any) => {
     const [userList, setUserList] = useState([])
     const { availableUsers } = useTypedSelector(state => state.chat)
-    const { addUsersToChat, getUsersNotFromChat } = useChatActions()
+    const { getUsersNotFromChat } = useChatActions()
 
     useEffect(() => {
         getUsersNotFromChat({ chatId: props.chatId, userId: props.userId })
@@ -33,7 +33,8 @@ const ChatAddUser = (props: any) => {
             chatId: props.chatId,
             userList: userList
         }
-        addUsersToChat(chat)
+
+        props.socket.emit('add_user_to_chat', chat)
     }
 
     return (
