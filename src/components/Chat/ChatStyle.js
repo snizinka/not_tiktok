@@ -483,4 +483,10 @@ export const ChatStyle = styled.div`
         -webkit-box-align: center;
         align-items: center;
     }
+
+    .message-image {
+        height: 200px;
+        width: fit-content;
+        border-radius: 10px;
+    }
 `

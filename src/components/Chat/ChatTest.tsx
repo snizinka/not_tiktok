@@ -210,6 +210,7 @@ export const ChatTest = (props: any) => {
                             {
                                 chats?.map((user: any, id: number) => {
                                     return <ChatContactFactory
+                                        currentGroup={selectedGroup.current?.chatId}
                                         socket={socket}
                                         key={`chatfactory${id}`}
                                         contacts={user}
