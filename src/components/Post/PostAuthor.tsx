@@ -10,7 +10,7 @@ const PostAuthor = (props: { props: any }) => {
     const { handleFollow } = useActions()
 
     return (
-        <div className={postStyles.info_top}>
+        <div key={`post-author-${props.props._user.userId}`} className={postStyles.info_top}>
             <div className={postStyles.icon}>
                 <img className={postStyles.image}
                     onClick={() => navigate(`profile/${props.props._user.userId}`)}

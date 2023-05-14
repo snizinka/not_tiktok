@@ -5,6 +5,7 @@ import ChatMessageForwarded from "./ChatMessageForwarded";
 import img from '../../post_content/assets/reply-arrow.png'
 import LoadImage from "../../hooks/LoadImage";
 import LoadVideo from "../../hooks/LoadVideo";
+import ChatPostPreview from "./ChatPostPreview";
 
 const ChatMessage = (props: any) => {
     const { user } = useTypedSelector(state => state.user)
@@ -12,13 +13,38 @@ const ChatMessage = (props: any) => {
     const [messageFile, setMessageFile]: any = useState(null)
 
     useEffect(() => {
-        const index = props.message?.message.indexOf('.')
-        const result = props.message?.message.substring(index + 1)
+        const index = props.message?.message?.indexOf('.')
+        const result = props.message?.message?.substring(index + 1)
         setMessageFile(result)
         if (result === 'jpg' || result === 'png') {
             console.log(result)
         }
     }, [])
+
+    function isValidHttpUrl(string: any) {
+        let url;
+
+        try {
+            url = new URL(string);
+        } catch (_) {
+            return false;
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
+    }
+
+    function isPost(url: any) {
+        const lastIndex = url.lastIndexOf('/');
+        const result = url.substring(0, lastIndex)
+        return result === 'http://localhost:3000/content'
+    }
+
+    function getPostId(url: any) {
+        console.log(url)
+        const lastIndex = url.lastIndexOf('/');
+        const result = url.substring(lastIndex + 1)
+        return result
+    }
 
     function ChatMessageHandler() {
         return <div className="message-action-container">
@@ -27,7 +53,7 @@ const ChatMessage = (props: any) => {
                 onClick={() => {
                     props.socket.emit('remove_message', { chat: props.contact, author: user[0].userId, messageId: props.message.messageId });
                 }}>Remove</button> : ''}
-            
+
             {props.message.user.userId === user[0].userId && (messageFile !== 'jpg' && messageFile !== 'png') ? <button
                 className="messageHandler"
                 onClick={() => {
@@ -54,6 +80,23 @@ const ChatMessage = (props: any) => {
         </div>
     }
 
+    function MessageRender() {
+        if (messageFile === 'jpg' || messageFile === 'png') {
+            return <LoadImage className={'message-image'} path={props.message?.message} />
+        } else if (messageFile === 'mkv' || messageFile === 'mp4') {
+            return <LoadVideo className={'message-image'} path={props.message?.message} />
+        } else {
+            if (isValidHttpUrl(props.message?.message)) {
+                return <>
+                    { isPost(props.message?.message) ? <ChatPostPreview id={getPostId(props.message?.message)} /> 
+                    : <a href={props.message?.message} className="message-content">{props.message?.message}</a>}
+                </>
+            } else {
+                return <p className="message-content">{props.message?.message}</p>
+            }
+        }
+    }
+
     return (
         <><div>
             <div className="message" onContextMenu={(e) => {
@@ -73,10 +116,8 @@ const ChatMessage = (props: any) => {
                 {props.message?.user?.userImage ? <img className="chat-img" src={require(`../../post_content/pictures/${props.message?.user?.userImage}`)} alt="" /> : ''}
                 <div className="message-info">
                     <p className="username">{props.message?.user?.username}</p>
-                    
-                    {messageFile === 'jpg' || messageFile === 'png' || messageFile === 'mkv' || messageFile === 'mp4' ? '' : <p className="message-content">{props.message?.message}</p> }
-                    {messageFile === 'jpg' || messageFile === 'png' ? <LoadImage className={'message-image'} path={props.message?.message} /> : ''}
-                    {messageFile === 'mkv' || messageFile === 'mp4' ? <LoadVideo className={'message-image'} path={props.message?.message} /> : ''}
+
+                    <MessageRender />
 
                     {props.message?.reply ? <ChatMessageReply reply={props.message.reply} /> : ''}
                     {props.message?.forwarded ? <ChatMessageForwarded forwarded={props.message.forwarded} /> : ''}

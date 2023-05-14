@@ -38,7 +38,7 @@ function App() {
   const ProtectedComponent = () => {
     if (Object.keys(user).length === 0)
       return <Navigate to='/signin' />
-    return <PostList byWhat={{type: 'DEFAULT'}}></PostList>
+    return <PostList socket={socket} byWhat={{type: 'DEFAULT'}}></PostList>
   }
 
   const ProtectedSign = () => {

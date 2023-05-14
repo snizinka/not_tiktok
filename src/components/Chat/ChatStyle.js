@@ -489,4 +489,34 @@ export const ChatStyle = styled.div`
         width: fit-content;
         border-radius: 10px;
     }
+
+    .preview-link {
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 16px;
+    }
+
+    .preview-image {
+        height: 300px;
+        max-width: 500px;
+        border-radius: 6px;
+    }
+
+    .preview-maintext {
+        color: black;
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        width: 300px;
+    }
+
+    .preview-categories {
+        width: 300px;
+        display: flex;
+        gap: 4px;
+    }
+
+    .preview-categories a {
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 14px;
+    }
 `

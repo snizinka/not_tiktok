@@ -18,23 +18,23 @@ function PostList(props: any) {
     function fetchPostsData() {
         switch (props.byWhat.type) {
             case 'DEFAULT':
-                fetchPosts(props.byWhat.type, 0, user[0].userId)
+                fetchPosts(props.byWhat.type, 0, user[0].userId, 'Default')
                 break
             case 'BY_DESCRIPTION':
-                fetchPosts(props.byWhat.type, search === '' ? params.name : search, user[0].userId)
+                fetchPosts(props.byWhat.type, search === '' ? params.name : search, user[0].userId, 'Default')
                 break
             case 'BY_POST_ID':
-                fetchPosts(props.byWhat.type, Number(params.id), user[0].userId)
+                fetchPosts(props.byWhat.type, Number(params.id), user[0].userId, 'Default')
                 break
             default:
-                fetchPosts(props.byWhat.type, 0, user[0].userId)
+                fetchPosts(props.byWhat.type, 0, user[0].userId, 'Default')
         }
     }
 
     const RenderPosts = (post: any) => {
         if (props.byWhat.type === 'BY_DESCRIPTION')
             return <Search info={post.info} />
-        return <Post info={post.info} />
+        return <Post socket={props.socket} info={post.info} />
     }
 
     const RenderCase = () => {

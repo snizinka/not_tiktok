@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import postStyles from '../../style/post.module.css'
 import PostSlider from './PostSlider'
 import PostComments from './PostComments'
@@ -8,10 +8,6 @@ import PostStatistics from './PostStatistics'
 import PostAuthor from './PostAuthor'
 
 export const Post = (props: any) => {
-    useEffect(() => {
-        console.log(props)
-    }, [props])
-
     return (
         <div key={`post-${props.info._user.userId}`} className={postStyles.post}>
             <div className={postStyles.left_part}>
@@ -24,7 +20,7 @@ export const Post = (props: any) => {
             </div>
             <div className={postStyles.right_part}>
                 <PostComments props={props.info} />
-                <PostEvaluation props={props.info} />
+                <PostEvaluation socket={props.socket} props={props.info} />
             </div>
         </div>
     )

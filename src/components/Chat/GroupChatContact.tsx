@@ -42,6 +42,6 @@ const GroupChatContact = (props: any) => {
             { displayDelete ? <button className='leave-chat' onClick={leavesChat}>x</button> : ''}
         </div>
     )
-};
+}
 
 export default GroupChatContact;

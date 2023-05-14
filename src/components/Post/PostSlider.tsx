@@ -41,8 +41,8 @@ const PostSlider = (props: { props: any }) => {
             <div className={postStyles.middle_wrapper}>
                 <div style={{ transform: `translateX(${currentSlide}px)` }} className={postStyles.middle_container}>
                     {
-                        content.map((contentInstance: any) => {
-                            return <ContentFactory props={contentInstance} />
+                        content.map((contentInstance: any, index: number) => {
+                            return <ContentFactory key={`post-factory-${index}`} props={contentInstance} />
                         })
                     }
                 </div>

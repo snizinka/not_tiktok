@@ -31,7 +31,15 @@ export enum PostActionTypes {
 
     FETCH_PROFILE = 'FETCH_PROFILE',
     FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS',
-    FETCH_PROFILE_ERROR = 'FETCH_PROFILE_ERROR'  
+    FETCH_PROFILE_ERROR = 'FETCH_PROFILE_ERROR',
+
+    ADD_COMMENT = 'ADD_COMMENT',
+    ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS',
+    ADD_COMMENT_ERROR = 'ADD_COMMENT_ERROR',
+
+    REMOVE_COMMENT = 'REMOVE_COMMENT',
+    REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS',
+    REMOVE_COMMENT_ERROR = 'REMOVE_COMMENT_ERROR',
 }
 
 interface FetchPostsAction {
@@ -113,8 +121,38 @@ interface FetchProfileErrorAction {
     payload: string
 }
 
+interface AddCommentAction {
+    type: PostActionTypes.ADD_COMMENT
+}
+
+interface AddCommentSuccessAction {
+    type: PostActionTypes.ADD_COMMENT_SUCCESS,
+    payload: any
+}
+
+interface AddCommentErrorAction {
+    type: PostActionTypes.ADD_COMMENT_ERROR,
+    payload: string
+}
+
+interface RemoveCommentAction {
+    type: PostActionTypes.REMOVE_COMMENT
+}
+
+interface RemoveCommentSuccessAction {
+    type: PostActionTypes.REMOVE_COMMENT_SUCCESS,
+    payload: any
+}
+
+interface RemoveCommentErrorAction {
+    type: PostActionTypes.REMOVE_COMMENT_ERROR,
+    payload: string
+}
+
 export type PostAction = FetchPostsAction | FetchPostsSuccessAction | FetchPostsErrorAction 
                         | RemovePostsAction | RemovePostsSuccessAction | RemovePostsErrorAction
                         | HandleLikesAction | HandleLikesSuccessAction | HandleLikesErrorAction
                         |FetchProfileAction | FetchProfileSuccessAction | FetchProfileErrorAction
                         |HandleFollowAction | HandleFollowSuccessAction | HandleFollowErrorAction
+                        | AddCommentAction | AddCommentSuccessAction | AddCommentErrorAction
+                        | RemoveCommentAction | RemoveCommentSuccessAction | RemoveCommentErrorAction
