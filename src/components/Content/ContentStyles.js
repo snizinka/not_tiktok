@@ -9,10 +9,9 @@ export const ContentStyles = styled.div`
 
 .text-title {
     font-family: 'Signika Negative',sans-serif;
-    height: 10%;
+    height: 8%;
     display: flex;
     justify-content: left;
-    align-items: center;
     overflow: hidden;
     padding-top: 10px;
     font-size: 18px;

@@ -34,14 +34,14 @@ function PostList(props: any) {
     const RenderPosts = (post: any) => {
         if (props.byWhat.type === 'BY_DESCRIPTION')
             return <Search info={post.info} />
-        return <Post socket={props.socket} info={post.info} />
+        return <Post index={post?.index} postsCount={post?.postsCount} socket={props.socket} info={post?.info} />
     }
-
+    
     const RenderCase = () => {
         if(loading) {
             return <Loading />
         } else if (posts.length > 0) {
-            return posts?.map((post: any) => <RenderPosts key={`postList-${post.postId}`} info={post} />)
+            return posts?.map((post: any, index: number) => <RenderPosts id='postlist' index={index} postsCount={posts?.length} key={`postList-${post?.postId}`} info={post} />)
         } else {
             return ''
         }
@@ -49,8 +49,11 @@ function PostList(props: any) {
 
     useEffect(() => {
         fetchPostsData()
-        console.log(posts)
     }, [props.byWhat.type, params])
+
+    useEffect(() => {
+        console.log(posts)
+    }, [posts])
 
     if (error) {
         return <div className="error">

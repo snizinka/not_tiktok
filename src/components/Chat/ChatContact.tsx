@@ -14,10 +14,12 @@ const ChatContact = (props: any) => {
         props.onChangeSelectedChat(null)
         props.onChangeContact({ id: undefined, type: 'Private', name: '' })
         const data = {
-            chatId: props?.chat?.receiver.userId,
+            contactId: props?.chat?.contactId,
             userId: user[0].userId,
+            seconUserId: props?.chat?.receiver?.userId,
             chatType: 'Private'
         }
+        console.log(data)
         props.socket.emit('remove_from_chat', data)
     }
 

@@ -9,7 +9,6 @@ const ChatPostPreview = (props: any) => {
 
     useEffect(() => {
         async function fetchPostPreview() {
-            console.log(props.id);
             const data = await getPostPreview('BY_POST_ID', Number(props.id), user[0].userId);
             setPost(data[0]);
         }
@@ -46,8 +45,8 @@ const ChatPostPreview = (props: any) => {
 
                 <div className="preview-categories">
                     {
-                        post?._category?.map((tag: any) => {
-                            return <a href="#" className="preview-hashtag">#{tag.categoryName}</a>
+                        post?._category?.map((tag: any, index: number) => {
+                            return <a key={`tag-${index}`} href="#" className="preview-hashtag">#{tag.categoryName}</a>
                         })
                     }
                 </div>

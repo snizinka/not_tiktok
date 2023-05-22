@@ -9,12 +9,14 @@ const PreviewImage = (props: any) => {
 
     function handleDragOver(event: any) {
         event.preventDefault()
+        areaRef.current.style.color = 'black'
         areaRef.current.style.background = '#B1BCE6'
         sunRef.current.style.transform = 'scale(10)';
     }
 
     function handleDragEnd(event: any) {
         event.preventDefault()
+        areaRef.current.style.color = 'black'
         areaRef.current.style.background = 'transparent'
         sunRef.current.style.transform = 'scale(1)';
     }
@@ -22,12 +24,14 @@ const PreviewImage = (props: any) => {
     function handleDrop(event: any) {
         event.preventDefault()
         uploadPreviewImage(event.dataTransfer.files[0])
+        areaRef.current.style.color = 'black'
         areaRef.current.style.background = 'transparent'
         sunRef.current.style.transform = 'scale(10)';
     }
 
     useEffect(() => {
         if (props.previewImage !== '') {
+            areaRef.current.style.color = 'black'
             areaRef.current.style.background = 'transparent'
             sunRef.current.style.transform = 'scale(10)';
         }

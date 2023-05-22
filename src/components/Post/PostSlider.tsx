@@ -2,23 +2,21 @@ import React, { useEffect, useState } from 'react'
 import postStyles from '../../style/post.module.css'
 import ContentFactory from '../Content/Factories/ContentFactory';
 
-const PostSlider = (props: { props: any }) => {
+const PostSlider = (props: any) => {
     const [currentSlide, setCurrentSlide] = useState(0)
     const [content, setContent] = useState<any>([]);
-    const renderedContent = [['PICTURE', props.props._picture], ['TEXT', props.props._text], ['VIDEO', props.props._video]]
-
+    const [amountOfSlides, setAmountOfSlides] = useState(0)
+    
     useEffect(() => {
+        const renderedContent = [['PICTURE', props?.info?._picture], ['TEXT', props?.info?._text], ['VIDEO', props?.info?._video]]
+        const amount = renderedContent?.map((slide: any) => slide[1]?.length)
+        const reduce = amount?.reduce((acc: any, curr: any) => acc + curr, 0)
+        setAmountOfSlides(reduce)
         setContent(renderedContent)
-    }, [])
-
-
-    function amountOfSlides() {
-        const slidesAmount = renderedContent.map((slide: any) => slide[1].length)
-        return slidesAmount.reduce((acc, curr) => acc + curr, 0)
-    }
+    }, [props])
 
     function switchToRightSlides() {
-        if (currentSlide < ((amountOfSlides() - 2) * (-400))) {
+        if (currentSlide < ((amountOfSlides - 2) * (-400))) {
             setCurrentSlide(0)
             return
         }
@@ -27,7 +25,7 @@ const PostSlider = (props: { props: any }) => {
 
     function switchToLeftSlides() {
         if (currentSlide >= 0) {
-            setCurrentSlide((amountOfSlides() - 1) * (-400))
+            setCurrentSlide((amountOfSlides - 1) * (-400))
             return
         }
         setCurrentSlide(currentSlide + 400)
@@ -41,7 +39,7 @@ const PostSlider = (props: { props: any }) => {
             <div className={postStyles.middle_wrapper}>
                 <div style={{ transform: `translateX(${currentSlide}px)` }} className={postStyles.middle_container}>
                     {
-                        content.map((contentInstance: any, index: number) => {
+                        content?.map((contentInstance: any, index: number) => {
                             return <ContentFactory key={`post-factory-${index}`} props={contentInstance} />
                         })
                     }

@@ -1,4 +1,6 @@
 export interface CreatePostState {
+    postId: any;
+    mode: any;
     content: any[] | any;
     loading: boolean;
     description: string;
@@ -36,6 +38,14 @@ export enum CreatePostActionTypes {
     UPLOAD_PREVIEW_IMAGE = 'UPLOAD_PREVIEW_IMAGE',
     UPLOAD_PREVIEW_IMAGE_SUCCESS = 'UPLOAD_PREVIEW_IMAGE_SUCCESS',
     UPLOAD_PREVIEW_IMAGE_ERROR = 'UPLOAD_PREVIEW_IMAGE_ERROR',
+
+    PREPARE_CONTENT = 'PREPARE_CONTENT',
+    PREPARE_CONTENT_SUCCESS = 'PREPARE_CONTENT_SUCCESS',
+    PREPARE_CONTENT_ERROR = 'PREPARE_CONTENT_ERROR',
+
+    UPLOAD_EDITED_CONTENT = 'UPLOAD_EDITED_CONTENT',
+    UPLOAD_EDITED_CONTENT_SUCCESS = 'UPLOAD_EDITED_CONTENT_SUCCESS',
+    UPLOAD_EDITED_CONTENT_ERROR = 'UPLOAD_EDITED_CONTENT_ERROR',
 }
 
 interface AddCreatePostsAction {
@@ -139,6 +149,34 @@ interface UploadPreviewImageErrorCreatePostsAction {
     payload: any[] | any
 }
 
+interface PrepareEditPostsAction {
+    type: CreatePostActionTypes.PREPARE_CONTENT
+}
+
+interface PrepareEditSuccessPostsAction {
+    type: CreatePostActionTypes.PREPARE_CONTENT_SUCCESS,
+    payload: any[] | any
+}
+
+interface PrepareEditErrorPostsAction {
+    type: CreatePostActionTypes.PREPARE_CONTENT_ERROR,
+    payload: any[] | any
+}
+
+interface UploadEditedPostsAction {
+    type: CreatePostActionTypes.UPLOAD_EDITED_CONTENT
+}
+
+interface UploadEditedSuccessPostsAction {
+    type: CreatePostActionTypes.UPLOAD_EDITED_CONTENT_SUCCESS,
+    payload: any[] | any
+}
+
+interface UploadEditedErrorPostsAction {
+    type: CreatePostActionTypes.UPLOAD_EDITED_CONTENT_ERROR,
+    payload: any[] | any
+}
+
 export type CreatePostAction = AddCreatePostsAction | RemoveCreatePostsSuccessAction | EditCreatePostsErrorAction
 | InputTitleTextCreatePostsErrorAction | InputBodyTextCreatePostsErrorAction
 | UploadImageCreatePostsAction | UploadImageSuccessCreatePostsAction | UploadImageErrorCreatePostsAction
@@ -148,3 +186,5 @@ export type CreatePostAction = AddCreatePostsAction | RemoveCreatePostsSuccessAc
 | AddPostTagAction | RemovePostTagAction
 | InputPostDescriptionAction
 | UploadPreviewImageCreatePostsAction | UploadPreviewImageSuccessCreatePostsAction | UploadPreviewImageErrorCreatePostsAction
+| PrepareEditPostsAction | PrepareEditSuccessPostsAction | PrepareEditErrorPostsAction
+| UploadEditedPostsAction | UploadEditedSuccessPostsAction | UploadEditedErrorPostsAction

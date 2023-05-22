@@ -8,14 +8,14 @@ const PostDescription = (props: {props: any}) => {
                 <div className={postStyles.category}>
 
                     {
-                        props.props._category.map((cat: any) => {
-                            return <a key={`postCategory-${cat.categoryId}`} href="#">@{cat.categoryName}</a>
+                        props?.props?._category?.map((cat: any) => {
+                            return <a key={`postCategory-${cat?.categoryId}`} href="#">@{cat?.categoryName}</a>
                         })
                     }
 
                 </div>
                 <div className={postStyles.description_text}>
-                    <p>{props.props.description}</p>
+                    <p>{props?.props?.description}</p>
                 </div>
             </div>
         </div>

@@ -892,6 +892,7 @@ export const CreatePostStyles = styled.div`
 }
 
 .back-btn {
+  margin-bottom: 10px;
   border: none;
   padding: 6px 10px;
   font-size: 18px;

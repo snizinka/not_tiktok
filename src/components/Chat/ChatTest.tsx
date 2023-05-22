@@ -1,9 +1,8 @@
 // @ts-ignore
-import React, { useEffect, useState, useRef } from "react"
+import React, { MutableRefObject, useEffect, useState, useRef } from "react"
 import useChatActions from "../../hooks/useChatActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import Header from "../Header";
-import ScrollToBottom from 'react-scroll-to-bottom'
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { ChatStyle } from "./ChatStyle";
@@ -11,10 +10,14 @@ import ChatContactFactory from "./ChatContactFactory/ChatContactFactory";
 import ChatGroupAdd from "./ChatGroupAdd";
 import ChatUsers from "./ChatUsers";
 import { socket } from "./ChatSocket";
+import ScrollSetup from "../ScrollSetup";
 
 export const ChatTest = (props: any) => {
     const [message, setMessage]: any = useState('')
     const [selectedChat, setSelectedChat]: any = useState(false)
+    const [atTop, setAtTop]: any = useState(false)
+    const [allowScrollingBottom, setAllowScrollingBottom]: any = useState(0)
+    const [limit, setLimit]: any = useState(20)
     const selectedGroup = useRef<any>(null)
     const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
     const { user } = useTypedSelector(state => state.user)
@@ -28,7 +31,8 @@ export const ChatTest = (props: any) => {
         createChat,
         addUsersToChat,
         removeUserFromChat,
-        leftChat
+        leftChat,
+        fetchLimitChatMessages
     } = useChatActions()
 
     const contactt: any = useRef(undefined)
@@ -37,6 +41,7 @@ export const ChatTest = (props: any) => {
     const [showChatUsers, setShowChatUsers] = useState(false)
     const [contactToSearch, setContactToSearch] = useState("")
     const [chatMode, setChatMode] = useState({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } }, from: '' })
+    
 
     useEffect(() => {
         props.socket?.emit('join_chat', {
@@ -73,7 +78,7 @@ export const ChatTest = (props: any) => {
                     commit = false
                 }
             })
-            
+
             if (commit) {
                 addUsersToChat(data)
             }
@@ -81,11 +86,21 @@ export const ChatTest = (props: any) => {
 
         props.socket?.on('removed_from_chat', (data: any) => {
             if (data.userId === user[0].userId) {
-                const leave = {
-                    chatId: data.chatId,
-                    userId: user[0].userId,
-                    chatType: 'Group'
+                let leave = {}
+                if (data.chatType === 'Group') {
+                    leave = {
+                        chatId: data.chatId,
+                        userId: user[0].userId,
+                        chatType: 'Group'
+                    }
+                } else {
+                    leave = {
+                        contactId: data.contactId,
+                        userId: user[0].userId,
+                        chatType: 'Provate'
+                    }
                 }
+
                 leftChat(leave)
             } else {
                 removeUserFromChat(data)
@@ -112,7 +127,6 @@ export const ChatTest = (props: any) => {
     useEffect(() => {
         sortContacts(contactToSearch)
     }, [contactToSearch])
-
 
     async function sendMessage(messageToSend: any, chatMode: any) {
         const message = {
@@ -188,6 +202,12 @@ export const ChatTest = (props: any) => {
         setAddNewChat(!addNewChat)
     }
 
+    function setIsAtTop(atTop: boolean) {
+        setAtTop(true)
+    }
+
+    // TODO: IT RERENDERS BECAUSE OF THE FUNCTION WHICH CHECKS IF I ADDED SOMETHING TO DOM. POP UP MENU ADDED
+
     return (
         <ChatDiv>
             <Header></Header>
@@ -229,16 +249,31 @@ export const ChatTest = (props: any) => {
                         {contact.type !== 'Group' ? contact.name : ''}
                         {contact.type === 'Group' ? <button className="chat-info-btn" onClick={changeShowChatUsers}>{contact.name}</button> : ''}
                     </div>
-
+                                
                     {
                         contact.id === undefined ? <div className="chat-field"><p>Chose a chat ...</p></div> :
-                            <ScrollToBottom className="chat-field">
+                            <ScrollSetup
+                                setAtTop={setIsAtTop}
+                                backToBottomButtonClass="back-to-bottom"
+                                scrollFieldClass="chat-field"
+                                scrollWrapper='scroll-wrapper'
+                                allowScrollingBottom={allowScrollingBottom}
+                            >
                                 {
                                     loadingMessages ? <div>
                                         <p>Loading</p>
-                                    </div> :
-                                        messages.map((message: any[] | never[] | any | never) => {
-                                            return <div key={`message-container-${message?.messageId}`} className="message-container" style={{ justifyContent: message?.user?.userId === user[0].userId ? 'flex-end' : 'flex-start' }}>
+                                    </div> : <>
+                                        <button onClick={() => {
+                                            setAllowScrollingBottom((prev: any) => 1)
+                                            fetchLimitChatMessages(contact, limit)
+                                            setLimit((prev: any) => prev + 10)
+                                        }}>Load messages</button>
+                                        {messages.map((message: any[] | never[] | any | never, index: number) => {
+                                            return <div
+                                                key={`message-container-${index}`}
+                                                className="message-container"
+                                                style={{ alignItems: message?.user?.userId === user[0].userId ? 'end' : 'start' }}
+                                            >
                                                 <ChatMessage
                                                     socket={props.socket}
                                                     message={message}
@@ -248,21 +283,23 @@ export const ChatTest = (props: any) => {
                                                     changeChatMode={changeChatMode}
                                                 />
                                             </div>
-                                        })
+                                        })}
+                                    </>
                                 }
-                                <div>
-                                    {selectedGroup.current && showChatUsers ? <ChatUsers
-                                        socket={socket}
-                                        changeShowChatUsers={changeShowChatUsers}
-                                        contact={contact}
-                                        selectedChat={selectedChat}
-                                        changesetSelectedChat={changesetSelectedChat}
-                                        chats={chats.filter((cht: any) => cht.chatType === 'Group')
-                                            .flatMap((cht: any) => cht.chat)
-                                            .filter((group: any) => group.chatId === selectedGroup.current.chatId)[0]} /> : ''}
-                                </div>
-                            </ScrollToBottom>
-                    }
+                            </ScrollSetup>}
+                    <div>
+                        {selectedGroup.current && showChatUsers ? <ChatUsers
+                            socket={socket}
+                            changeShowChatUsers={changeShowChatUsers}
+                            contact={contact}
+                            selectedChat={selectedChat}
+                            changesetSelectedChat={changesetSelectedChat}
+                            chats={chats.filter((cht: any) => cht.chatType === 'Group')
+                                .flatMap((cht: any) => cht.chat)
+                                .filter((group: any) => group.chatId === selectedGroup.current.chatId)[0]} /> : ''}
+                    </div>
+
+
 
                     <div className="inputRow">
                         <ChatInput

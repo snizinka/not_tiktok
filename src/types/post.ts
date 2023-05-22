@@ -1,4 +1,6 @@
 export interface PostState {
+    loadPostIndex: number;
+    currentPostThreshold: number;
     posts: any[] | any;
     loading: boolean;
     error: null | string;
@@ -8,6 +10,10 @@ export enum PostActionTypes {
     FETCH_POSTS = 'FETCH_POSTS',
     FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS',
     FETCH_POSTS_ERROR = 'FETCH_POSTS_ERROR',
+
+    FETCH_ADDITIONAL_POSTS = 'FETCH_ADDITIONAL_POSTS',
+    FETCH_ADDITIONAL_SUCCESS = 'FETCH_ADDITIONAL_SUCCESS',
+    FETCH_ADDITIONAL_ERROR = 'FETCH_ADDITIONAL_ERROR',
 
     ADD_POSTS = 'ADD_POSTS',
     ADD_POSTS_SUCCESS = 'ADD_POSTS_SUCCESS',
@@ -56,6 +62,20 @@ interface FetchPostsErrorAction {
     payload: string
 }
 
+
+interface FetchAdditionalPostsAction {
+    type: PostActionTypes.FETCH_ADDITIONAL_POSTS,
+}
+
+interface FetchAdditionalSuccessAction {
+    type: PostActionTypes.FETCH_ADDITIONAL_SUCCESS,
+    payload: any[]
+}
+
+interface FetchAdditionalErrorAction {
+    type: PostActionTypes.FETCH_ADDITIONAL_ERROR,
+    payload: string
+}
 
 
 
@@ -156,3 +176,4 @@ export type PostAction = FetchPostsAction | FetchPostsSuccessAction | FetchPosts
                         |HandleFollowAction | HandleFollowSuccessAction | HandleFollowErrorAction
                         | AddCommentAction | AddCommentSuccessAction | AddCommentErrorAction
                         | RemoveCommentAction | RemoveCommentSuccessAction | RemoveCommentErrorAction
+                        | FetchAdditionalPostsAction | FetchAdditionalSuccessAction | FetchAdditionalErrorAction

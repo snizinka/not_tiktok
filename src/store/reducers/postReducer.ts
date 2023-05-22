@@ -1,6 +1,8 @@
 import { PostAction, PostActionTypes, PostState } from "../../types/post";
 
 const initialState: PostState = {
+    loadPostIndex: 5,
+    currentPostThreshold: 0,
     posts: [],
     loading: false,
     error: null
@@ -30,6 +32,8 @@ export default function postReducer(state = initialState, action: PostAction): P
     switch (action.type) {
         case PostActionTypes.FETCH_POSTS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold + 6,
                 loading: true,
                 posts: [],
                 error: null
@@ -37,6 +41,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.FETCH_POSTS_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: action.payload,
                 error: null
@@ -44,13 +50,44 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.FETCH_POSTS_ERROR:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: [],
                 error: action.payload
             }
 
+        case PostActionTypes.FETCH_ADDITIONAL_POSTS:
+            return {
+                loadPostIndex: state.loadPostIndex + 6,
+                currentPostThreshold: state.currentPostThreshold,
+                loading: false,
+                posts: state.posts,
+                error: null
+            }
+
+        case PostActionTypes.FETCH_ADDITIONAL_SUCCESS:
+            return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold + 6,
+                loading: false,
+                posts: [...state.posts, ...action.payload],
+                error: null
+            }
+
+        case PostActionTypes.FETCH_ADDITIONAL_ERROR:
+            return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
+                loading: false,
+                posts: state.posts,
+                error: action.payload
+            }
+
         case PostActionTypes.REMOVE_POSTS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: true,
                 posts: state.posts.filter((p: { postId: number; }) => p.postId !== action.payload),
                 error: null
@@ -58,6 +95,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.REMOVE_POSTS_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: null
@@ -68,6 +107,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.HANDLE_LIKES:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: null
@@ -75,6 +116,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.HANDLE_LIKES_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts.map(
                     (content: { postId: any; likes: number }, i: any) =>
@@ -91,6 +134,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.HANDLE_LIKES_ERROR:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: action.payload
@@ -102,6 +147,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.HANDLE_FOLLOW:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: null
@@ -109,6 +156,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.HANDLE_FOLLOW_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts.map(
                     (content: { _user: any; }, i: any) =>
@@ -124,6 +173,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.HANDLE_FOLLOW_ERROR:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: action.payload
@@ -134,6 +185,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.FETCH_PROFILE:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: true,
                 posts: [],
                 error: null
@@ -141,6 +194,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.FETCH_PROFILE_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: action.payload,
                 error: null
@@ -148,6 +203,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.FETCH_PROFILE_ERROR:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: action.payload
@@ -155,6 +212,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.ADD_COMMENT:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: true,
                 posts: state.posts,
                 error: null
@@ -162,6 +221,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.ADD_COMMENT_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: addCommentHandler(state, action),
                 error: null
@@ -169,6 +230,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.ADD_COMMENT_ERROR:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: action.payload
@@ -176,6 +239,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.REMOVE_COMMENT:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: true,
                 posts: state.posts,
                 error: null
@@ -183,6 +248,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.REMOVE_COMMENT_SUCCESS:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: removeCommentHandler(state, action),
                 error: null
@@ -190,6 +257,8 @@ export default function postReducer(state = initialState, action: PostAction): P
 
         case PostActionTypes.REMOVE_COMMENT_ERROR:
             return {
+                loadPostIndex: state.loadPostIndex,
+                currentPostThreshold: state.currentPostThreshold,
                 loading: false,
                 posts: state.posts,
                 error: action.payload

@@ -34,7 +34,7 @@ export const inputBodyText = (id: number, bodyText: string) => {
 
 export const addTag = (tag: string, tagId: number) => {
     return async (dispatch: Dispatch<CreatePostAction>) => {
-        dispatch({ type: CreatePostActionTypes.ADD_TAG, payload: {tag, tagId} })
+        dispatch({ type: CreatePostActionTypes.ADD_TAG, payload: { tag, tagId } })
     }
 }
 
@@ -147,6 +147,64 @@ export const uploadPreviewImage = (image: any) => {
         } catch (e: any) {
             console.log(e)
             dispatch({ type: CreatePostActionTypes.UPLOAD_PREVIEW_IMAGE_ERROR, payload: e })
+        }
+    }
+}
+
+export const getPostContentToEdit = (id: any, userId: any) => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        try {
+            dispatch({ type: CreatePostActionTypes.PREPARE_CONTENT })
+            try {
+                const data = await fetch('http://localhost:9000/api', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        parameter: 'BY_POST_ID',
+                        id: id,
+                        userId: userId
+                    })
+                }).then(res => res.json())
+
+                console.log(data.result.converted._posts[0])
+                dispatch({ type: CreatePostActionTypes.PREPARE_CONTENT_SUCCESS, payload: data.result.converted._posts[0] })
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+        } catch (e: any) {
+            console.log(e)
+            dispatch({ type: CreatePostActionTypes.PREPARE_CONTENT_ERROR, payload: e })
+        }
+    }
+}
+
+export const uploadEditedPostContent = (content: any) => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        try {
+            dispatch({ type: CreatePostActionTypes.UPLOAD_EDITED_CONTENT })
+            try {
+                const data = await fetch('http://localhost:9000/uploadeditedpost', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: content
+                    })
+                }).then(res => res.json())
+                dispatch({ type: CreatePostActionTypes.UPLOAD_EDITED_CONTENT_SUCCESS, payload: [] })
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+        } catch (e: any) {
+            console.log(e)
+            dispatch({ type: CreatePostActionTypes.UPLOAD_EDITED_CONTENT_ERROR, payload: e })
         }
     }
 }

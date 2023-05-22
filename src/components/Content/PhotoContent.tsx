@@ -11,7 +11,7 @@ const PhotoContent = (props: { props: Content }) => {
   }, [props])
 
   return (
-    <img className={postStyles.slider_img} src={photoData?.source} alt="" />
+    <img loading='lazy' className={postStyles.slider_img} src={photoData?.source} alt="" />
   )
 };
 

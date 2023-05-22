@@ -45,6 +45,29 @@ export const fetchChatMessages = (contact: number) => {
     }
 }
 
+export const fetchLimitChatMessages = (contact: number, limit: number) => {
+    return async (dispatch: Dispatch<ChatAction>) => {
+        try {
+            dispatch({ type: ChatActionTypes.FETCH_LIMIT_MESSAGES })
+            const data = await fetch('http://localhost:9000/limitmessages', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    contact: contact,
+                    limit: limit
+                })
+            }).then(res => res.json());
+
+            dispatch({ type: ChatActionTypes.FETCH_LIMIT_MESSAGES_SUCCESS, payload: data.result.data })
+        } catch (err: any) {
+            dispatch({ type: ChatActionTypes.FETCH_LIMIT_MESSAGES_ERROR, payload: "Couldn't load messages" })
+        }
+    }
+}
+
 export const addChatMessage = (message: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         dispatch({ type: ChatActionTypes.ADD_MESSAGE, payload: message })

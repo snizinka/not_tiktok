@@ -26,7 +26,9 @@ const SharePost = (props: any) => {
                 time: '2022.12.15',
                 details: user[0],
                 chatMode: 'Typing',
-                chatType: contact.contactType
+                chatType: contact.contactType,
+                shared: true,
+                postId: props.postId
             }
 
             props.socket?.emit('send_message', message)

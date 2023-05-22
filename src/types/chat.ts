@@ -18,6 +18,10 @@ export enum ChatActionTypes {
     FETCH_MESSAGES_SUCCESS = 'FETCH_MESSAGES_SUCCESS',
     FETCH_MESSAGES_ERROR = 'FETCH_MESSAGES_ERROR',
 
+    FETCH_LIMIT_MESSAGES = 'FETCH_LIMIT_MESSAGES',
+    FETCH_LIMIT_MESSAGES_SUCCESS = 'FETCH_LIMIT_MESSAGES_SUCCESS',
+    FETCH_LIMIT_MESSAGES_ERROR = 'FETCH_LIMIT_MESSAGES_ERROR',
+
     ADD_MESSAGE = 'ADD_MESSAGE',
 
     ADD_NEW_CHAT = 'ADD_NEW_CHAT',
@@ -66,6 +70,20 @@ interface FetchMessagesSuccessAction {
 
 interface FetchMessagesErrorAction {
     type: ChatActionTypes.FETCH_MESSAGES_ERROR,
+    payload: string
+}
+
+interface FetchLimitMessagesAction {
+    type: ChatActionTypes.FETCH_LIMIT_MESSAGES
+}
+
+interface FetchLimitMessagesSuccessAction {
+    type: ChatActionTypes.FETCH_LIMIT_MESSAGES_SUCCESS,
+    payload: any[]
+}
+
+interface FetchLimitMessagesErrorAction {
+    type: ChatActionTypes.FETCH_LIMIT_MESSAGES_ERROR,
     payload: string
 }
 
@@ -145,3 +163,4 @@ export type ChatAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsers
 | RemoveUsersFromChatAction
 | LeaveChatAction | LeaveChatSuccessAction | LeaveChatErrorAction
 | AddNewChatAction
+| FetchLimitMessagesAction | FetchLimitMessagesSuccessAction | FetchLimitMessagesErrorAction

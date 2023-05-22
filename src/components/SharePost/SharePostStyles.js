@@ -47,8 +47,9 @@ export const SharePostStyles = styled.div`
     }
 
     .share-to-chat img {
+        border-radius: 100%;
+        object-fit: cover;
         height: 40px;
         width: 40px;
-        border-radius: 100%;
     }
 `

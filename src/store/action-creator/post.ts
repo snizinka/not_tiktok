@@ -142,3 +142,29 @@ export const removeComment = (comment: any) => {
         }
     }
 }
+
+export const fetchAdditionalPosts = (dataParam: any) => {
+    return async (dispatch: Dispatch<PostAction>) => {
+        try {
+            dispatch({ type: PostActionTypes.FETCH_ADDITIONAL_POSTS })
+            const data = await fetch('http://localhost:9000/getadditionalposts', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: dataParam
+                })
+            }).then(res => res.json());
+
+            console.log(data.result.data)
+            dispatch({ type: PostActionTypes.FETCH_ADDITIONAL_SUCCESS, payload: data.result.data })
+        } catch (e) {
+            dispatch({
+                type: PostActionTypes.FETCH_ADDITIONAL_ERROR,
+                payload: 'Shit happens'
+            })
+        }
+    }
+}

@@ -71,7 +71,7 @@ const Profile = (props: any) => {
                                 {
                                     userProfile.userId === user[0].userId ? <button>Edit</button> : ''
                                 }
-                                <button>Send a message</button>
+                                { userProfile.userId !== user[0].userId ? <button>Send a message</button> : '' }
                             </div>
 
                             <div className={profile.posts_wrapper}>

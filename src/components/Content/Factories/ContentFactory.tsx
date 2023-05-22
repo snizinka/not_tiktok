@@ -10,27 +10,27 @@ const ContentFactory = (props: any) => {
     const [contentData, setContentData] = useState<any>([])
 
     useEffect(() => {
-        setContentType(props.props[0])
-        setContentData(props.props[1])
+        setContentType(props?.props[0])
+        setContentData(props?.props[1])
     }, [props])
 
     let content: any = [];
 
     switch (contentType) {
         case 'PICTURE':
-            contentData.map((cont: any) => {
+            contentData?.map((cont: any) => {
                 let picture: Content = { contentId: cont.photoContentId, source: cont.photoLink }
                 content.push(<PhotoContent props={picture} />)
             })
 
             break;
         case 'TEXT':
-            contentData.map((cont: any) => {
+            contentData?.map((cont: any) => {
                 content.push(<TextContent props={cont} />)
             })
             break;
         case 'VIDEO':
-            contentData.map((cont: any) => {
+            contentData?.map((cont: any) => {
                 let video: Content = { contentId: cont.videoId, source: cont.videoLink }
                 content.push(<VideoContent props={video} />)
             })

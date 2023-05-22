@@ -236,6 +236,43 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 messages: []
             }
 
+            case ChatActionTypes.FETCH_LIMIT_MESSAGES:
+                return {
+                    availableUsers: state.availableUsers,
+                    loadingMessages: true,
+                    chats: state.chats,
+                    error: null,
+                    chat: state.chat,
+                    storedChats: state.storedChats,
+                    user: state.user,
+                    messages: state.messages
+                }
+    
+            case ChatActionTypes.FETCH_LIMIT_MESSAGES_SUCCESS:
+                return {
+                    availableUsers: state.availableUsers,
+                    loadingMessages: false,
+                    chats: state.chats,
+                    error: null,
+                    chat: state.chat,
+                    storedChats: state.storedChats,
+                    user: state.user,
+                    messages: [...action.payload, ...state.messages]
+                }
+    
+            case ChatActionTypes.FETCH_LIMIT_MESSAGES_ERROR:
+                return {
+                    availableUsers: state.availableUsers,
+                    loadingMessages: false,
+                    chats: state.chats,
+                    error: action.payload,
+                    chat: state.chat,
+                    storedChats: state.storedChats,
+                    user: state.user,
+                    messages: []
+                }
+    
+
         case ChatActionTypes.ADD_MESSAGE:
             return {
                 availableUsers: state.availableUsers,

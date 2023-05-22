@@ -16,9 +16,6 @@ const ChatMessage = (props: any) => {
         const index = props.message?.message?.indexOf('.')
         const result = props.message?.message?.substring(index + 1)
         setMessageFile(result)
-        if (result === 'jpg' || result === 'png') {
-            console.log(result)
-        }
     }, [])
 
     function isValidHttpUrl(string: any) {
@@ -40,7 +37,6 @@ const ChatMessage = (props: any) => {
     }
 
     function getPostId(url: any) {
-        console.log(url)
         const lastIndex = url.lastIndexOf('/');
         const result = url.substring(lastIndex + 1)
         return result
@@ -117,8 +113,8 @@ const ChatMessage = (props: any) => {
                 <div className="message-info">
                     <p className="username">{props.message?.user?.username}</p>
 
-                    <MessageRender />
-
+                    {/* <MessageRender /> */}
+                    <p className="message-content">{props.message?.message}</p>
                     {props.message?.reply ? <ChatMessageReply reply={props.message.reply} /> : ''}
                     {props.message?.forwarded ? <ChatMessageForwarded forwarded={props.message.forwarded} /> : ''}
                 </div>

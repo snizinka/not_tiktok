@@ -38,6 +38,11 @@ export const ChatStyle = styled.div`
     .chat-field {
         height: calc(100vh - 270px);
         overflow: auto;
+
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
     }
 
     .chat-field>div {
@@ -518,5 +523,23 @@ export const ChatStyle = styled.div`
     .preview-categories a {
         font-family: 'Signika Negative',sans-serif;
         font-size: 14px;
+    }
+
+    .back-to-bottom {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        height: 25px;
+        width: 25px;
+        border-radius: 100%;
+        background: #FFF9D7;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border: none;
+        cusror: pointer;
+    }
+
+    .scroll-wrapper {
+        position: relative;
+        width: 95%;
     }
 `

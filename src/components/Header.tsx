@@ -45,7 +45,10 @@ export default function Header() {
                         <li>
                             <Link to={`/profile/${user[0].userId}`} style={{width: '100%', display: 'block'}}>Profile</Link>
                         </li>
-                        <li>Settings</li>
+                        <li>
+                            <Link to={`/analytics`} style={{width: '100%', display: 'block'}}>Analytics</Link>
+                        </li>
+                        <li><Link to={`/editprofile`} style={{width: '100%', display: 'block'}}>Settings</Link></li>
                         <li onClick={() => { userLogout() }}>Log out</li>
                     </DropdownMenu>
                 </ul>

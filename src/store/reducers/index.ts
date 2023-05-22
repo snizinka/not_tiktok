@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import analyticsReducer from "./analyticsReducer";
 import chatReducer from "./chatReducer";
 import createPostReducer from "./createPostReducer";
 import postReducer from "./postReducer";
@@ -9,6 +10,7 @@ import socketReducer from "./socketReducer";
 import userReducer from "./userReducer";
 
 export const rootReducer = combineReducers({
+    analytics: analyticsReducer,
     socket: socketReducer,
     profile: profileReducer,
     createPost: createPostReducer,

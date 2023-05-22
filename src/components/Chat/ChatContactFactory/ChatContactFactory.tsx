@@ -18,6 +18,7 @@ const ChatContactFactory = (props: any) => {
                 content.push(<ChatContact key={`chat-Contact-${cont.contactId}`} chat={cont}
                     onChangeSelectedChat={props.changeSelectedChat}
                     onChangeContact={props.changeContact}
+                    socket={props.socket}
                 />)
             })
             break;

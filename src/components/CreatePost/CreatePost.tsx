@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Header from "../Header";
 import CancelButton from "./CancelButton";
 import CreatePostFactory from "./CreatePostFactory";
@@ -14,32 +14,61 @@ import ContinueButton from "./ContinueButton";
 import PreviewImage from "./PreviewImage";
 import contentValidationFactory from "./ContentValidation/contentValidationFactory";
 import BackButton from "./BackButton";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
+    const navigate = useNavigate();
+    const { getPostContentToEdit } = useCreatePostActions()
+    const params = useParams()
     const { user } = useTypedSelector(state => state.user)
     const { request } = useTypedSelector(state => state.requestUsers)
     const dragItem = React.useRef<any>(null)
     const dragOverItem = React.useRef<any>(null)
-    const { content, description, previewImage, tags } = useTypedSelector(state => state.createPost)
-    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription } = useCreatePostActions()
+    const { content, description, previewImage, tags, mode, postId } = useTypedSelector(state => state.createPost)
+    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription, uploadEditedPostContent } = useCreatePostActions()
 
     const [currentId, setCurrentId] = useState<any>(0)
     const [error, setError] = useState<any>(null)
     const [requstedPostId, setRequestedPostId] = useState<any>(null)
     const [tagId, setTagId] = useState<any>(0)
     const [isPostOrdered, setIsPostOrdered] = useState(false)
-    const [currentSlide, setCurrentSlide] = useState(0)
+    const currentSlide = useRef(0)
+    const slider = useRef<any>(null)
     const [currentHorizontalSlide, setCurrentHorizontalSlide] = useState(0)
     const [contentToRemove, setContentToRemove] = useState<any>(null)
-    const [addedNewType, setAddedNewType] = useState<any>(false)
     const [horizontalSlide, setHorizontalSlide] = useState<any>(0)
     const [tag, setTag] = useState<any>('')
+    const contentLength = useRef<any>(0)
 
     useEffect(() => {
-        if (content.length > 0 && addedNewType) {
-            scrollToAdded()
-            setAddedNewType(false)
+        console.log(mode)
+        if (params.id) {
+            getPostContentToEdit(params.id, user[0].userId)
         }
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    let newPosition = contentLength.current * (-100)
+                    currentSlide.current = (newPosition)
+                    console.log(newPosition)
+                    slider.current.style.transition = `.4s ease`;
+                    slider.current.style.transform = `translateY(${newPosition}%)`;
+                }
+            }
+        })
+
+        observer.observe(slider.current, { childList: true });
+
+        return () => {
+            observer.disconnect();
+        }
+    }, [])
+
+    useEffect(() => {
+        contentLength.current = content.length
+        console.log(content)
+        console.log(tags)
     }, [content])
 
     useEffect(() => {
@@ -50,28 +79,9 @@ const CreatePost = () => {
         }
     }, [contentToRemove])
 
-    useEffect(() => {
-        console.log(content)
-    }, [content])
-
-    useEffect(() => {
-        console.log(request)
-    }, [request])
-
-    useEffect(() => {
-        console.log(requstedPostId)
-    }, [requstedPostId])
-
-    function scrollToAdded() {
-        let newPosition = content.length * (-100)
-        setCurrentSlide(newPosition)
-        let dpc: any = document.getElementsByClassName('content-type-slider')[1];
-        dpc.style.transform = `translateY(${newPosition}%)`;
-    }
-
     function scrollSlider(direction: string) {
         console.log(currentSlide)
-        let newPosition = direction === 'down' ? currentSlide - 100 : currentSlide + 100
+        let newPosition = direction === 'down' ? currentSlide.current - 100 : currentSlide.current + 100
 
         if (newPosition > 0) {
             newPosition = content.length * (-100)
@@ -79,13 +89,11 @@ const CreatePost = () => {
             newPosition = 0
         }
 
-        setCurrentSlide(newPosition)
-        let dpc: any = document.getElementsByClassName('content-type-slider')[1];
-        dpc.style.transform = `translateY(${newPosition}%)`;
+        currentSlide.current = (newPosition)
+        slider.current.style.transform = `translateY(${newPosition}%)`;
     }
 
     function addContentType(newContentType: string) {
-        setAddedNewType(true)
         setCurrentId(currentId + 1)
         addContent({ content: newContentType, id: currentId })
     }
@@ -117,7 +125,12 @@ const CreatePost = () => {
     }
 
     function uploadContent() {
-        uploadPost(content, tags, description, previewImage, user[0].userId, requstedPostId)
+        if (mode === 'creation') {
+            uploadPost(content, tags, description, previewImage, user[0].userId, requstedPostId)
+        } else {
+            uploadEditedPostContent({postId, content, tags, description, previewImage, userId: user[0].userId, requstedPostId})
+            navigate(`/content/${postId}`)
+        }
     }
 
     function addNewTag() {
@@ -146,7 +159,7 @@ const CreatePost = () => {
         } else if (horizontalSlide === 4) {
             return <button onClick={() => switchHorizontalSlide(5)}>Preview</button>
         } else {
-            return <button onClick={uploadContent}>Publish post</button>
+            return <button onClick={uploadContent}>{mode === 'editing' ? 'Publish edited' : 'Publish post'}</button>
         }
     }
 
@@ -182,7 +195,7 @@ const CreatePost = () => {
                         </div>
 
                         <div className="content-type-slider-wrapper">
-                            <div className="content-type-slider">
+                            <div ref={slider} id="content-type-slider" className="content-type-slider">
                                 <div className="content-type-slide" key={`content-type-zero`}>
                                     <CreatePostType setContentType={addContentType} />
                                     {error}
@@ -231,7 +244,7 @@ const CreatePost = () => {
                             <div className="content-type-slidr tag-slide">
                                 {
                                     tags.map((_tag: any, index: number) => {
-                                        return <div className="tag-item">
+                                        return <div key={`tag-item-${index}`} className="tag-item">
                                             <p>{_tag.tag}</p>
                                             <button className="delete-tag" onClick={() => removeTagById(_tag.tagId)}>x</button>
                                         </div>
