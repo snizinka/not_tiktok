@@ -18,6 +18,7 @@ import Analytics from './components/Analytics/Analytics';
 import AnalyticsPost from './components/Analytics/AnalyticsPost';
 import history from './history';
 import EditProfile from './components/Profile/EditProfile';
+import AdminPanel from './components/AdminPanel/AdminPanel';
 
 function App() {
   const [socket, setSocket]: any = useState()
@@ -64,6 +65,7 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<ProtectedComponent />}></Route>
+          <Route path='/admin' element={<AdminPanel />}></Route>
           <Route path='/analytics' element={<Analytics />}></Route>
           <Route path='/analytics/posts/:id' element={<AnalyticsPost />}></Route>
           <Route path='/profile/:id' element={<Profile />}></Route>
