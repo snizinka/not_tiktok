@@ -80,3 +80,28 @@ export const loadPost = (id: any) => {
         }
     }
 }
+
+export const manageBlockPostState = (id: number) => {
+    return async (dispatch: Dispatch<AdminAction>) => {
+        try {
+            dispatch({ type: AdminActionTypes.MANAGE_POST_BLOCK })
+            const data = await fetch('http://localhost:9000/managepostblockstate', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            }).then(res => res.json());
+
+            console.log(data.result)
+
+            dispatch({ type: AdminActionTypes.MANAGE_POST_BLOCK_SUCCESS, payload: data.result })
+        } catch (err: any) {
+            console.log(err)
+            dispatch({ type: AdminActionTypes.MANAGE_POST_BLOCK_ERROR, payload: "Couldn't load" })
+        }
+    }
+}

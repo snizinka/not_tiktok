@@ -16,6 +16,7 @@ import contentValidationFactory from "./ContentValidation/contentValidationFacto
 import BackButton from "./BackButton";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import TextContent from "./TextContent";
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ const CreatePost = () => {
                     currentSlide.current = (newPosition)
                     console.log(newPosition)
                     slider.current.style.transition = `.4s ease`;
-                    slider.current.style.transform = `translateY(${newPosition}%)`;
+                    slider.current.style.transform = `translate(0, ${newPosition}%)`;
                 }
             }
         })
@@ -68,7 +69,6 @@ const CreatePost = () => {
     useEffect(() => {
         contentLength.current = content.length
         console.log(content)
-        console.log(tags)
     }, [content])
 
     useEffect(() => {
@@ -128,7 +128,7 @@ const CreatePost = () => {
         if (mode === 'creation') {
             uploadPost(content, tags, description, previewImage, user[0].userId, requstedPostId)
         } else {
-            uploadEditedPostContent({postId, content, tags, description, previewImage, userId: user[0].userId, requstedPostId})
+            uploadEditedPostContent({ postId, content, tags, description, previewImage, userId: user[0].userId, requstedPostId })
             navigate(`/content/${postId}`)
         }
     }
@@ -203,9 +203,9 @@ const CreatePost = () => {
                                 </div>
                                 {
                                     horizontalSlide === 1 ? content?.map((cnt: any, index: number) => {
-                                        return <div className="content-type-slide" key={`content-type-${index}`}>
+                                        return <div className="content-type-slide" key={`content-types-${index}`}>
                                             <CancelButton removeContent={removeContentById} contentId={cnt.id} />
-                                            <CreatePostFactory contentType={cnt} />
+                                            <CreatePostFactory key={`content-factory-${cnt.id}`} contentType={cnt} />
                                             {index === content.length - 1 ? <NextButton slide={scrollSlider} /> : ''}
                                         </div>
                                     }) : ''

@@ -3,6 +3,7 @@ import adminReducer from "./adminReducer";
 import analyticsReducer from "./analyticsReducer";
 import chatReducer from "./chatReducer";
 import createPostReducer from "./createPostReducer";
+import notificationReducer from "./notificationReducer";
 import postReducer from "./postReducer";
 import profileReducer from "./profileReducer";
 import requestUsersReducer from "./requestUsersReducer";
@@ -13,14 +14,15 @@ import userReducer from "./userReducer";
 export const rootReducer = combineReducers({
     admin: adminReducer,
     analytics: analyticsReducer,
-    socket: socketReducer,
-    profile: profileReducer,
     createPost: createPostReducer,
-    post: postReducer,
-    user: userReducer,
     chat: chatReducer,
+    notifications: notificationReducer,
+    post: postReducer,
+    profile: profileReducer,
     requestUsers: requestUsersReducer,
-    search: searchReducer
+    socket: socketReducer,
+    search: searchReducer,
+    user: userReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

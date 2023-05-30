@@ -11,7 +11,7 @@ import useAnalyticsActions from '../../hooks/useAnalytics'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
 import useActions from '../../hooks/useActions'
 
-export const Post = ({ socket, info, index, postsCount }: any) => {
+export const Post = ({ socket, info, index }: any) => {
     const { user } = useTypedSelector(state => state.user)
     const { currentPostThreshold, loadPostIndex } = useTypedSelector(state => state.post)
     const { storeViewedPost } = useAnalyticsActions()
@@ -47,7 +47,7 @@ export const Post = ({ socket, info, index, postsCount }: any) => {
     }, [inView])
 
     return (
-        <div ref={ref} key={`post-${info?._user.userId}`} className={postStyles.post}>
+        <div ref={ref} key={`post-${info?._user?.userId}`} className={postStyles.post}>
             <div className={postStyles.left_part}>
                 <PostAuthor props={info} />
                 <PostDescription props={info} />

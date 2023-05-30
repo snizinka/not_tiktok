@@ -100,11 +100,12 @@ export const CreatePostStyles = styled.div`
     height: 100%;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
-    transition: .4s ease;
+    transition: .9s ease;
 }
 
 .content-type-slide {
     height: 100%;
+    width: 100%;
     scroll-snap-align: start;
 }
 

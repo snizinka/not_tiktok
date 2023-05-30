@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from 'react';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import useProfileActions from '../../hooks/useProfileActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import profile from '../../style/profile.module.css'
@@ -7,8 +7,10 @@ import Header from '../Header';
 import '../../style/profile.css'
 import ProfilePosts from './ProfilePostsFactory/ProfilePosts';
 import ProfilePostsFactory from './ProfilePostsFactory/ProfilePostsFactory';
+import useActions from '../../hooks/useActions';
 
 const Profile = (props: any) => {
+    const navigate = useNavigate()
     const params = useParams()
     const { profile: userProfile, posts } = useTypedSelector(state => state.profile)
     const { user } = useTypedSelector(state => state.user)
@@ -69,7 +71,7 @@ const Profile = (props: any) => {
                             <div className={profile.middle_line}>
                                 <button>@{userProfile?.username}</button>
                                 {
-                                    userProfile.userId === user[0].userId ? <button>Edit</button> : ''
+                                    userProfile.userId === user[0].userId ? <button onClick={() => navigate('/editprofile')}>Edit</button> : ''
                                 }
                                 { userProfile.userId !== user[0].userId ? <button>Send a message</button> : '' }
                             </div>

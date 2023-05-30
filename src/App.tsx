@@ -16,34 +16,44 @@ import io from 'socket.io-client'
 import ScrollSetup from './components/ScrollSetup';
 import Analytics from './components/Analytics/Analytics';
 import AnalyticsPost from './components/Analytics/AnalyticsPost';
-import history from './history';
 import EditProfile from './components/Profile/EditProfile';
 import AdminPanel from './components/AdminPanel/AdminPanel';
+import useNotificationsActions from './hooks/useNotificationsActions';
+import NotificationBar from './components/Notifications/NotificationBar';
 
 function App() {
   const [socket, setSocket]: any = useState()
   const { loading, user } = useTypedSelector(state => state.user)
   const { userData } = useUserActions()
+  const { addNotification } = useNotificationsActions()
 
   useEffect(() => {
-    setSocket(io("http://localhost:9000", { reconnectionDelayMax: 10000,secure: false, transports: ['websocket', 'polling'],}))
+    if (user.length > 0) {
+      const createSocket = io("http://localhost:9000", { reconnectionDelayMax: 10000, secure: false, transports: ['websocket', 'polling'] })
+      setSocket(createSocket)
+      createSocket?.emit('join_chat', {
+        id: user[0].userId,
+        joinMethod: 'private'
+      })
+    }
 
     let login = JSON.parse(localStorage.getItem('user') || '{}')
-    if(login[0] !== undefined && Object.keys(user).length > 0){
+    if (login[0] !== undefined && Object.keys(user).length > 0) {
       userData(login[0].username, login[0].password)
     }
   }, [])
 
   useEffect(() => {
     socket?.on('receive_message_notification', (data: any) => {
+      addNotification({type: 'chat', notification: data})
       console.log(data)
-   })
+    })
   }, [socket])
 
   const ProtectedComponent = () => {
     if (Object.keys(user).length === 0)
       return <Navigate to='/signin' />
-    return <PostList socket={socket} byWhat={{type: 'DEFAULT'}}></PostList>
+    return <PostList socket={socket} byWhat={{ type: 'DEFAULT' }}></PostList>
   }
 
   const ProtectedSign = () => {
@@ -62,6 +72,7 @@ function App() {
 
   return (
     <div className="App">
+      <NotificationBar />
       <Router>
         <Routes>
           <Route path='/' element={<ProtectedComponent />}></Route>
@@ -72,8 +83,8 @@ function App() {
           <Route path='/edit/:id' element={<CreatePost />}></Route>
           <Route path='/editprofile' element={<EditProfile />}></Route>
           <Route path='/category/:id' element={<Profile />}></Route>
-          <Route path='/content/:id' element={<PostList byWhat={{type: 'BY_POST_ID'}} />}></Route>
-          <Route path='/search/:name' element={<PostList byWhat={{type: 'BY_DESCRIPTION'}} />}></Route>
+          <Route path='/content/:id' element={<PostList byWhat={{ type: 'BY_POST_ID' }} />}></Route>
+          <Route path='/search/:name' element={<PostList byWhat={{ type: 'BY_DESCRIPTION' }} />}></Route>
           <Route path='/createpost' element={<CreatePost />}></Route>
           <Route path='/signup' element={<SignUp />}></Route>
           <Route path='/signin' element={<ProtectedSign />}></Route>

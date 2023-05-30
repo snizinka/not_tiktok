@@ -78,7 +78,7 @@ export default function adminReducer(state = initialState, action: AdminAction):
                 post: action.payload.selectedPost,
                 users: [],
                 user: action.payload.user,
-                analytics: [],
+                analytics: action.payload.subscription,
                 loading: false,
                 error: null
             }
@@ -144,6 +144,45 @@ export default function adminReducer(state = initialState, action: AdminAction):
                 users: [],
                 user: {},
                 analytics: [],
+                loading: false,
+                error: action.payload
+            }
+
+        case AdminActionTypes.MANAGE_POST_BLOCK:
+            return {
+                action: state.action,
+                all_posts: state.posts,
+                posts: state.posts,
+                post: state.post,
+                users: state.users,
+                user: state.user,
+                analytics: state.analytics,
+                loading: true,
+                error: null
+            }
+
+        case AdminActionTypes.MANAGE_POST_BLOCK_SUCCESS:
+            return {
+                action: state.action,
+                all_posts: state.all_posts,
+                posts: state.posts,
+                post: {...state.post, isBlocked: action.payload.isBlocked},
+                users: state.users,
+                user: state.user,
+                analytics: state.analytics,
+                loading: false,
+                error: null
+            }
+
+        case AdminActionTypes.MANAGE_POST_BLOCK_ERROR:
+            return {
+                action: state.action,
+                all_posts: state.posts,
+                posts: state.posts,
+                post: state.post,
+                users: state.users,
+                user: state.user,
+                analytics: state.analytics,
                 loading: false,
                 error: action.payload
             }

@@ -28,16 +28,33 @@ ChartJS.register(
 
 const Analytics = () => {
     const { user } = useTypedSelector(state => state.user)
-    const { posts } = useTypedSelector(state => state.analytics)
+    const { posts, post, analytics: analyticsContent } = useTypedSelector(state => state.analytics)
     const [search, setSearch] = useState('')
     const [period, setPeriod] = useState(0)
     const [speriod, setSperiod] = useState('March')
     const [month, setMonth] = useState(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Octovber', 'November', 'December'])
-    const [mothPeriod, setMonthPeriod] = useState(month[0])
+    const [analyticsDataSet, setAnalyticsDataSet] = useState(
+        {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [
+                {
+                    label: 'June',
+                    data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+                {
+                    label: 'July',
+                    data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+            ],
+        }
+    )
 
-    const { fetchPostsByDescription } = useAnalyticsActions()
+    const { fetchPostsByDescription, fetchPostAnalytics } = useAnalyticsActions()
 
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
     const options = {
         responsive: true,
         plugins: {
@@ -51,27 +68,32 @@ const Analytics = () => {
         },
     }
 
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: 'June',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'July',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-                borderColor: 'blue',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-        ],
-    }
 
     useEffect(() => {
         fetchPostsByDescription(search, user[0].userId)
     }, [search])
+
+    useEffect(() => {
+        const months = analyticsContent.map((item: any) => month[item.month - 1])
+        const dataSet = analyticsContent.map((item: any, index: any) => {
+            return {
+                label: item.month,
+                data: item.dates,
+                borderColor: 'rgb(197, 184, 184)',
+                backgroundColor: `rgba(${index * 70}, ${index * 70}, ${index * 100}, ${index * 0.7})`,
+            }
+        })
+
+        setAnalyticsDataSet({
+            labels: months,
+            datasets: dataSet
+        })
+
+    }, [analyticsContent])
+
+    function fetchPost(postId: number) {
+        fetchPostAnalytics(postId)
+    }
 
     return (
         <div>
@@ -91,7 +113,7 @@ const Analytics = () => {
                                 <div className={analytics.posts}>
                                     {
                                         posts.map((post: any) => {
-                                            return <AnalyticsDropdown key={post.postId} post={post} />
+                                            return <AnalyticsDropdown key={post.postId} post={post} fetchPost={fetchPost} />
                                         })
                                     }
                                 </div>
@@ -100,37 +122,15 @@ const Analytics = () => {
                             <div className={analytics.left_column}>
                                 <div className={analytics.top_part}>
                                     <div className={analytics.text_container}>
-                                        <p>Posts views: 190</p>
-                                        <p>Posts likes: </p>
-                                        <p>Average topic: science</p>
-                                        <p>Subscribers by period of:
-                                            {
-                                                period === 0 ? <div>
-                                                    <span className={analytics.month}>{mothPeriod}</span>
-                                                    <button className={analytics.add} onClick={() => { setPeriod(1) }}>+</button>
-                                                </div> :
-                                                    <div>
-                                                        <span className={analytics.month}>{mothPeriod}</span>
-                                                        <p>to</p>
-                                                        <input type="date" />
-                                                        <span className={analytics.month}>{speriod}</span>
-                                                    </div>
-
-                                            }
-
-                                        </p>
+                                        <p>Posts views: {post?.views}</p>
+                                        <p>Posts likes: {post?.likes}</p>
+                                        <p>Shares: {post?.shares}</p>
+                                        <p>Comments: {post?._comments?.length}</p>
 
                                         <div className="chart">
-                                            <Line data={data} options={options}>
+                                            <Line data={analyticsDataSet} options={options}>
                                             </Line>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div className={analytics.bottom_part}>
-                                    <div className={analytics.txt_container}>
-                                        <p>Tasks done</p>
-                                        <p>Tasks received</p>
                                     </div>
                                 </div>
                             </div>

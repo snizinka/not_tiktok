@@ -11,16 +11,17 @@ import ChatGroupAdd from "./ChatGroupAdd";
 import ChatUsers from "./ChatUsers";
 import { socket } from "./ChatSocket";
 import ScrollSetup from "../ScrollSetup";
+import useNotificationsActions from "../../hooks/useNotificationsActions";
 
 export const ChatTest = (props: any) => {
     const [message, setMessage]: any = useState('')
+    const { user } = useTypedSelector(state => state.user)
     const [selectedChat, setSelectedChat]: any = useState(false)
+    const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
     const [atTop, setAtTop]: any = useState(false)
     const [allowScrollingBottom, setAllowScrollingBottom]: any = useState(0)
     const [limit, setLimit]: any = useState(20)
     const selectedGroup = useRef<any>(null)
-    const { chats, messages, loadingMessages } = useTypedSelector(state => state.chat)
-    const { user } = useTypedSelector(state => state.user)
     const {
         fetchChatUsers,
         fetchChatMessages,
@@ -34,6 +35,7 @@ export const ChatTest = (props: any) => {
         leftChat,
         fetchLimitChatMessages
     } = useChatActions()
+    const { removeChatNotifications } = useNotificationsActions()
 
     const contactt: any = useRef(undefined)
     const [contact, setContact]: any = useState({ id: undefined, type: 'Private', name: '' })
@@ -44,10 +46,10 @@ export const ChatTest = (props: any) => {
     
 
     useEffect(() => {
-        props.socket?.emit('join_chat', {
-            id: user[0].userId,
-            joinMethod: 'private'
-        })
+        // props.socket?.emit('join_chat', {
+        //     id: user[0].userId,
+        //     joinMethod: 'private'
+        // })
 
         props.socket?.on('message_removed', (data: any) => {
             if ((contactt.current === data.author) || (user[0].userId === data.author) || (selectedGroup.current?.chatId === data.chat.id)) {
@@ -108,7 +110,6 @@ export const ChatTest = (props: any) => {
         })
 
         fetchChatUsers(user[0].userId)
-        return () => { props.socket?.removeAllListeners() }
     }, [])
 
     useEffect(() => {
@@ -121,6 +122,7 @@ export const ChatTest = (props: any) => {
                 })
             }
             fetchChatMessages(contact)
+            removeChatNotifications({type: 'chat', id: contact.id})
         }
     }, [contact])
 

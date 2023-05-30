@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import useActions from '../../hooks/useActions'
 import postStyles from '../../style/post.module.css'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
@@ -31,27 +31,29 @@ const PostComments = (props: any) => {
         removeComment(comment)
     }
 
+    const commentsList = useMemo(() => {
+        return props.props._comments.map((comment: any) => {
+            return <div key={`post-comments-${comment.commentId}`} className={postStyles.comment}>
+            <Link to={`profile/${comment._user.userId}`} className={postStyles.user_sign}>
+                <p>{comment._user.username}</p>
+            </Link>
+            <div className={postStyles.comment_content}>
+                <img src={require(`../../post_content/pictures/${comment._user.userImage}`)} alt="" />
+                <p>{comment.commentContent}</p>
+            </div>
+            <div>
+                <button onClick={() => setReplyTo(comment.commentId)}>Reply</button>
+                { comment._user.userId === user[0].userId ? <button onClick={() => deleteComment(comment.commentId)}>Remove</button> : '' }
+            </div>
+        </div>
+        });
+    }, [props.props._comments]);
+
     return (
         <div key={`post-comments-${props.props.postId}`} className={postStyles.comment_section}>
             <p className={postStyles.comment_p}>Comments</p>
                 <ScrollToBottom className={postStyles.comments}>
-                    {
-                        props.props._comments.map((comment: any) => {
-                            return <div key={`post-comment-${comment.commentId}`} className={postStyles.comment}>
-                                <Link to={`profile/${comment._user.userId}`} className={postStyles.user_sign}>
-                                    <p>{comment._user.username}</p>
-                                </Link>
-                                <div className={postStyles.comment_content}>
-                                    <img src={require(`../../post_content/pictures/${comment._user.userImage}`)} alt="" />
-                                    <p>{comment.commentContent}</p>
-                                </div>
-                                <div>
-                                    <button onClick={() => setReplyTo(comment.commentId)}>Reply</button>
-                                    { comment._user.userId === user[0].userId ? <button onClick={() => deleteComment(comment.commentId)}>Remove</button> : '' }
-                                </div>
-                            </div>
-                        })
-                    }
+                    { commentsList }
                 </ScrollToBottom>
             <div className={postStyles.add_comment_fld}>
                 <input type='text' value={commentInput} onInput={(e: any) => setCommentInput(e.target.value)} placeholder='' />

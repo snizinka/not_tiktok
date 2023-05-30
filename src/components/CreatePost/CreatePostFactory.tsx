@@ -2,10 +2,8 @@ import React, { memo, useEffect, useState } from "react"
 import PhotoContent from "./PhotoContent";
 import TextContent from "./TextContent";
 import VideoContent from "./VideoContent";
-import useCreatePostActions from "../../hooks/useCreatePostActions";
 
 const CreatePostFactory = (props: any) => {
-    const { inputTitleText, inputBodyText } = useCreatePostActions()
     const [contentType, setContentType] = useState(props.contentType)
     let content: any = [];
 
@@ -17,8 +15,6 @@ const CreatePostFactory = (props: any) => {
         case 'textContent':
             content.push(<TextContent
                 id={contentType.id}
-                onInputTitleText={inputTitleText}
-                onInputBodyText={inputBodyText}
                 titleContent={contentType.content.title}
                 bodyContent={contentType.content.body}
             />)

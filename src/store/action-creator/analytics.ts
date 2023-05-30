@@ -45,3 +45,29 @@ export const storeViewedPost = (data: any) => {
         }
     }
 }
+
+
+export const fetchPostAnalytics = (post: any) => {
+    return async (dispatch: Dispatch<AnalyticsAction>) => {
+        try {
+            dispatch({ type: AnalyticsActionTypes.FETCH_POSTS_ANALYTICS })
+            const data = await fetch('http://localhost:9000/loadpostanalytics', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: post
+                })
+            }).then(res => res.json());
+
+            console.log(data.result)
+
+            dispatch({ type: AnalyticsActionTypes.FETCH_POSTS_ANALYTICS_SUCCESS, payload: data.result })
+        } catch (err: any) {
+           console.log('Analytics error')
+           dispatch({ type: AnalyticsActionTypes.FETCH_POSTS_ANALYTICS_ERROR, payload: err })
+        }
+    }
+}

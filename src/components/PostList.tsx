@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import useActions from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useParams } from 'react-router-dom'
@@ -14,6 +14,7 @@ function PostList(props: any) {
     const { search } = useTypedSelector(state => state.search);
     const { error, posts, loading } = useTypedSelector(state => state.post)
     const { fetchPosts } = useActions()
+    const [rendered, setRendered] = useState(0)
 
     function fetchPostsData() {
         switch (props.byWhat.type) {
@@ -31,29 +32,12 @@ function PostList(props: any) {
         }
     }
 
-    const RenderPosts = (post: any) => {
-        if (props.byWhat.type === 'BY_DESCRIPTION')
-            return <Search info={post.info} />
-        return <Post index={post?.index} postsCount={post?.postsCount} socket={props.socket} info={post?.info} />
-    }
-    
-    const RenderCase = () => {
-        if(loading) {
-            return <Loading />
-        } else if (posts.length > 0) {
-            return posts?.map((post: any, index: number) => <RenderPosts id='postlist' index={index} postsCount={posts?.length} key={`postList-${post?.postId}`} info={post} />)
-        } else {
-            return ''
+    useEffect(() => {
+        if (rendered === 0) {
+            setRendered(1)
+            fetchPostsData()
         }
-    }
-
-    useEffect(() => {
-        fetchPostsData()
     }, [props.byWhat.type, params])
-
-    useEffect(() => {
-        console.log(posts)
-    }, [posts])
 
     if (error) {
         return <div className="error">
@@ -63,14 +47,18 @@ function PostList(props: any) {
 
     return (
         <div>
-            <Header></Header>
+            <Header />
             <div className={postStyles.posts_wrapper}>
                 {
                     props.byWhat.type === 'BY_DESCRIPTION' ? <p className={postStyles.searchTitle}>Search results: {search === '' ? params.name : search}</p> : ''
                 }
                 <div className={postStyles.posts_container}>
                     <div className={props.byWhat.type === 'BY_DESCRIPTION' ? postStyles.searchContainer : ''}>
-                        <RenderCase />
+                        {
+                            props.byWhat.type === 'BY_DESCRIPTION' ? posts?.map((post: any, index: number) => <Search key={`search-${index}`} info={post} />)
+                                :
+                                posts?.map((post: any, index: number) => <Post key={`psot-${index}`} index={index} socket={props.socket} info={post} />)
+                        }
                     </div>
                 </div>
             </div>

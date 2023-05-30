@@ -24,6 +24,10 @@ export enum AdminActionTypes {
     LOAD_POST = 'LOAD_POST',
     LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS',
     LOAD_POST_ERROR = 'LOAD_POST_ERROR',
+
+    MANAGE_POST_BLOCK = 'MANAGE_POST_BLOCK',
+    MANAGE_POST_BLOCK_SUCCESS = 'MANAGE_POST_BLOCK_SUCCESS',
+    MANAGE_POST_BLOCK_ERROR = 'MANAGE_POST_BLOCK_ERROR',
 }
 
 
@@ -74,7 +78,22 @@ interface LoadPostErrorAction {
     payload: any[] | any
 }
 
+interface ManagePostBlockAction {
+    type: AdminActionTypes.MANAGE_POST_BLOCK
+}
+
+interface ManagePostBlockSuccessAction {
+    type: AdminActionTypes.MANAGE_POST_BLOCK_SUCCESS,
+    payload: any[] | any
+}
+
+interface ManagePostBlockErrorAction {
+    type: AdminActionTypes.MANAGE_POST_BLOCK_ERROR,
+    payload: any[] | any
+}
+
 export type AdminAction = FindUserOrPostAction | FindUserOrPostSuccessAction | FindUserOrPostErrorAction
 | SelectUserOrPostAction | SelectUserOrPostSuccessAction | SelectUserOrPostErrorAction
 | SortPostsAction
 | LoadPostAction | LoadPostSuccessAction | LoadPostErrorAction
+| ManagePostBlockAction | ManagePostBlockSuccessAction | ManagePostBlockErrorAction

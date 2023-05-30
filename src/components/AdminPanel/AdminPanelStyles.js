@@ -246,4 +246,12 @@ export const AdminPanelStyles = styled.div`
     color: white;
     margin-bottom: 20px;
 }
+
+.info-item-categories {
+    display: flex;
+    gap: 4px;
+    height: 20px;
+    width: calc(100% - 80px);
+    overflow: auto;
+}
 `

@@ -29,26 +29,13 @@ ChartJS.register(
 
 const AdminPanel = () => {
     const { action, posts, users, user, post, analytics, loading } = useTypedSelector(state => state.admin)
-    const { findUserOrPost, selectUserOrPost, sortPosts, loadPost } = useAdminActions()
+    const { findUserOrPost, selectUserOrPost, sortPosts, loadPost, manageBlockPostState } = useAdminActions()
     const [search, setSearch] = useState<string>('')
     const [searchAmongPosts, setSearchAmongPosts] = useState<string>('')
     const [displayResults, setDisplayResults] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<any>({})
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top' as const,
-            },
-            title: {
-                display: true,
-                text: 'Period from June to July',
-            },
-        },
-    }
-
-    const data = {
+    const [labels, setLables] = useState<any>(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Octovber', 'November', 'December'])
+    const [analyticsData, setAnalyticsData] = useState<any>({
         labels,
         datasets: [
             {
@@ -64,6 +51,19 @@ const AdminPanel = () => {
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
         ],
+    })
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+            },
+            title: {
+                display: true,
+                text: 'Period from June to July',
+            },
+        },
     }
 
     useEffect(() => {
@@ -86,12 +86,31 @@ const AdminPanel = () => {
     }, [selectedItem])
 
     useEffect(() => {
-        console.log(user, posts, post, action)
+        console.log(user, posts, post, action, analytics)
     }, [user])
 
     useEffect(() => {
         sortPosts(searchAmongPosts)
     }, [searchAmongPosts])
+
+    useEffect(() => {
+        if (analytics.length) {
+            const months = analytics.map((item: any) => labels[item.month - 1])
+            const dataSet = analytics.map((item: any, index: any) => {
+                return {
+                    label: item.month,
+                    data: item.dates,
+                    borderColor: 'rgb(197, 184, 184)',
+                    backgroundColor: `rgba(${index * 70}, ${index * 70}, ${index * 100}, ${index * 0.7})`,
+                }
+            })
+
+            setAnalyticsData({
+                labels: months,
+                datasets: dataSet
+            })
+        }
+    }, [analytics])
 
     function changeSelectedItem(item: any) {
         setSelectedItem(item)
@@ -151,22 +170,24 @@ const AdminPanel = () => {
 
                                         <div className="info-item">
                                             <p>Created At:</p>
-                                            <p className="reactive">{user?.created_at}</p>
+                                            <p className="reactive">{user?.created_at?.slice(0, 19).replace('T', ' ')}</p>
                                         </div>
 
                                         <div className="info-item">
                                             <p>Amount of Posts:</p>
+                                            <p className="reactive">{posts?.length}</p>
                                         </div>
 
                                         <div className="info-item">
                                             <p>Amount of Views:</p>
+                                            <p className="reactive">{user?.postsViews}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="top-right">
                                     <div className="top-container">
-                                        <Line data={data} options={options}>
+                                        <Line data={analyticsData} options={options}>
                                         </Line>
                                     </div>
                                 </div>
@@ -186,6 +207,13 @@ const AdminPanel = () => {
 
                                         <div className="info-item">
                                             <p>Categories:</p>
+                                            <div className='info-item-categories'>
+                                                {
+                                                    post?._category?.map((item: any) => {
+                                                        return <a key={`category-${item.categoryId}`} href="#">#{item.categoryName}</a>
+                                                    })
+                                                }
+                                            </div>
                                         </div>
 
                                         <div className="info-item">
@@ -197,10 +225,19 @@ const AdminPanel = () => {
                                             <p>Views:</p>
                                             <p>{post?.views}</p>
                                         </div>
+
+                                        <div className="info-item">
+                                            <p>Status:</p>
+                                            <p style={{ color: post?.isBlocked ? 'red' : 'black' }}>{post?.isBlocked ? 'Blocked' : 'No restrictions'}</p>
+                                        </div>
                                     </div>
 
                                     <div className='action-btn'>
-                                        <button>BLOCK POST</button>
+                                        <button onClick={() => {
+                                            if (post?.postId) {
+                                                manageBlockPostState(post?.postId)
+                                            }
+                                        }}>{post?.isBlocked ? 'UNBLOCK POST' : 'BLOCK POST'}</button>
                                     </div>
                                 </div>
                             </div>

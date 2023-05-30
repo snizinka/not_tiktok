@@ -181,35 +181,6 @@ export default function postReducer(state = initialState, action: PostAction): P
             }
 
 
-
-
-        case PostActionTypes.FETCH_PROFILE:
-            return {
-                loadPostIndex: state.loadPostIndex,
-                currentPostThreshold: state.currentPostThreshold,
-                loading: true,
-                posts: [],
-                error: null
-            }
-
-        case PostActionTypes.FETCH_PROFILE_SUCCESS:
-            return {
-                loadPostIndex: state.loadPostIndex,
-                currentPostThreshold: state.currentPostThreshold,
-                loading: false,
-                posts: action.payload,
-                error: null
-            }
-
-        case PostActionTypes.FETCH_PROFILE_ERROR:
-            return {
-                loadPostIndex: state.loadPostIndex,
-                currentPostThreshold: state.currentPostThreshold,
-                loading: false,
-                posts: state.posts,
-                error: action.payload
-            }
-
         case PostActionTypes.ADD_COMMENT:
             return {
                 loadPostIndex: state.loadPostIndex,

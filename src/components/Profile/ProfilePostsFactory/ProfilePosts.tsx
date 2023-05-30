@@ -13,8 +13,8 @@ const ProfilePosts = (props: any) => {
         }}>
             {
                 props.posts.map((post: any, index: number) => {
-                    return <Link to={`/content/${post.postId}`}>
-                        <div key={`profile-post-${index}`} className="profile-post-card">
+                    return <Link key={`profile-post-${index}`} to={`/content/${post.postId}`}>
+                        <div key={`profile-posts-${index}`} className="profile-post-card">
                             <div className="profile-post-image">
                                 {
                                     post.previewImage ? <img className="profile-post-img"
@@ -28,8 +28,8 @@ const ProfilePosts = (props: any) => {
                                     <div className="additional-refs">
                                         <div className="profile-post-categories">
                                             {
-                                                post._categories.map((category: any) => {
-                                                    return <p>#{category.categoryName}</p>
+                                                post._categories.map((category: any, indexx: number) => {
+                                                    return <p key={`profile-post-category-${indexx}`}>#{category.categoryName}</p>
                                                 })
                                             }
                                         </div>
