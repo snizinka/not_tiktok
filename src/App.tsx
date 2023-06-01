@@ -25,10 +25,11 @@ function App() {
   const [socket, setSocket]: any = useState()
   const { loading, user } = useTypedSelector(state => state.user)
   const { userData } = useUserActions()
-  const { addNotification } = useNotificationsActions()
+  const { addNotification, fetchNotifications } = useNotificationsActions()
 
   useEffect(() => {
     if (user.length > 0) {
+      fetchNotifications(user[0].userId)
       const createSocket = io("http://localhost:9000", { reconnectionDelayMax: 10000, secure: false, transports: ['websocket', 'polling'] })
       setSocket(createSocket)
       createSocket?.emit('join_chat', {

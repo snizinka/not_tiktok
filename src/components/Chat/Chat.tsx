@@ -69,7 +69,7 @@ export const Chat = () => {
         if (contact.id !== undefined) {
             socket.off('disconnect')
             socket.emit('join_chat', contact.id)
-            fetchChatMessages(contact)
+            // fetchChatMessages(contact)
         }
     }, [contact])
 

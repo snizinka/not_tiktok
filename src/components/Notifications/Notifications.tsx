@@ -40,6 +40,7 @@ const Notifications = () => {
                     {
                         Object.values(notifications.chat).map((value: any) => value?.map((message: any, index: any) =>
                             <NotificationFromMenu key={`notification-${index}`}
+                                id={message}
                                 message={message.message}
                                 from={message.user.username}
                                 preview={message.user.userImage}

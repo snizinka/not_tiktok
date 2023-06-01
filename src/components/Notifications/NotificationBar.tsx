@@ -4,18 +4,16 @@ import Notification from "./Notification"
 import { NotificationBarStyles } from "./NotificationBarStyles"
 
 const NotificationBar = () => {
-    const { notifications } = useTypedSelector(state => state.notifications)
+    const { recent } = useTypedSelector(state => state.notifications)
     const [recentNotifications, setRecentNotifications] = useState<any>([])
 
     useEffect(() => {
-        if (Object.keys(notifications.chat).length > 0) {
-            const recents = Object.values(notifications.chat)?.map((value: any) => value)
-            let recent = recents[recents.length - 1]
-            recent = recent[recent.length - 1]
-            setRecentNotifications([...recentNotifications, recent])
+        if (recent.length > 0) {
+            let recents = recent[recent.length - 1]
+            setRecentNotifications([...recentNotifications, recents])
         }
-    }, [notifications])
-    
+    }, [recent])
+
     const removeNotificationFromBar = React.useCallback((itemToDelete: any) => {
         setRecentNotifications((currentItems: any) =>
             currentItems.filter((item: any) => item.messageId !== itemToDelete)

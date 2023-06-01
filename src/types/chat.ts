@@ -1,4 +1,5 @@
 export interface ChatState {
+    firstUnread: any;
     availableUsers: any | any[];
     user: any;
     chat: any;
@@ -42,7 +43,11 @@ export enum ChatActionTypes {
 
     LEAVE_CHAT = 'LEAVE_CHAT', 
     LEAVE_CHAT_SUCCESS = 'LEAVE_CHAT_SUCCESS', 
-    LEAVE_CHAT_ERROR = 'LEAVE_CHAT_ERROR', 
+    LEAVE_CHAT_ERROR = 'LEAVE_CHAT_ERROR',
+
+    SET_FIRST_UNREAD_MESSAGE = 'SET_FIRST_UNREAD_MESSAGE',
+
+    SET_SEEN_STATUS = 'SET_SEEN_STATUS',
 }
 
 interface FetchUsersAction {
@@ -151,6 +156,16 @@ interface AddNewChatAction {
     payload: any[] | any
 }
 
+interface SetFirstUnreadMessageAction {
+    type: ChatActionTypes.SET_FIRST_UNREAD_MESSAGE,
+    payload: any[] | any
+}
+
+interface SetSeenStatusAction {
+    type: ChatActionTypes.SET_SEEN_STATUS,
+    payload: any[] | any
+}
+
 
 export type ChatAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsersErrorAction 
 | FetchMessagesAction | FetchMessagesSuccessAction | FetchMessagesErrorAction 
@@ -164,3 +179,5 @@ export type ChatAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsers
 | LeaveChatAction | LeaveChatSuccessAction | LeaveChatErrorAction
 | AddNewChatAction
 | FetchLimitMessagesAction | FetchLimitMessagesSuccessAction | FetchLimitMessagesErrorAction
+| SetFirstUnreadMessageAction
+| SetSeenStatusAction

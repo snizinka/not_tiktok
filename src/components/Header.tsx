@@ -44,7 +44,7 @@ function Header() {
                     </DropdownMenu>
                     <li className={headerStyles.nav_element}>
                         <Link to='/chat'>
-                            <p>({Object.values(notifications.chat).map((value: any) => value.length)}) Chat</p>
+                            <p>({Object.values(notifications.chat).map((value: any) => value.length).reduce((accumulator, currentValue) => accumulator + currentValue, 0)}) Chat</p>
                         </Link>
                     </li>
                     <DropdownMenu>

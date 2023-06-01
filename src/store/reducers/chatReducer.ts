@@ -1,6 +1,7 @@
 import { ChatAction, ChatActionTypes, ChatState } from "../../types/chat";
 
 const initialState: ChatState = {
+    firstUnread: undefined,
     availableUsers: [],
     user: JSON.parse(localStorage.getItem('user') || '{}'),
     chat: null,
@@ -166,6 +167,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
     switch (action.type) {
         case ChatActionTypes.FETCH_USERS:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: true,
                 chats: [],
@@ -178,6 +180,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.FETCH_USERS_SUCCESS:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: action.payload,
@@ -190,6 +193,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.FETCH_USERS_ERROR:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: [],
@@ -202,6 +206,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.FETCH_MESSAGES:
             return {
+                firstUnread: undefined,
                 availableUsers: state.availableUsers,
                 loadingMessages: true,
                 chats: state.chats,
@@ -214,6 +219,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.FETCH_MESSAGES_SUCCESS:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -226,6 +232,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.FETCH_MESSAGES_ERROR:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -236,45 +243,49 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 messages: []
             }
 
-            case ChatActionTypes.FETCH_LIMIT_MESSAGES:
-                return {
-                    availableUsers: state.availableUsers,
-                    loadingMessages: true,
-                    chats: state.chats,
-                    error: null,
-                    chat: state.chat,
-                    storedChats: state.storedChats,
-                    user: state.user,
-                    messages: state.messages
-                }
-    
-            case ChatActionTypes.FETCH_LIMIT_MESSAGES_SUCCESS:
-                return {
-                    availableUsers: state.availableUsers,
-                    loadingMessages: false,
-                    chats: state.chats,
-                    error: null,
-                    chat: state.chat,
-                    storedChats: state.storedChats,
-                    user: state.user,
-                    messages: [...action.payload, ...state.messages]
-                }
-    
-            case ChatActionTypes.FETCH_LIMIT_MESSAGES_ERROR:
-                return {
-                    availableUsers: state.availableUsers,
-                    loadingMessages: false,
-                    chats: state.chats,
-                    error: action.payload,
-                    chat: state.chat,
-                    storedChats: state.storedChats,
-                    user: state.user,
-                    messages: []
-                }
-    
+        case ChatActionTypes.FETCH_LIMIT_MESSAGES:
+            return {
+                firstUnread: state.firstUnread,
+                availableUsers: state.availableUsers,
+                loadingMessages: true,
+                chats: state.chats,
+                error: null,
+                chat: state.chat,
+                storedChats: state.storedChats,
+                user: state.user,
+                messages: state.messages
+            }
+
+        case ChatActionTypes.FETCH_LIMIT_MESSAGES_SUCCESS:
+            return {
+                firstUnread: state.firstUnread,
+                availableUsers: state.availableUsers,
+                loadingMessages: false,
+                chats: state.chats,
+                error: null,
+                chat: state.chat,
+                storedChats: state.storedChats,
+                user: state.user,
+                messages: [...action.payload, ...state.messages]
+            }
+
+        case ChatActionTypes.FETCH_LIMIT_MESSAGES_ERROR:
+            return {
+                firstUnread: state.firstUnread,
+                availableUsers: state.availableUsers,
+                loadingMessages: false,
+                chats: state.chats,
+                error: action.payload,
+                chat: state.chat,
+                storedChats: state.storedChats,
+                user: state.user,
+                messages: []
+            }
+
 
         case ChatActionTypes.ADD_MESSAGE:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -287,6 +298,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.REMOVE_MESSAGE:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -299,6 +311,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.EDIT_MESSAGE:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -315,6 +328,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.GET_USERS_FOR_CHAT:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: [],
                 loadingMessages: false,
                 chats: state.chats,
@@ -327,6 +341,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.GET_USERS_FOR_CHAT_SUCCESS:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: action.payload,
                 loadingMessages: false,
                 chats: state.chats,
@@ -339,6 +354,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.GET_USERS_FOR_CHAT_ERROR:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -352,6 +368,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.ADD_USERS_TO_CHAT:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: changeGroupChatMembers(state, action),
@@ -364,6 +381,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.REMOVE_USERS_FROM_CHAT:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: removeGroupChatMembers(state, action),
@@ -376,6 +394,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.SORT_CONTACTS:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 storedChats: state.storedChats,
@@ -391,6 +410,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.LEAVE_CHAT:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -403,6 +423,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.LEAVE_CHAT_SUCCESS:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: leaveChat(state, action),
@@ -415,6 +436,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.LEAVE_CHAT_ERROR:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: state.chats,
@@ -427,6 +449,7 @@ export default function chatReducer(state = initialState, action: ChatAction): C
 
         case ChatActionTypes.ADD_NEW_CHAT:
             return {
+                firstUnread: state.firstUnread,
                 availableUsers: state.availableUsers,
                 loadingMessages: false,
                 chats: addGroupToList(state, action),
@@ -437,6 +460,32 @@ export default function chatReducer(state = initialState, action: ChatAction): C
                 messages: state.messages
             }
 
+        case ChatActionTypes.SET_FIRST_UNREAD_MESSAGE:
+            return {
+                firstUnread: action.payload,
+                availableUsers: state.availableUsers,
+                loadingMessages: false,
+                chats: state.chats,
+                error: null,
+                chat: state.chat,
+                storedChats: state.storedChats,
+                user: state.user,
+                messages: state.messages
+            }
+
+
+        case ChatActionTypes.SET_SEEN_STATUS:
+            return {
+                firstUnread: undefined,
+                availableUsers: state.availableUsers,
+                loadingMessages: false,
+                chats: state.chats,
+                error: null,
+                chat: state.chat,
+                storedChats: state.storedChats,
+                user: state.user,
+                messages: state.messages
+            }
 
         default:
             return state;

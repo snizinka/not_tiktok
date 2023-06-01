@@ -12,8 +12,10 @@ import ChatUsers from "./ChatUsers";
 import { socket } from "./ChatSocket";
 import ScrollSetup from "../ScrollSetup";
 import useNotificationsActions from "../../hooks/useNotificationsActions";
+import { useInView } from "react-intersection-observer";
 
 export const ChatTest = (props: any) => {
+    const messagesRef = useRef()
     const [message, setMessage]: any = useState('')
     const { user } = useTypedSelector(state => state.user)
     const [selectedChat, setSelectedChat]: any = useState(false)
@@ -33,7 +35,8 @@ export const ChatTest = (props: any) => {
         addUsersToChat,
         removeUserFromChat,
         leftChat,
-        fetchLimitChatMessages
+        fetchLimitChatMessages,
+        setUnreadMessage
     } = useChatActions()
     const { removeChatNotifications } = useNotificationsActions()
 
@@ -43,14 +46,9 @@ export const ChatTest = (props: any) => {
     const [showChatUsers, setShowChatUsers] = useState(false)
     const [contactToSearch, setContactToSearch] = useState("")
     const [chatMode, setChatMode] = useState({ mode: 'Typing', messageId: null, message: { message: '', user: { username: '' } }, from: '' })
-    
+
 
     useEffect(() => {
-        // props.socket?.emit('join_chat', {
-        //     id: user[0].userId,
-        //     joinMethod: 'private'
-        // })
-
         props.socket?.on('message_removed', (data: any) => {
             if ((contactt.current === data.author) || (user[0].userId === data.author) || (selectedGroup.current?.chatId === data.chat.id)) {
                 removeChatMessage(data.messageId)
@@ -121,14 +119,23 @@ export const ChatTest = (props: any) => {
                     joinMethod: 'group'
                 })
             }
-            fetchChatMessages(contact)
-            removeChatNotifications({type: 'chat', id: contact.id})
+            fetchChatMessages(contact, user[0].userId)
+            removeChatNotifications({ type: 'chat', id: contact.id })
         }
     }, [contact])
 
     useEffect(() => {
         sortContacts(contactToSearch)
     }, [contactToSearch])
+
+    useEffect(() => {
+        for (let i = 0; i < messages.length; i++) {
+            if ((messages[i].seen === 0 || messages[i].seen === null) && messages[i].user.userId !== user[0].userId) {
+                setUnreadMessage(messages[i].messageId)
+                return
+            }
+        }
+    }, [messages])
 
     async function sendMessage(messageToSend: any, chatMode: any) {
         const message = {
@@ -251,7 +258,7 @@ export const ChatTest = (props: any) => {
                         {contact.type !== 'Group' ? contact.name : ''}
                         {contact.type === 'Group' ? <button className="chat-info-btn" onClick={changeShowChatUsers}>{contact.name}</button> : ''}
                     </div>
-                                
+
                     {
                         contact.id === undefined ? <div className="chat-field"><p>Chose a chat ...</p></div> :
                             <ScrollSetup
@@ -277,6 +284,7 @@ export const ChatTest = (props: any) => {
                                                 style={{ alignItems: message?.user?.userId === user[0].userId ? 'end' : 'start' }}
                                             >
                                                 <ChatMessage
+                                                    index={index}
                                                     socket={props.socket}
                                                     message={message}
                                                     contact={contact}

@@ -23,7 +23,7 @@ export const fetchChatUsers = (userId: number) => {
     }
 }
 
-export const fetchChatMessages = (contact: number) => {
+export const fetchChatMessages = (contact: number, userId: number) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({ type: ChatActionTypes.FETCH_MESSAGES })
@@ -34,7 +34,8 @@ export const fetchChatMessages = (contact: number) => {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    contact: contact
+                    contact: contact,
+                    userId: userId
                 })
             }).then(res => res.json());
 
@@ -137,5 +138,29 @@ export const removeUserFromChat = (chat: any) => {
 export const leftChat = (id: any) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         dispatch({ type: ChatActionTypes.LEAVE_CHAT_SUCCESS, payload: id })
+    }
+}
+
+export const setUnreadMessage = (messageId: any) => {
+    return async (dispatch: Dispatch<ChatAction>) => {
+        dispatch({ type: ChatActionTypes.SET_FIRST_UNREAD_MESSAGE, payload: messageId })
+    }
+}
+
+export const setSeenStatus = (messageId: any) => {
+    return async (dispatch: Dispatch<ChatAction>) => {
+        try {
+            dispatch({ type: ChatActionTypes.SET_SEEN_STATUS, payload: messageId })
+            const data = await fetch('http://localhost:9000/messageseen', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    messageId: messageId
+                })
+            }).then(res => res.json());
+        } catch (err: any) { }
     }
 }
