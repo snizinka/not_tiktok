@@ -1,16 +1,29 @@
-import React, { useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import headerStyles from '../style/header.module.css'
 
 const DropdownMenu = (props: React.PropsWithChildren<{}>) => {
-    const [showUserMenu, setShowUserMenu] = useState<boolean>(false)
+    const ref = useRef<any>(null);
+    const refUl = useRef<any>(null);
+    useEffect(() => {
+        function handleClickOutside(event: any) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                refUl.current.style.display = 'none'
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [ref])
 
     return (
-        <li className={headerStyles.nav_element} onClick={() => { setShowUserMenu(!showUserMenu) }}>
-            <ul style={{ display: showUserMenu === false ? 'none' : 'block' }} className={headerStyles.submenu}>
+        <li ref={ref} className={headerStyles.nav_element} onClick={() => { refUl.current.style.display = 'block' }}>
+            <ul ref={refUl} style={{ display: 'none' }} className={headerStyles.submenu}>
                 {props.children}
             </ul>
         </li>
     )
-};
+}
 
 export default DropdownMenu;

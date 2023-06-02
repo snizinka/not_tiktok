@@ -194,6 +194,8 @@ export const CreatePostStyles = styled.div`
 }
 
 .content-type-slidr {
+  height: 490px;
+    overflow: scroll;
     width: 100%;
     flex-wrap: wrap;
     gap: 10px;

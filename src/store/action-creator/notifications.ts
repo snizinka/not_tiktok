@@ -67,3 +67,22 @@ export const removeNotificationById = (notificationId: any) => {
         } catch (err: any) { }
     }
 }
+
+export const removeTasksNotificationById = (userId: number, requestId: any) => {
+    return async (dispatch: Dispatch<NotificationsAction>) => {
+        try {
+            dispatch({ type: NotificationsActionTypes.SEEN_TASKS_NOTIFICATIONS_ID, payload: requestId })
+            await fetch('http://localhost:9000/settaskseen', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    requestId: requestId
+                })
+            }).then(res => res.json())
+        } catch (err: any) { }
+    }
+}

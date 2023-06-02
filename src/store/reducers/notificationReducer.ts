@@ -105,6 +105,16 @@ function removeChatNotificationById(state: any, action: any) {
     }
 }
 
+function removeTasksNotificationById(state: any, action: any) {
+    const notificationListOld = state.notifications
+    const requests = notificationListOld.tasks.filter((request: any) => request.requestId !== action.payload)
+
+    return {
+        ...state.notifications,
+        tasks: requests
+    }
+}
+
 export default function notificationReducer(state = initialState, action: NotificationsAction): NotificationsState {
     switch (action.type) {
         case NotificationsActionTypes.RECEIVED_NOTIFICATION_ONLINE:
@@ -123,6 +133,14 @@ export default function notificationReducer(state = initialState, action: Notifi
                 recent: state.recent,
                 loading: false,
                 notifications: removeChatNotificationById(state, action),
+                error: null,
+            }
+
+        case NotificationsActionTypes.SEEN_TASKS_NOTIFICATIONS_ID:
+            return {
+                recent: state.recent,
+                loading: false,
+                notifications: removeTasksNotificationById(state, action),
                 error: null,
             }
 

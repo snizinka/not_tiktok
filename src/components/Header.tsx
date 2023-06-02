@@ -32,7 +32,8 @@ function Header() {
             <nav className={headerStyles.nav}>
                 <ul className={headerStyles.ul}>
                     <DropdownMenu>
-                        <Notifications />
+                    <p>{Object.values(notifications.chat).map((value: any) => value.length).reduce((accumulator, currentValue) => accumulator + currentValue, 0) + notifications.tasks.length}
+                    <Notifications /></p>
                     </DropdownMenu>
                     <DropdownMenu>
                         <li>
