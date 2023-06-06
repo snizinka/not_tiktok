@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import headerStyles from '../style/header.module.css'
 
 const DropdownMenu = (props: React.PropsWithChildren<{}>) => {

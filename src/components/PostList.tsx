@@ -7,6 +7,7 @@ import Header from './Header';
 import { Post } from './Post/Post';
 import Loading from './Loading';
 import { Search } from './Search';
+import useIsMobile from '../hooks/useIsMobile';
 
 function PostList(props: any) {
     const params = useParams()
@@ -48,16 +49,19 @@ function PostList(props: any) {
     return (
         <div>
             <Header />
-            <div className={postStyles.posts_wrapper}>
+            <div className={postStyles.posts_wrapper} style={{ height: 'calc(100vh - 100px)' }}>
                 {
-                    props.byWhat.type === 'BY_DESCRIPTION' ? <p className={postStyles.searchTitle}>Search results: {search === '' ? params.name : search}</p> : ''
+                    props.byWhat.type === 'BY_DESCRIPTION' ? 
+                    <p className={postStyles.searchTitle}>Search results: {search === '' ? params.name : search}</p> : ''
                 }
-                <div className={postStyles.posts_container}>
-                    <div className={props.byWhat.type === 'BY_DESCRIPTION' ? postStyles.searchContainer : ''}>
+                <div className={postStyles.posts_container} style={{ height: '100%' }}>
+                    <div className={props.byWhat.type === 'BY_DESCRIPTION' ? postStyles.searchContainer : ''} style={{ height: '100%' }}>
                         {
-                            props.byWhat.type === 'BY_DESCRIPTION' ? posts?.map((post: any, index: number) => <Search key={`search-${index}`} info={post} />)
+                            props.byWhat.type === 'BY_DESCRIPTION' ? 
+                            posts?.map((post: any, index: number) => <Search key={`search-${index}`} info={post} />)
                                 :
-                                posts?.map((post: any, index: number) => <Post key={`psot-${index}`} index={index} socket={props.socket} info={post} />)
+                                posts?.map((post: any, index: number) => <Post key={`psot-${index}`} 
+                                index={index} socket={props.socket} info={post} />)
                         }
                     </div>
                 </div>

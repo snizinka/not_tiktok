@@ -35,9 +35,9 @@ const SignIn = () => {
                     </div>
 
                     <div className={signin.forgot}>
-                        <a href="">Forgot your login or password?</a>
+                        <a href="/restore">Forgot your login or password?</a>
                     </div>
-
+-
                     <p className={signin.possible_error}>
                         {
                             error ? 'Attention: Wrong login or password' : ''

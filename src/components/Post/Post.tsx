@@ -10,6 +10,7 @@ import { useInView } from 'react-intersection-observer'
 import useAnalyticsActions from '../../hooks/useAnalytics'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
 import useActions from '../../hooks/useActions'
+import useIsMobile from '../../hooks/useIsMobile'
 
 export const Post = ({ socket, info, index }: any) => {
     const { user } = useTypedSelector(state => state.user)
@@ -47,17 +48,30 @@ export const Post = ({ socket, info, index }: any) => {
     }, [inView])
 
     return (
-        <div ref={ref} key={`post-${info?._user?.userId}`} className={postStyles.post}>
-            <div className={postStyles.left_part}>
+        <div ref={ref} key={`post-${info?._user?.userId}`}
+            style={{
+                flexDirection: useIsMobile() ? 'column' : 'row',
+                marginLeft: useIsMobile() ? '0' : '4%'
+            }}
+            className={postStyles.post}>
+            <div className={postStyles.left_part} style={{
+                width: useIsMobile() ? '100%' : '25%',
+                marginLeft: useIsMobile() ? '0' : '3%'
+            }}>
                 <PostAuthor props={info} />
                 <PostDescription props={info} />
-                <PostStatistics info={info} />
+                {useIsMobile() ? '' : <PostStatistics info={info} />}
             </div>
-            <div className={postStyles.middle_part}>
+            <div className={postStyles.middle_part}
+                style={{
+                    width: useIsMobile() ? '100%' : '40%',
+                    height: useIsMobile() ? '50%' : '570px'
+                }}>
                 {inView ? <PostSlider info={info} /> : ''}
             </div>
-            <div className={postStyles.right_part}>
-                <PostComments props={info} />
+            <div className={postStyles.right_part} style={{ width:
+                 useIsMobile() ? '100%' : '25%' }}>
+                {useIsMobile() ? '' : <PostComments props={info} />}
                 <PostEvaluation socket={socket} info={info} />
             </div>
         </div>
