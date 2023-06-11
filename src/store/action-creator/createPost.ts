@@ -20,6 +20,12 @@ export const updateContentArray = (contentArray: any[]) => {
     }
 }
 
+export const clearFields = () => {
+    return async (dispatch: Dispatch<CreatePostAction>) => {
+        dispatch({ type: CreatePostActionTypes.CLEAR_FIELDS })
+    }
+}
+
 export const inputTitleText = (id: number, textContent: string) => {
     return async (dispatch: Dispatch<CreatePostAction>) => {
         dispatch({ type: CreatePostActionTypes.INPUT_TITLE_TEXT, payload: { id: id, textContent: textContent } })

@@ -3,11 +3,10 @@ import styled from 'styled-components'
 import Header from './Header'
 import useRequestUsersActions from '../hooks/useRequestUsersActions';
 import { useTypedSelector } from "../hooks/useTypedSelector";
-import { fetchUsersToAccomplish } from "../store/action-creator/requestUsers";
-import { makeRequest } from "../store/action-creator/requestUsers";
-import { stat } from 'fs';
+import { useMediaQuery } from 'react-responsive';
 
 export const Request = (props: any) => {
+    const breakPoint = useMediaQuery({ query: '(max-width: 690px)' })
     const { user } = useTypedSelector(state => state.user)
     const { error, loading, users, requestStatus } = useTypedSelector(state => state.requestUsers)
     const { fetchUsersToAccomplish } = useRequestUsersActions()
@@ -76,7 +75,9 @@ export const Request = (props: any) => {
                     style={{ transform: `translate(-${stage}%, 0px)` }}>
 
                     <div className="first-stage">
-                        <div className='request-container'>
+                        <div className='request-container' style={{
+                            width: breakPoint ? '95%' : '60%'
+                        }}>
                             <div className="comeback"></div>
                             <div className="components">
                                 <div className="form-component" style={{
@@ -160,7 +161,9 @@ export const Request = (props: any) => {
                     </div>
 
                     <div className="second-stage">
-                        <div className='request-container'>
+                        <div className='request-container' style={{
+                            width: breakPoint ? '95%' : '60%'
+                        }}>
                             <div className="comeback">
                                 <button onClick={() => {
                                     setStage(stage - 100)
@@ -221,7 +224,9 @@ export const Request = (props: any) => {
                     </div>
 
                     <div className="second-stage">
-                        <div className='request-container'>
+                        <div className='request-container' style={{
+                            width: breakPoint ? '95%' : '60%'
+                        }}>
                             <div className="comeback">
                                 <button onClick={() => {
                                     setStage(stage - 100)
@@ -342,7 +347,7 @@ const RequestDiv = styled.div`
 .form-wrapper {
     margin: auto;
     padding: 40px 0;
-    width: 1400px;
+    width: 95%;
     background: #BDBDBD;
     box-shadow: 20px 20px 30px rgb(0 0 0 / 25%);
     border-radius: 10px;
@@ -368,7 +373,7 @@ const RequestDiv = styled.div`
 .request-container {
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: 60%;
     background: #d9d9d9;
     justify-content: center;
     align-items: center;
@@ -382,6 +387,7 @@ const RequestDiv = styled.div`
     flex-direction: column;
     height: 400px;
     gap: 4px;
+    width: 90%;
 }
 
 .form-component {
@@ -399,13 +405,13 @@ const RequestDiv = styled.div`
         border: none;
         outline: none;
         padding: 8px 10px;
-        width: 330px;
+        width: 95%;
         border-radius: 7px;
         margin-bottom: 10px;
         resize: none;
     }
 
-    width: 350px;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -522,7 +528,7 @@ const RequestDiv = styled.div`
 .summury-container {
     transition: .9s ease;
     border-radius: 10px;
-    width: 350px;
+    width: 95%;
     display: flex;
     flex-direction: column;
 }
@@ -546,11 +552,11 @@ const RequestDiv = styled.div`
 }
 
 #exception {
-    width: 270px;
+    width: 80%;
 }
 
 .comeback {
-    width: 350px;
+    width: 95%;
     height: 30px;
     margin-bottom: 10px;
 
@@ -638,7 +644,7 @@ const RequestDiv = styled.div`
     display: flex;
 
     p {
-        width: 290px;
+        width: 85%;
     }
 
     button {

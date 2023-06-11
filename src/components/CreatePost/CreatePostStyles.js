@@ -2,8 +2,8 @@ import styled from 'styled-components'
 export const CreatePostStyles = styled.div`
 .content-type-wrapper {
     margin: auto;
-    height: 650px;
-    width: 1400px;
+    height: calc(100vh - 110px);
+    width: 95%;
     background: #BDBDBD;
     box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
@@ -96,10 +96,10 @@ export const CreatePostStyles = styled.div`
 }
 
 .content-type-slider {
-    width: 90%;
+    width: 100%;
     height: 100%;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+    // scroll-snap-type: y mandatory;
+    // scroll-behavior: smooth;
     transition: .9s ease;
 }
 
@@ -183,6 +183,8 @@ export const CreatePostStyles = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    padding: 4px;
 }
 
 .content-type-slidr {

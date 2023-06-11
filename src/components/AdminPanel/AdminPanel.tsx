@@ -16,6 +16,7 @@ import useAdminActions from "../../hooks/useAdminActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import UsersAndPostsList from "./UsersAndPostsList";
 import LoadImage from "../../hooks/LoadImage";
+import { useMediaQuery } from "react-responsive";
 
 ChartJS.register(
     CategoryScale,
@@ -28,6 +29,7 @@ ChartJS.register(
 )
 
 const AdminPanel = () => {
+    const hideSideBar = useMediaQuery({ query: '(max-width: 1062px)' })
     const { action, posts, users, user, post, analytics, loading } = useTypedSelector(state => state.admin)
     const { findUserOrPost, selectUserOrPost, sortPosts, loadPost, manageBlockPostState } = useAdminActions()
     const [search, setSearch] = useState<string>('')
@@ -131,7 +133,9 @@ const AdminPanel = () => {
                         {displayResults && action === 'searching' ? <UsersAndPostsList changeSelectedItem={changeSelectedItem} result={[...posts, ...users]} /> : ''}
                     </div>
                     <div className="parts-wrapper">
-                        <div className="left-part">
+                        <div className="left-part" style={{
+                           width: hideSideBar ? '42%' : '30%' 
+                        }}>
                             <div className="left-part-container">
                                 <h1>POSTS</h1>
 
@@ -154,38 +158,57 @@ const AdminPanel = () => {
                             </div>
                         </div>
 
-                        <div className="right-part">
-                            <div className="right-part-top">
-                                <div className="top-left">
+                        <div className="right-part" style={{
+                            width: hideSideBar ? '56%' : '69%'
+                        }}>
+                            <div className="right-part-top" style={{
+                                flexDirection: hideSideBar ? 'column' : 'row',
+                                overflow: hideSideBar ? 'auto' : 'initial'
+                            }}>
+                                <div className="top-left" style={{
+                                    width: hideSideBar ? '100%' : '56%'
+                                }}>
                                     <div className="top-container">
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Username:</p>
                                             <p className="reactive">{user?.username}</p>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>User Link:</p>
                                             <p className="reactive">{user?.userLink}</p>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Created At:</p>
                                             <p className="reactive">{user?.created_at?.slice(0, 19).replace('T', ' ')}</p>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Amount of Posts:</p>
                                             <p className="reactive">{posts?.length}</p>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Amount of Views:</p>
                                             <p className="reactive">{user?.postsViews}</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="top-right">
+                                <div className="top-right" style={{
+                                    width: hideSideBar ? '100%' : '42.5%'
+                                }}>
                                     <div className="top-container">
                                         <Line data={analyticsData} options={options}>
                                         </Line>
@@ -194,18 +217,25 @@ const AdminPanel = () => {
                             </div>
 
                             <div className="right-part-bottom">
-                                <div className="bottom-container">
+                                <div className="bottom-container" style={{
+                                    flexDirection: hideSideBar ? 'column' : 'row',
+                                    justifyContent: hideSideBar ? 'flex-start' : 'center'
+                                }}>
                                     <div className="post-preview">
                                         <LoadImage className={'post-preview-image'} path={post?.previewImage} />
                                     </div>
 
                                     <div className="post-details">
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Title:</p>
                                             <p>{post?.description}</p>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Categories:</p>
                                             <div className='info-item-categories'>
                                                 {
@@ -216,17 +246,23 @@ const AdminPanel = () => {
                                             </div>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Post Link:</p>
                                             <a href={`http://localhost:3000/content/${post?.postId}`}>{post?.postId ? `http://localhost:3000/content/${post?.postId}` : ''}</a>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Views:</p>
                                             <p>{post?.views}</p>
                                         </div>
 
-                                        <div className="info-item">
+                                        <div className="info-item" style={{
+                                            width: hideSideBar ? '100%' : '70%'
+                                        }}>
                                             <p>Status:</p>
                                             <p style={{ color: post?.isBlocked ? 'red' : 'black' }}>{post?.isBlocked ? 'Blocked' : 'No restrictions'}</p>
                                         </div>

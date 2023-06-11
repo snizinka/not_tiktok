@@ -9,12 +9,12 @@ const TextContent = (props: any) => {
   }, [props])
 
   return (
-    <TextContentStyle style={{height: '100%', width: '100%'}}>
+    <TextContentStyle style={{ height: '100%', width: '100%' }}>
       <div className='text-title'>
-        <p>{textData?.textContent}</p>
+        <p>{textData?.textTitle}</p>
       </div>
       <div className='text-body'>
-        <p>{textData?.textTitle}</p>
+        <p>{textData?.textContent}</p>
       </div>
     </TextContentStyle>
   )

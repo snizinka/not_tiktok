@@ -18,6 +18,11 @@ export enum CreatePostActionTypes {
     INPUT_TITLE_TEXT = 'INPUT_TITLE_TEXT',
     INPUT_BODY_TEXT = 'INPUT_BODY_TEXT',
 
+    CLEAR_FIELDS = 'CLEAR_FIELDS',
+    CLEAR_FIELDS_SUCCESS = 'CLEAR_FIELDS_SUCCESS',
+    CLEAR_FIELDS_ERROR = 'CLEAR_FIELDS_ERROR',
+
+
     UPLOAD_IMAGE = 'UPLOAD_IMAGE',
     UPLOAD_IMAGE_SUCCESS = 'UPLOAD_IMAGE_SUCCESS',
     UPLOAD_IMAGE_ERROR = 'UPLOAD_IMAGE_ERROR',
@@ -177,6 +182,21 @@ interface UploadEditedErrorPostsAction {
     payload: any[] | any
 }
 
+
+interface ClearFieldsPostsAction {
+    type: CreatePostActionTypes.CLEAR_FIELDS
+}
+
+interface ClearFieldsSuccessPostsAction {
+    type: CreatePostActionTypes.CLEAR_FIELDS_SUCCESS,
+    payload: any[] | any
+}
+
+interface ClearFieldsErrorPostsAction {
+    type: CreatePostActionTypes.CLEAR_FIELDS_ERROR,
+    payload: any[] | any
+}
+
 export type CreatePostAction = AddCreatePostsAction | RemoveCreatePostsSuccessAction | EditCreatePostsErrorAction
 | InputTitleTextCreatePostsErrorAction | InputBodyTextCreatePostsErrorAction
 | UploadImageCreatePostsAction | UploadImageSuccessCreatePostsAction | UploadImageErrorCreatePostsAction
@@ -188,3 +208,4 @@ export type CreatePostAction = AddCreatePostsAction | RemoveCreatePostsSuccessAc
 | UploadPreviewImageCreatePostsAction | UploadPreviewImageSuccessCreatePostsAction | UploadPreviewImageErrorCreatePostsAction
 | PrepareEditPostsAction | PrepareEditSuccessPostsAction | PrepareEditErrorPostsAction
 | UploadEditedPostsAction | UploadEditedSuccessPostsAction | UploadEditedErrorPostsAction
+| ClearFieldsPostsAction | ClearFieldsSuccessPostsAction | ClearFieldsErrorPostsAction

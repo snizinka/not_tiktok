@@ -15,6 +15,8 @@ import {
 import useAnalyticsActions from '../../hooks/useAnalytics';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import AnalyticsDropdown from './AnalyticsDropdown';
+import { useMediaQuery } from 'react-responsive';
+import useIsMobile from '../../hooks/useIsMobile';
 
 ChartJS.register(
     CategoryScale,
@@ -102,8 +104,12 @@ const Analytics = () => {
                 <div className={analytics.container}>
                     <h1 className={analytics.title}>Analytics</h1>
                     {
-                        <div className={analytics.layout_title}>
-                            <div className={analytics.search}>
+                        <div className={analytics.layout_title} style={{
+                            flexDirection: useIsMobile() ? 'column' : 'row'
+                        }}>
+                            <div className={analytics.search} style={{
+                                overflow: useIsMobile() ? 'hidden' : 'inherit'
+                            }}>
                                 <div className={analytics.title_select}>
                                     <h1>Analyze selected post</h1>
                                 </div>
@@ -119,7 +125,11 @@ const Analytics = () => {
                                 </div>
                             </div>
 
-                            <div className={analytics.left_column}>
+                            <div className={analytics.left_column} style={{
+                                marginTop: useIsMobile() ? '0px' : '80px',
+                                display: useIsMobile() ? 'flex' : 'block',
+                                justifyContent: 'center'
+                            }}>
                                 <div className={analytics.top_part}>
                                     <div className={analytics.text_container}>
                                         <p>Posts views: {post?.views}</p>

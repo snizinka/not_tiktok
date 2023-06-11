@@ -13,8 +13,12 @@ import { socket } from "./ChatSocket";
 import ScrollSetup from "../ScrollSetup";
 import useNotificationsActions from "../../hooks/useNotificationsActions";
 import { useInView } from "react-intersection-observer";
+import useIsMobile from "../../hooks/useIsMobile";
+import { useMediaQuery } from "react-responsive";
 
 export const ChatTest = (props: any) => {
+    const refShowSideBar = useRef<any>()
+    const hideSideBar = useMediaQuery({ query: '(max-width: 900px)' })
     const messagesRef = useRef()
     const [message, setMessage]: any = useState('')
     const { user } = useTypedSelector(state => state.user)
@@ -221,9 +225,17 @@ export const ChatTest = (props: any) => {
         <ChatDiv>
             <Header></Header>
             <div className="chat-container">
-                <div className="left-pannel">
+                <div ref={refShowSideBar} className="left-pannel" style={{
+                    visibility: hideSideBar ? 'hidden' : 'visible',
+                    position: hideSideBar ? 'absolute' : 'inherit',
+                    zIndex: '1',
+                    background: hideSideBar ? '#BDBDBD' : 'transparent'
+                }}>
                     <div className="chat-list">
                         <div className="new_chat">
+                            {hideSideBar ? <button onClick={() => {
+                                refShowSideBar.current.style.visibility = "hidden"
+                            }}>Close</button> : ''}
                             <button className="create_chat_trigger" onClick={() => setAddNewChat(!addNewChat)}>Create a new chat</button>
                         </div>
                         <div className="search_contact">
@@ -253,8 +265,20 @@ export const ChatTest = (props: any) => {
                     </div>
                 </div>
 
-                <div className="chat-box">
+                <div className="chat-box" style={{
+                    width: hideSideBar ? '100%' : '75%'
+                }}>
                     <div className="chat-info">
+                        <button className="show-contacts-btn" style={{
+                            position: 'absolute',
+                            left: '10px'
+                        }} onClick={() => {
+                            if (refShowSideBar.current.style.visibility === "visible") {
+                                refShowSideBar.current.style.visibility = "hidden"
+                            } else {
+                                refShowSideBar.current.style.visibility = "visible"
+                            }
+                        }}>Contacts</button>
                         {contact.type !== 'Group' ? contact.name : ''}
                         {contact.type === 'Group' ? <button className="chat-info-btn" onClick={changeShowChatUsers}>{contact.name}</button> : ''}
                     </div>
@@ -272,11 +296,11 @@ export const ChatTest = (props: any) => {
                                     loadingMessages ? <div>
                                         <p>Loading</p>
                                     </div> : <>
-                                        <button onClick={() => {
+                                        {/* <button onClick={() => {
                                             setAllowScrollingBottom((prev: any) => 1)
                                             fetchLimitChatMessages(contact, limit)
                                             setLimit((prev: any) => prev + 10)
-                                        }}>Load messages</button>
+                                        }}>Load messages</button> */}
                                         {messages.map((message: any[] | never[] | any | never, index: number) => {
                                             return <div
                                                 key={`message-container-${index}`}

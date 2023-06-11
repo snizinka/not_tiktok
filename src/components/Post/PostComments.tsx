@@ -42,7 +42,6 @@ const PostComments = (props: any) => {
                 <p>{comment.commentContent}</p>
             </div>
             <div>
-                <button onClick={() => setReplyTo(comment.commentId)}>Reply</button>
                 { comment._user.userId === user[0].userId ? <button onClick={() => deleteComment(comment.commentId)}>Remove</button> : '' }
             </div>
         </div>

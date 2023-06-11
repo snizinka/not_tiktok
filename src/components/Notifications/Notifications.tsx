@@ -33,10 +33,12 @@ const Notifications = () => {
                     background: '#D9D9D9',
                     boxShadow: '10px 10px 20px rgba(0, 0, 0, 0.25)',
                     borderRadius: '8px',
-                    padding: '6px',
+                    padding: '6px 0',
                     height: 'calc(100% - 41px)',
                     overflowY: 'auto',
                     overflowX: 'hidden',
+                    paddingRight: '17px',
+                    boxSizing: 'content-box'
                 }}>
                     <h2>Tasks</h2>
                     {

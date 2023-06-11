@@ -6,8 +6,10 @@ import Header from "../Header";
 import { EditProfileStyles } from "./EditProfileStyles";
 import axios from "axios";
 import LoadImage from "../../hooks/LoadImage";
+import { useMediaQuery } from "react-responsive";
 
 const EditProfile = () => {
+    const breakPoint = useMediaQuery({ query: '(max-width: 970px)' })
     const { user } = useTypedSelector(state => state.user)
     const { success, profile, validation, validating, loading } = useTypedSelector(state => state.profile)
     const { fetchProfileSettings, checkUserLink, checkMailAddress, updateProfile } = useProfileActions()
@@ -189,9 +191,15 @@ const EditProfile = () => {
             <Header></Header>
             <div className="edit-wrapper">
                 <div className="container">
-                    <div className="fields-wrappers">
-                        <div className="left-bar">
-                            <div className="img-name-link">
+                    <div className="fields-wrappers" style={{
+                        flexDirection: breakPoint ? 'column' : 'row',
+                        overflow: breakPoint ? 'auto' : 'initial'
+                    }}>
+                        <div className="left-bar" style={{
+                            height: breakPoint ? 'auto' : '65%',
+                            paddingTop: breakPoint ? '0' : '10%'
+                        }}>
+                            <div className="img-name-link" style={{ padding: breakPoint ? '0' : '20px 0' }}>
                                 <div className="profile-img">
                                     <LoadImage className={'profile-image'} path={profileImage} />
                                     <button onClick={() => imageRef.current.click()} className="change-img">Change</button>
@@ -208,10 +216,13 @@ const EditProfile = () => {
                                 <p className="user-link">{profile?.mailAddress}</p>
                             </div>
                         </div>
-                        <div className="middle-bar">
+                        <div className="middle-bar" style={{ justifyContent: breakPoint ? 'start' : 'center' }}>
                             <h1 className="title">Profile Settings</h1>
 
-                            <div className="editing-fields-wrapper">
+                            <div className="editing-fields-wrapper" style={{
+                                rowGap: breakPoint ? '0px' : '14px',
+                                columnGap: breakPoint ? '0px' : '14px',
+                            }}>
                                 <div className="fields-pair">
                                     <div className="field">
                                         <p className="field-title">Username</p>
@@ -268,7 +279,10 @@ const EditProfile = () => {
                         <div className="right-bar">
                             <h2 className="privacy">Privacy settings</h2>
 
-                            <div className="editing-fields-wrapper">
+                            <div className="editing-fields-wrapper" style={{
+                                rowGap: breakPoint ? '0px' : '14px',
+                                columnGap: breakPoint ? '0px' : '14px',
+                            }}>
                                 <div className="check-field">
                                     <p className="field-title">Private profile</p>
                                     <CheckButton checked={privateProfile} setChecked={changePrivacy} />

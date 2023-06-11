@@ -1,5 +1,5 @@
 import headerStyles from '../style/header.module.css'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import useUserActions from '../hooks/useUserActions';
 import { Link, useNavigate } from 'react-router-dom'
 import { useTypedSelector } from '../hooks/useTypedSelector';
@@ -27,22 +27,7 @@ function Header() {
         <div className={headerStyles.container}>
             <h1 className={headerStyles.logo}><Link to={`/`} style={{ width: '100%', display: 'block', color: '#FFF9D7' }}>Not TikTok</Link></h1>
             {
-                hideNav ? <button
-                style={{
-                    marginLeft: 'auto',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    height: '50px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '5px',
-                    justifyContent: 'center'
-                }}
-                >
-                    <div style={{ width: '20px', height: '5px', background: '#BDBDBD' }}></div>
-                    <div style={{ width: '20px', height: '5px', background: '#BDBDBD' }}></div>
-                    <div style={{ width: '20px', height: '5px', background: '#BDBDBD' }}></div>
-                </button> :
+                hideNav ? <MobileHeader /> :
                     <>
                         <div className={headerStyles.search_area}>
                             <input value={search} onInput={(e: any) => { setSearchValue(e.target.value) }} type="text" className={headerStyles.search_input} />
@@ -51,11 +36,11 @@ function Header() {
 
                         <nav className={headerStyles.nav}>
                             <ul className={headerStyles.ul}>
-                                <DropdownMenu>
+                                <DropdownMenu icon='notification-icon.png'>
                                     <p>{Object.values(notifications.chat).map((value: any) => value.length).reduce((accumulator, currentValue) => accumulator + currentValue, 0) + notifications.tasks.length}
                                         <Notifications /></p>
                                 </DropdownMenu>
-                                <DropdownMenu>
+                                <DropdownMenu icon='add-icon.png'>
                                     <li>
                                         <Link to='/createpost' style={{ width: '100%', display: 'block' }}>Add post</Link>
                                     </li>
@@ -65,10 +50,22 @@ function Header() {
                                 </DropdownMenu>
                                 <li className={headerStyles.nav_element}>
                                     <Link to='/chat'>
-                                        <p>({Object.values(notifications.chat).map((value: any) => value.length).reduce((accumulator, currentValue) => accumulator + currentValue, 0)}) Chat</p>
+                                        <img src={require('../post_content/assets/chat-icon.png')} style={{
+                                            position: 'absolute',
+                                            height: '100%',
+                                            width: '100%',
+                                            top: '0',
+                                            left: '0'
+                                        }} />
+                                        <p style={{
+                                            position: 'absolute',
+                                            zIndex: '123',
+                                            color: 'white',
+                                            top: 0
+                                        }}>({Object.values(notifications.chat).map((value: any) => value.length).reduce((accumulator, currentValue) => accumulator + currentValue, 0)})</p>
                                     </Link>
                                 </li>
-                                <DropdownMenu>
+                                <DropdownMenu icon='menu-icon.png'>
                                     <li>
                                         <Link to={`/admin`} style={{ width: '100%', display: 'block' }}>Admin</Link>
                                     </li>
@@ -85,7 +82,6 @@ function Header() {
                         </nav>
                     </>
             }
-            <MobileHeader />
         </div>
     </header>
 }

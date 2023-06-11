@@ -16,19 +16,19 @@ const PostSlider = (props: any) => {
     }, [props])
 
     function switchToRightSlides() {
-        if (currentSlide < ((amountOfSlides - 2) * (-400))) {
+        if (currentSlide < ((amountOfSlides - 2) * (-100))) {
             setCurrentSlide(0)
             return
         }
-        setCurrentSlide(currentSlide - 400)
+        setCurrentSlide(currentSlide - 100)
     }
 
     function switchToLeftSlides() {
         if (currentSlide >= 0) {
-            setCurrentSlide((amountOfSlides - 1) * (-400))
+            setCurrentSlide((amountOfSlides - 1) * (-100))
             return
         }
-        setCurrentSlide(currentSlide + 400)
+        setCurrentSlide(currentSlide + 100)
     }
 
     return (
@@ -37,7 +37,7 @@ const PostSlider = (props: any) => {
                 <button onClick={switchToLeftSlides}>Prev</button>
             </div>
             <div className={postStyles.middle_wrapper}>
-                <div style={{ transform: `translateX(${currentSlide}px)` }} className={postStyles.middle_container}>
+                <div style={{ transform: `translateX(${currentSlide}%)` }} className={postStyles.middle_container}>
                     {
                         content?.map((contentInstance: any, index: number) => {
                             return <ContentFactory key={`post-factory-${index}`} props={contentInstance} />

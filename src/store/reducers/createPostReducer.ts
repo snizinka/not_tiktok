@@ -375,6 +375,21 @@ export default function createPostReducer(state = initialState, action: CreatePo
                 previewImage: state.previewImage,
                 error: action.payload
             }
+
+
+
+            case CreatePostActionTypes.CLEAR_FIELDS:
+                return {
+                    postId: undefined,
+                    mode: 'creation',
+                    loading: false,
+                    content: [],
+                    tags: [],
+                    description: '',
+                    previewImage: '',
+                    error: null
+                }
+    
         default:
             return state
     }

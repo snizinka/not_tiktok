@@ -9,6 +9,10 @@ export enum UserActionTypes {
     SIGN_USER_SUCCESS = 'SIGN_USER_SUCCESS',
     SIGN_USER_ERROR = 'SIGN_USER_ERROR',
 
+    SIGN_UP_USER = 'SIGN_UP_USER',
+    SIGN_UP_USER_SUCCESS = 'SIGN_UP_USER_SUCCESS',
+    SIGN_UP_USER_ERROR = 'SIGN_UP_USER_ERROR',
+
     LOGOUT_USER = 'LOGOUT_USER',
     LOGOUT_USER_SUCCESS = 'LOGOUT_USER_SUCCESS',
     LOGOUT_USER_ERROR = 'LOGOUT_USER_ERROR'
@@ -29,6 +33,20 @@ interface SignUserErrorAction {
 }
 
 
+interface SignUpUserAction {
+    type: UserActionTypes.SIGN_UP_USER
+}
+
+interface SignUpUserSuccessAction {
+    type: UserActionTypes.SIGN_UP_USER_SUCCESS,
+    payload: any[]
+}
+
+interface SignUpUserErrorAction {
+    type: UserActionTypes.SIGN_UP_USER_ERROR,
+    payload: string
+}
+
 
 
 interface LogoutUserAction {
@@ -45,3 +63,4 @@ interface LogoutUserErrorAction {
 }
 
 export type UserAction = SignUserAction | SignUserSuccessAction | SignUserErrorAction | LogoutUserAction | LogoutUserSuccessAction | LogoutUserErrorAction
+| SignUpUserAction | SignUpUserSuccessAction | SignUpUserErrorAction

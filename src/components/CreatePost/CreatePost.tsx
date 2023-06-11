@@ -27,7 +27,7 @@ const CreatePost = () => {
     const dragItem = React.useRef<any>(null)
     const dragOverItem = React.useRef<any>(null)
     const { content, description, previewImage, tags, mode, postId } = useTypedSelector(state => state.createPost)
-    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription, uploadEditedPostContent } = useCreatePostActions()
+    const { addContent, removeContent, updateContentArray, uploadPost, addTag, removeTag, inputDescription, uploadEditedPostContent, clearFields } = useCreatePostActions()
 
     const [currentId, setCurrentId] = useState<any>(0)
     const [error, setError] = useState<any>(null)
@@ -46,6 +46,8 @@ const CreatePost = () => {
         console.log(mode)
         if (params.id) {
             getPostContentToEdit(params.id, user[0].userId)
+        } else {
+            clearFields()
         }
         const observer = new MutationObserver((mutationsList) => {
             for (const mutation of mutationsList) {

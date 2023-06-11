@@ -51,9 +51,11 @@ export const Post = ({ socket, info, index }: any) => {
         <div ref={ref} key={`post-${info?._user?.userId}`}
             style={{
                 flexDirection: useIsMobile() ? 'column' : 'row',
-                marginLeft: useIsMobile() ? '0' : '4%'
+                marginLeft: useIsMobile() ? '0' : '4%',
+                height: '95%',
+                paddingTop: '5%'
             }}
-            className={postStyles.post}>
+            className={postStyles.post} >
             <div className={postStyles.left_part} style={{
                 width: useIsMobile() ? '100%' : '25%',
                 marginLeft: useIsMobile() ? '0' : '3%'
@@ -69,11 +71,13 @@ export const Post = ({ socket, info, index }: any) => {
                 }}>
                 {inView ? <PostSlider info={info} /> : ''}
             </div>
-            <div className={postStyles.right_part} style={{ width:
-                 useIsMobile() ? '100%' : '25%' }}>
+            <div className={postStyles.right_part} style={{
+                width:
+                    useIsMobile() ? '100%' : '25%'
+            }}>
                 {useIsMobile() ? '' : <PostComments props={info} />}
                 <PostEvaluation socket={socket} info={info} />
             </div>
-        </div>
+        </div >
     )
 }

@@ -3,6 +3,7 @@ import signin from '../style/signin.module.css'
 import useUserActions from '../hooks/useUserActions';
 import { userData } from '../store/action-creator/user';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { Link } from 'react-router-dom';
 const SignIn = () => {
     const { error, loading, user } = useTypedSelector(state => state.user)
     const { userData } = useUserActions()
@@ -46,7 +47,7 @@ const SignIn = () => {
 
                     <div className={signin.action_btns}>
                         <button onClick={() => signUser(login, password)}>Sign In</button>
-                        <button>Up</button>
+                        <button><Link to='/signup'>Up</Link></button>
                     </div>
                 </div>
             </div>

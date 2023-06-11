@@ -29,6 +29,29 @@ export default function postReducer(state = initialState, action: UserAction): U
                 error: action.payload
             }
 
+
+
+        case UserActionTypes.SIGN_UP_USER:
+            return {
+                loading: true,
+                user: {},
+                error: null
+            }
+
+        case UserActionTypes.SIGN_UP_USER_SUCCESS:
+            return {
+                loading: false,
+                user: {},
+                error: null
+            }
+
+        case UserActionTypes.SIGN_UP_USER_ERROR:
+            return {
+                loading: false,
+                user: {},
+                error: action.payload
+            }
+
         case UserActionTypes.LOGOUT_USER:
             return {
                 loading: true,

@@ -3,9 +3,9 @@ import { Dispatch } from "redux";
 import { UserAction, UserActionTypes } from "../../types/user";
 
 export const userData = (login: string, password: string) => {
-    return async (dispatch:Dispatch<UserAction>) => {
-        try{
-            dispatch({type: UserActionTypes.SIGN_USER})
+    return async (dispatch: Dispatch<UserAction>) => {
+        try {
+            dispatch({ type: UserActionTypes.SIGN_USER })
             const data = await fetch('http://localhost:9000/signin', {
                 method: 'POST',
                 headers: {
@@ -19,18 +19,42 @@ export const userData = (login: string, password: string) => {
             }).then(res => res.json());
 
             localStorage.setItem('user', data.result === undefined ? '{}' : JSON.stringify(data.result));
-            dispatch({type: UserActionTypes.SIGN_USER_SUCCESS, payload: data.result === undefined ? {} : data.result})
-        }catch(err:any) {
-            dispatch({type: UserActionTypes.SIGN_USER_ERROR, payload: 'Wrong username or password'})
+            dispatch({ type: UserActionTypes.SIGN_USER_SUCCESS, payload: data.result === undefined ? {} : data.result })
+        } catch (err: any) {
+            dispatch({ type: UserActionTypes.SIGN_USER_ERROR, payload: 'Wrong username or password' })
             console.log(UserActionTypes.SIGN_USER_ERROR)
         }
-    }   
+    }
+}
+
+
+export const signUp = (email: string, login: string, password: string) => {
+    return async (dispatch: Dispatch<UserAction>) => {
+        try {
+            dispatch({ type: UserActionTypes.SIGN_UP_USER })
+            const data = await fetch('http://localhost:9000/signup', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    username: login,
+                    password: password
+                })
+            }).then(res => res.json());
+            dispatch({ type: UserActionTypes.SIGN_UP_USER_SUCCESS, payload: data.result === undefined ? {} : data.result })
+        } catch (err: any) {
+            dispatch({ type: UserActionTypes.SIGN_UP_USER_ERROR, payload: 'Wrong username or password' })
+        }
+    }
 }
 
 export const userLogout = () => {
-    return async (dispatch:Dispatch<UserAction>) => {
-        dispatch({type: UserActionTypes.LOGOUT_USER})
+    return async (dispatch: Dispatch<UserAction>) => {
+        dispatch({ type: UserActionTypes.LOGOUT_USER })
         localStorage.setItem('user', JSON.stringify({}))
-        dispatch({type: UserActionTypes.LOGOUT_USER_SUCCESS})
+        dispatch({ type: UserActionTypes.LOGOUT_USER_SUCCESS })
     }
 }

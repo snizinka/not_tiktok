@@ -85,7 +85,7 @@ export const ChatStyle = styled.div`
     
     .chat-container {
         display: flex;
-        width: 1400px;
+        width: 92%;
         margin: auto;
     }
 
@@ -133,6 +133,7 @@ export const ChatStyle = styled.div`
     }
 
     .chat-info {
+        position: relative;
         padding: 6px 0;
         height: 60px;
         background: #b1bce6;
@@ -255,8 +256,7 @@ export const ChatStyle = styled.div`
         font-family: 'Signika Negative', sans-serif;
         font-size: 15px;
         font-weight: 700;
-        padding: 10px 0px;
-        width: 150px;
+        padding: 10px;
         margin-top: auto;
         margin-bottom: 10px;
         background: #D9D9D9;
@@ -448,7 +448,21 @@ export const ChatStyle = styled.div`
         cursor: pointer;
     }
 
+    .show-contacts-btn {
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Signika Negative',sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 10px 8px;
+        margin-top: auto;
+        margin-bottom: 10px;
+        background: #D9D9D9;
+        border: none;
+    }
+
     .chat-info-btn {
+        position: relative;
         border-radius: 6px;
         cursor: pointer;
         font-family: 'Signika Negative',sans-serif;

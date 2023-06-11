@@ -28,7 +28,6 @@ const ScrollSetup = ({ setAtTop, scrollFieldClass, backToBottomButtonClass, scro
 
     return (
         <div className={scrollWrapper}>
-            <h1>{allowScrollingBottom}</h1>
             <div id="scrollSetup" className={scrollFieldClass}>
                 {children}
             </div>
